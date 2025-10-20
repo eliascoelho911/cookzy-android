@@ -1,0 +1,20 @@
+@startuml
+title Cookzy – Fluxo de Telas Principais
+skinparam componentStyle rectangle
+rectangle "🏠 HomeScreen" as Home
+rectangle "📚 BookDetailScreen" as Book
+rectangle "🍳 RecipeDetailScreen" as Recipe
+rectangle "⏱ PrepScreen" as Prep
+rectangle "💬 FeedbackScreen" as Feedback
+rectangle "📊 NutritionScreen" as Nutrition
+rectangle "🍴 ImportScreen" as Import
+rectangle "🔍 SearchScreen" as Search
+
+Home --> Book : Selecionar Livro
+Book --> Recipe : Abrir Receita
+Recipe --> Prep : Iniciar Preparo
+Prep --> Feedback : Finalizar Receita
+Recipe --> Nutrition : Ver Nutrição
+Home --> Import : Importar Receita
+Home --> Search : Buscar
+@enduml
