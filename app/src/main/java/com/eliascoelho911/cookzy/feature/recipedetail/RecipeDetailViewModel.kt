@@ -1,30 +1,22 @@
 package com.eliascoelho911.cookzy.feature.recipedetail
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import com.eliascoelho911.cookzy.core.BaseViewModel
 import com.eliascoelho911.cookzy.domain.repository.RecipeRepository
 import com.eliascoelho911.cookzy.feature.recipeeditor.RecipeEditorArgs
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class RecipeDetailViewModel(
-    private val recipeRepository: RecipeRepository,
-    savedStateHandle: SavedStateHandle
-) : ViewModel() {
+    savedStateHandle: SavedStateHandle,
+    private val recipeRepository: RecipeRepository
+) : BaseViewModel<RecipeDetailUiState, Unit>(
+    initialState = RecipeDetailUiState(isLoading = true)
+) {
 
     private val recipeId: Long = checkNotNull(savedStateHandle[RecipeEditorArgs.RECIPE_ID]) {
         "recipeId is required to show recipe details."
     }
-
-    private val _state = MutableStateFlow(RecipeDetailUiState(isLoading = true))
-    val state: StateFlow<RecipeDetailUiState> = _state
 
     init {
         loadRecipe()
@@ -36,10 +28,10 @@ class RecipeDetailViewModel(
 
     private fun loadRecipe() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, errorMessage = null) }
+            updateState { it.copy(isLoading = true, errorMessage = null) }
             val recipe = recipeRepository.getRecipe(recipeId)
             if (recipe == null) {
-                _state.update {
+                updateState {
                     it.copy(
                         isLoading = false,
                         errorMessage = "Receita não encontrada."
@@ -48,7 +40,7 @@ class RecipeDetailViewModel(
                 return@launch
             }
 
-            _state.update {
+            updateState {
                 it.copy(
                     recipeId = recipe.id,
                     title = recipe.title,
@@ -72,19 +64,6 @@ class RecipeDetailViewModel(
                         },
                     isLoading = false,
                     errorMessage = null
-                )
-            }
-        }
-    }
-
-    companion object {
-        fun provideFactory(
-            repository: RecipeRepository
-        ): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                RecipeDetailViewModel(
-                    recipeRepository = repository,
-                    savedStateHandle = this.createSavedStateHandle()
                 )
             }
         }

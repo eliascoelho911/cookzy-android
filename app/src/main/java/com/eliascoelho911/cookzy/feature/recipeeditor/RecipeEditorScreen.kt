@@ -33,19 +33,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.eliascoelho911.cookzy.domain.repository.RecipeRepository
 import kotlinx.coroutines.launch
 
 @Composable
 fun RecipeEditorRoute(
-    repository: RecipeRepository,
     onNavigateToDetail: (Long) -> Unit,
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: RecipeEditorViewModel = viewModel(
-        factory = RecipeEditorViewModel.provideFactory(repository)
-    )
+    viewModel: RecipeEditorViewModel
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }

@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.eliascoelho911.cookzy.android"
+    namespace = "com.eliascoelho911.cookzy"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.eliascoelho911.cookzy.android"
+        applicationId = "com.eliascoelho911.cookzy"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -58,11 +58,15 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.io.insertkoin.android)
+    implementation(libs.io.insertkoin.compose)
+    implementation(libs.io.insertkoin.navigation)
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.androidx.room.testing)
+    testImplementation(libs.io.mockk)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

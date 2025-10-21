@@ -2,18 +2,20 @@ package com.eliascoelho911.cookzy.feature.recipeeditor
 
 import androidx.lifecycle.SavedStateHandle
 import com.eliascoelho911.cookzy.domain.model.Recipe
-import com.eliascoelho911.cookzy.domain.model.RecipeDraft
 import com.eliascoelho911.cookzy.domain.model.RecipeIngredient
 import com.eliascoelho911.cookzy.domain.model.RecipeStep
 import com.eliascoelho911.cookzy.domain.repository.RecipeRepository
 import com.eliascoelho911.cookzy.testing.MainDispatcherRule
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
@@ -22,21 +24,29 @@ class RecipeEditorViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
+    @RelaxedMockK
+    lateinit var repository: RecipeRepository
+
+    @Before
+    fun setup() {
+        MockKAnnotations.init(this, relaxUnitFun = true)
+        coEvery { repository.createRecipe(any()) } returns 1L
+    }
+
     @Test
     fun onSave_withEmptyTitle_setsError() = runTest {
-        val repository = FakeRecipeRepository()
-        val viewModel = RecipeEditorViewModel(repository, SavedStateHandle())
+        val viewModel = RecipeEditorViewModel(SavedStateHandle(), repository)
 
         viewModel.onSave()
 
         assertEquals("Título é obrigatório", viewModel.state.value.titleError)
-        assertTrue(repository.createdDraft == null && repository.updatedDraft == null)
+        coVerify(exactly = 0) { repository.createRecipe(any()) }
+        coVerify(exactly = 0) { repository.updateRecipe(any(), any()) }
     }
 
     @Test
     fun onSave_withValidData_emitsNavigateEffect() = runTest {
-        val repository = FakeRecipeRepository()
-        val viewModel = RecipeEditorViewModel(repository, SavedStateHandle())
+        val viewModel = RecipeEditorViewModel(SavedStateHandle(), repository)
 
         viewModel.onTitleChange("Bolo de Fubá")
         val ingredientId = viewModel.state.value.ingredientInputs.first().id
@@ -45,19 +55,19 @@ class RecipeEditorViewModelTest {
         viewModel.onStepChange(stepId) { it.copy(description = "Misture tudo e asse.") }
 
         viewModel.onSave()
+        advanceUntilIdle()
 
         val effect = viewModel.effects.first()
 
         assertTrue(effect is RecipeEditorUiEffect.NavigateToRecipeDetail)
         val navigateEffect = effect as RecipeEditorUiEffect.NavigateToRecipeDetail
         assertEquals(1L, navigateEffect.recipeId)
-        assertEquals("Bolo de Fubá", repository.createdDraft?.title)
-        assertTrue(repository.updatedDraft == null)
+        coVerify(exactly = 1) { repository.createRecipe(any()) }
+        coVerify(exactly = 0) { repository.updateRecipe(any(), any()) }
     }
 
     @Test
     fun init_withRecipeId_loadsExistingRecipeAndUpdates() = runTest {
-        val repository = FakeRecipeRepository()
         val existingRecipe = Recipe(
             id = 10L,
             title = "Pão Caseiro",
@@ -77,17 +87,19 @@ class RecipeEditorViewModelTest {
                 )
             )
         )
-        repository.seed(existingRecipe)
+        coEvery { repository.getRecipe(existingRecipe.id) } returns existingRecipe
 
         val viewModel = RecipeEditorViewModel(
-            recipeRepository = repository,
-            savedStateHandle = SavedStateHandle(mapOf("recipeId" to existingRecipe.id))
+            savedStateHandle = SavedStateHandle(mapOf("recipeId" to existingRecipe.id)),
+            recipeRepository = repository
         )
 
         advanceUntilIdle()
 
         assertEquals("Pão Caseiro", viewModel.state.value.title)
         viewModel.onTitleChange("Pão Caseiro Integral")
+        coEvery { repository.updateRecipe(existingRecipe.id, any()) } returns Unit
+
         viewModel.onSave()
         advanceUntilIdle()
 
@@ -96,52 +108,9 @@ class RecipeEditorViewModelTest {
         assertTrue(effect is RecipeEditorUiEffect.NavigateToRecipeDetail)
         val navigateEffect = effect as RecipeEditorUiEffect.NavigateToRecipeDetail
         assertEquals(existingRecipe.id, navigateEffect.recipeId)
-        assertEquals("Pão Caseiro Integral", repository.updatedDraft?.title)
+        coVerify(exactly = 1) {
+            repository.updateRecipe(existingRecipe.id, match { it.title == "Pão Caseiro Integral" })
+        }
+        coVerify(exactly = 0) { repository.createRecipe(any()) }
     }
-}
-
-private class FakeRecipeRepository : RecipeRepository {
-    private val recipes = mutableMapOf<Long, Recipe>()
-    private val recipesFlow = MutableStateFlow<List<Recipe>>(emptyList())
-    private var nextId = 1L
-
-    var createdDraft: RecipeDraft? = null
-        private set
-    var updatedDraft: RecipeDraft? = null
-        private set
-
-    override suspend fun createRecipe(draft: RecipeDraft): Long {
-        val id = nextId++
-        createdDraft = draft
-        recipes[id] = draft.toRecipe(id)
-        emitChanges()
-        return id
-    }
-
-    override suspend fun updateRecipe(id: Long, draft: RecipeDraft) {
-        updatedDraft = draft
-        recipes[id] = draft.toRecipe(id)
-        emitChanges()
-    }
-
-    override suspend fun getRecipe(id: Long): Recipe? = recipes[id]
-
-    override fun observeRecipes(): Flow<List<Recipe>> = recipesFlow
-
-    fun seed(recipe: Recipe) {
-        recipes[recipe.id] = recipe
-        emitChanges()
-    }
-
-    private fun emitChanges() {
-        recipesFlow.value = recipes.values.sortedBy { it.id }
-    }
-
-    private fun RecipeDraft.toRecipe(id: Long): Recipe =
-        Recipe(
-            id = id,
-            title = title,
-            ingredients = ingredients,
-            steps = steps
-        )
 }

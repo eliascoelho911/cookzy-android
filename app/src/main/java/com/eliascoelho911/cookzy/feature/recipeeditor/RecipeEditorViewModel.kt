@@ -1,38 +1,25 @@
 package com.eliascoelho911.cookzy.feature.recipeeditor
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import com.eliascoelho911.cookzy.core.BaseViewModel
 import com.eliascoelho911.cookzy.domain.model.RecipeDraft
 import com.eliascoelho911.cookzy.domain.model.RecipeIngredient
 import com.eliascoelho911.cookzy.domain.model.RecipeStep
 import com.eliascoelho911.cookzy.domain.repository.RecipeRepository
-import java.util.UUID
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 private const val RECIPE_ID_ARG = "recipeId"
 
 class RecipeEditorViewModel(
-    private val recipeRepository: RecipeRepository,
-    savedStateHandle: SavedStateHandle
-) : ViewModel() {
+    savedStateHandle: SavedStateHandle,
+    private val recipeRepository: RecipeRepository
+) : BaseViewModel<RecipeEditorUiState, RecipeEditorUiEffect>(
+    initialState = RecipeEditorUiState(isLoading = savedStateHandle[RECIPE_ID_ARG] as? Boolean? != null)
+) {
 
     private val recipeIdArg: Long? = savedStateHandle[RECIPE_ID_ARG]
-
-    private val _state = MutableStateFlow(RecipeEditorUiState(isLoading = recipeIdArg != null))
-    val state: StateFlow<RecipeEditorUiState> = _state
-
-    private val _effects = Channel<RecipeEditorUiEffect>(Channel.BUFFERED)
-    val effects = _effects.receiveAsFlow()
 
     private var currentRecipeId: Long? = null
 
@@ -43,7 +30,7 @@ class RecipeEditorViewModel(
     }
 
     fun onTitleChange(newTitle: String) {
-        _state.update {
+        updateState {
             it.copy(
                 title = newTitle,
                 titleError = null
@@ -52,7 +39,7 @@ class RecipeEditorViewModel(
     }
 
     fun onIngredientChange(id: String, transform: (IngredientInput) -> IngredientInput) {
-        _state.update { current ->
+        updateState { current ->
             current.copy(
                 ingredientInputs = current.ingredientInputs.map { input ->
                     if (input.id == id) transform(input) else input
@@ -62,7 +49,7 @@ class RecipeEditorViewModel(
     }
 
     fun addIngredient() {
-        _state.update {
+        updateState {
             it.copy(
                 ingredientInputs = it.ingredientInputs + IngredientInput()
             )
@@ -70,7 +57,7 @@ class RecipeEditorViewModel(
     }
 
     fun removeIngredient(id: String) {
-        _state.update { current ->
+        updateState { current ->
             val updated = current.ingredientInputs.filterNot { it.id == id }
             current.copy(
                 ingredientInputs = updated.ifEmpty { listOf(IngredientInput()) }
@@ -79,7 +66,7 @@ class RecipeEditorViewModel(
     }
 
     fun onStepChange(id: String, transform: (StepInput) -> StepInput) {
-        _state.update { current ->
+        updateState { current ->
             current.copy(
                 stepInputs = current.stepInputs.map { input ->
                     if (input.id == id) transform(input) else input
@@ -89,7 +76,7 @@ class RecipeEditorViewModel(
     }
 
     fun addStep() {
-        _state.update {
+        updateState {
             it.copy(
                 stepInputs = it.stepInputs + StepInput()
             )
@@ -97,7 +84,7 @@ class RecipeEditorViewModel(
     }
 
     fun removeStep(id: String) {
-        _state.update { current ->
+        updateState { current ->
             val updated = current.stepInputs.filterNot { it.id == id }
             current.copy(
                 stepInputs = updated.ifEmpty { listOf(StepInput()) }
@@ -106,17 +93,14 @@ class RecipeEditorViewModel(
     }
 
     fun onCancel() {
-        viewModelScope.launch {
-            _effects.send(RecipeEditorUiEffect.CloseWithoutSaving)
-        }
+        sendEffect(RecipeEditorUiEffect.CloseWithoutSaving)
     }
 
     fun onSave() {
-        val currentState = _state.value
         val sanitizedTitle = currentState.title.trim()
 
         if (sanitizedTitle.isEmpty()) {
-            _state.update { it.copy(titleError = "Título é obrigatório") }
+            updateState { it.copy(titleError = "Título é obrigatório") }
             return
         }
 
@@ -144,8 +128,8 @@ class RecipeEditorViewModel(
         )
 
         viewModelScope.launch {
+            updateState { it.copy(isSaving = true) }
             try {
-                _state.update { it.copy(isSaving = true) }
                 val recipeId = currentRecipeId?.let { existingId ->
                     recipeRepository.updateRecipe(existingId, draft)
                     existingId
@@ -153,82 +137,69 @@ class RecipeEditorViewModel(
                     currentRecipeId = createdId
                 }
 
-                _effects.send(RecipeEditorUiEffect.NavigateToRecipeDetail(recipeId))
+                sendEffect(RecipeEditorUiEffect.NavigateToRecipeDetail(recipeId))
             } catch (error: Throwable) {
-                _effects.send(
+                sendEffect(
                     RecipeEditorUiEffect.ShowError(
                         message = error.message ?: "Não foi possível salvar a receita."
                     )
                 )
             } finally {
-                _state.update { it.copy(isSaving = false) }
+                updateState { it.copy(isSaving = false) }
             }
         }
     }
 
     private fun loadRecipe(recipeId: Long) {
         viewModelScope.launch {
-            try {
-                _state.update { it.copy(isLoading = true) }
-                val recipe = recipeRepository.getRecipe(recipeId)
-                if (recipe == null) {
-                    _effects.send(
-                        RecipeEditorUiEffect.ShowError("Receita não encontrada.")
-                    )
-                    _effects.send(RecipeEditorUiEffect.CloseWithoutSaving)
-                    return@launch
-                }
-                currentRecipeId = recipe.id
-                _state.update {
-                    it.copy(
-                        title = recipe.title,
-                        titleError = null,
-                        isLoading = false,
-                        isEditing = true,
-                        ingredientInputs = recipe.ingredients
-                            .sortedBy { ingredient -> ingredient.position }
-                            .map { ingredient ->
-                                IngredientInput(
-                                    id = UUID.randomUUID().toString(),
-                                    name = ingredient.name,
-                                    quantity = ingredient.quantity.orEmpty(),
-                                    unit = ingredient.unit.orEmpty(),
-                                    note = ingredient.note.orEmpty()
-                                )
-                            }
-                            .ifEmpty { listOf(IngredientInput()) },
-                        stepInputs = recipe.steps
-                            .sortedBy { step -> step.position }
-                            .map { step ->
-                                StepInput(
-                                    id = UUID.randomUUID().toString(),
-                                    description = step.description
-                                )
-                            }
-                            .ifEmpty { listOf(StepInput()) }
-                    )
-                }
-            } catch (error: Throwable) {
-                _effects.send(
-                    RecipeEditorUiEffect.ShowError(
-                        message = error.message ?: "Erro ao carregar a receita."
-                    )
-                )
-                _effects.send(RecipeEditorUiEffect.CloseWithoutSaving)
-            }
-        }
-    }
+            updateState { it.copy(isLoading = true) }
+            runCatching { recipeRepository.getRecipe(recipeId) }
+                .onSuccess { recipe ->
+                    if (recipe == null) {
+                        sendEffect(RecipeEditorUiEffect.ShowError("Receita não encontrada."))
+                        sendEffect(RecipeEditorUiEffect.CloseWithoutSaving)
+                        return@launch
+                    }
 
-    companion object {
-        fun provideFactory(
-            repository: RecipeRepository
-        ): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                RecipeEditorViewModel(
-                    recipeRepository = repository,
-                    savedStateHandle = this.createSavedStateHandle()
-                )
-            }
+                    currentRecipeId = recipe.id
+                    updateState {
+                        it.copy(
+                            title = recipe.title,
+                            titleError = null,
+                            isLoading = false,
+                            isEditing = true,
+                            ingredientInputs = recipe.ingredients
+                                .sortedBy { ingredient -> ingredient.position }
+                                .map { ingredient ->
+                                    IngredientInput(
+                                        id = UUID.randomUUID().toString(),
+                                        name = ingredient.name,
+                                        quantity = ingredient.quantity.orEmpty(),
+                                        unit = ingredient.unit.orEmpty(),
+                                        note = ingredient.note.orEmpty()
+                                    )
+                                }
+                                .ifEmpty { listOf(IngredientInput()) },
+                            stepInputs = recipe.steps
+                                .sortedBy { step -> step.position }
+                                .map { step ->
+                                    StepInput(
+                                        id = UUID.randomUUID().toString(),
+                                        description = step.description
+                                    )
+                                }
+                                .ifEmpty { listOf(StepInput()) }
+                        )
+                    }
+                }
+                .onFailure { error ->
+                    sendEffect(
+                        RecipeEditorUiEffect.ShowError(
+                            message = error.message ?: "Erro ao carregar a receita."
+                        )
+                    )
+                    sendEffect(RecipeEditorUiEffect.CloseWithoutSaving)
+                }
         }
     }
 }

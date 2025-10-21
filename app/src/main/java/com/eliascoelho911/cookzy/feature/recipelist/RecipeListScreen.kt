@@ -23,18 +23,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.eliascoelho911.cookzy.domain.repository.RecipeRepository
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun RecipeListRoute(
-    repository: RecipeRepository,
     onCreateRecipe: () -> Unit,
     onRecipeSelected: (Long) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: RecipeListViewModel = viewModel(
-        factory = RecipeListViewModel.provideFactory(repository)
-    )
+    viewModel: RecipeListViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
