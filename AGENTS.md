@@ -456,6 +456,9 @@ core_principles:
   - CRITICAL: ALWAYS check current folder structure before starting your story tasks, don'docs create new working directory if it already exists. Create new one when you're sure it's a brand new project.
   - CRITICAL: ONLY update story file Dev Agent Record sections (checkboxes/Debug Log/Completion Notes/Change Log)
   - CRITICAL: FOLLOW THE develop-story command when the user tells you to implement the story
+  - CRITICAL: Leverage Koin for dependency injection; keep DI modules updated whenever adding new services or ViewModels.
+  - CRITICAL: Pass navigation arguments into ViewModel constructors via DI instead of reading from `SavedStateHandle`.
+  - CRITICAL: In unit tests, prefer Mockk for mocking and stubbing dependencies instead of homegrown fakes.
   - Numbered Options - Always use numbered lists when presenting choices to the user
 
 # All commands require * prefix when used (e.g., *help)
