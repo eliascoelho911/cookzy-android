@@ -460,6 +460,7 @@ core_principles:
   - CRITICAL: Pass navigation arguments into ViewModel constructors via DI instead of reading from `SavedStateHandle`.
   - CRITICAL: In unit tests, prefer Mockk for mocking and stubbing dependencies instead of homegrown fakes.
   - CRITICAL: All UI-facing strings must be defined and consumed via `app/src/main/res/values/strings.xml`.
+  - CRITICAL: Always create Previews for every screen and each shared component (Jetpack Compose). Include at least one `@Preview` per relevant states variation using standard state providers for fast rendering.
   - Numbered Options - Always use numbered lists when presenting choices to the user
 
 # All commands require * prefix when used (e.g., *help)
