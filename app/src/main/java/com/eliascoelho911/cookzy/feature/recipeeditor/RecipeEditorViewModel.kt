@@ -1,6 +1,5 @@
 package com.eliascoelho911.cookzy.feature.recipeeditor
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.eliascoelho911.cookzy.core.BaseViewModel
 import com.eliascoelho911.cookzy.domain.model.RecipeDraft
@@ -10,16 +9,14 @@ import com.eliascoelho911.cookzy.domain.repository.RecipeRepository
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-private const val RECIPE_ID_ARG = "recipeId"
-
 class RecipeEditorViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val recipeIdArg: Long?,
     private val recipeRepository: RecipeRepository
 ) : BaseViewModel<RecipeEditorUiState, RecipeEditorUiEffect>(
-    initialState = RecipeEditorUiState(isLoading = savedStateHandle[RECIPE_ID_ARG] as? Boolean? != null)
+    initialState = RecipeEditorUiState(
+        isLoading = recipeIdArg != null
+    )
 ) {
-
-    private val recipeIdArg: Long? = savedStateHandle[RECIPE_ID_ARG]
 
     private var currentRecipeId: Long? = null
 
@@ -231,9 +228,4 @@ sealed interface RecipeEditorUiEffect {
     data class NavigateToRecipeDetail(val recipeId: Long) : RecipeEditorUiEffect
     data object CloseWithoutSaving : RecipeEditorUiEffect
     data class ShowError(val message: String) : RecipeEditorUiEffect
-}
-
-object RecipeEditorArgs {
-    const val ROUTE = "recipeEditor"
-    const val RECIPE_ID = RECIPE_ID_ARG
 }

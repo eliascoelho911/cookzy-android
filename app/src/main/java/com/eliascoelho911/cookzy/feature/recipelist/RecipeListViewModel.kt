@@ -42,7 +42,3 @@ data class RecipeSummaryUi(
     val id: Long,
     val title: String
 )
-
-object RecipeListArgs {
-    const val ROUTE = "recipeList"
-}

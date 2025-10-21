@@ -1,22 +1,16 @@
 package com.eliascoelho911.cookzy.feature.recipedetail
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.eliascoelho911.cookzy.core.BaseViewModel
 import com.eliascoelho911.cookzy.domain.repository.RecipeRepository
-import com.eliascoelho911.cookzy.feature.recipeeditor.RecipeEditorArgs
 import kotlinx.coroutines.launch
 
 class RecipeDetailViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val recipeId: Long,
     private val recipeRepository: RecipeRepository
 ) : BaseViewModel<RecipeDetailUiState, Unit>(
     initialState = RecipeDetailUiState(isLoading = true)
 ) {
-
-    private val recipeId: Long = checkNotNull(savedStateHandle[RecipeEditorArgs.RECIPE_ID]) {
-        "recipeId is required to show recipe details."
-    }
 
     init {
         loadRecipe()
@@ -90,8 +84,3 @@ data class StepDetailUi(
     val position: Int,
     val description: String
 )
-
-object RecipeDetailArgs {
-    const val ROUTE = "recipeDetail"
-    const val RECIPE_ID = "recipeId"
-}

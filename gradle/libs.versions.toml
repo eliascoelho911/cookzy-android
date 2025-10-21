@@ -14,6 +14,7 @@ navigationCompose = "2.9.5"
 androidxTestCore = "1.7.0"
 koin = "4.1.1"
 mockk = "1.14.6"
+kotlinxSerialization = "1.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -46,6 +47,7 @@ io-insertkoin-android = { group = "io.insert-koin", name = "koin-android", versi
 io-insertkoin-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
 io-insertkoin-navigation = { group = "io.insert-koin", name = "koin-androidx-navigation", version.ref = "koin" }
 io-mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -53,3 +55,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version = "2.2.20-2.0.4" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

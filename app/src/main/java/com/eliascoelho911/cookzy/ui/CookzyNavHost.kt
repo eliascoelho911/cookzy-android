@@ -2,20 +2,22 @@ package com.eliascoelho911.cookzy.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import com.eliascoelho911.cookzy.feature.recipeeditor.RecipeEditorArgs
+import androidx.navigation.toRoute
 import com.eliascoelho911.cookzy.feature.recipeeditor.RecipeEditorRoute
-import com.eliascoelho911.cookzy.feature.recipedetail.RecipeDetailArgs
+import com.eliascoelho911.cookzy.feature.recipeeditor.RecipeEditorViewModel
 import com.eliascoelho911.cookzy.feature.recipedetail.RecipeDetailRoute
 import com.eliascoelho911.cookzy.feature.recipedetail.RecipeDetailViewModel
-import com.eliascoelho911.cookzy.feature.recipelist.RecipeListArgs
 import com.eliascoelho911.cookzy.feature.recipelist.RecipeListRoute
-import com.eliascoelho911.cookzy.feature.recipeeditor.RecipeEditorViewModel
+import com.eliascoelho911.cookzy.navigation.RecipeDetailDeepLinks
+import com.eliascoelho911.cookzy.navigation.RecipeDetailDestination
+import com.eliascoelho911.cookzy.navigation.RecipeEditorDeepLinks
+import com.eliascoelho911.cookzy.navigation.RecipeEditorDestination
+import com.eliascoelho911.cookzy.navigation.RecipeListDestination
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun CookzyNavHost(
@@ -26,25 +28,31 @@ fun CookzyNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = RecipeListArgs.ROUTE,
+        startDestination = RecipeListDestination,
         modifier = modifier
     ) {
-        composable(route = RecipeListArgs.ROUTE) {
+        composable<RecipeListDestination> {
             RecipeListRoute(
-                onCreateRecipe = { navController.navigate(RecipeEditorArgs.ROUTE) },
+                onCreateRecipe = { navController.navigate(RecipeEditorDestination()) },
                 onRecipeSelected = { recipeId ->
-                    navController.navigate("${RecipeDetailArgs.ROUTE}/$recipeId")
+                    navController.navigate(RecipeDetailDestination(recipeId))
                 }
             )
         }
 
-        composable(route = RecipeEditorArgs.ROUTE) { backStackEntry ->
-            val viewModel = koinViewModel<RecipeEditorViewModel>()
+        composable<RecipeEditorDestination>(
+            deepLinks = RecipeEditorDeepLinks
+        ) { backStackEntry ->
+            val destination = backStackEntry.toRoute<RecipeEditorDestination>()
+            val viewModel = koinViewModel<RecipeEditorViewModel>(
+                parameters = { parametersOf(destination.recipeId) }
+            )
+
             RecipeEditorRoute(
                 viewModel = viewModel,
                 onNavigateToDetail = { recipeId ->
-                    navController.navigate("${RecipeDetailArgs.ROUTE}/$recipeId") {
-                        popUpTo(RecipeListArgs.ROUTE) {
+                    navController.navigate(RecipeDetailDestination(recipeId)) {
+                        popUpTo(route = RecipeListDestination) {
                             inclusive = false
                         }
                         launchSingleTop = true
@@ -58,42 +66,14 @@ fun CookzyNavHost(
             )
         }
 
-        composable(
-            route = "${RecipeEditorArgs.ROUTE}/{${RecipeEditorArgs.RECIPE_ID}}",
-            arguments = listOf(
-                navArgument(RecipeEditorArgs.RECIPE_ID) {
-                    type = NavType.LongType
-                }
-            )
+        composable<RecipeDetailDestination>(
+            deepLinks = RecipeDetailDeepLinks
         ) { backStackEntry ->
-            val viewModel = koinViewModel<RecipeEditorViewModel>()
-            RecipeEditorRoute(
-                viewModel = viewModel,
-                onNavigateToDetail = { recipeId ->
-                    navController.navigate("${RecipeDetailArgs.ROUTE}/$recipeId") {
-                        popUpTo(RecipeListArgs.ROUTE) {
-                            inclusive = false
-                        }
-                        launchSingleTop = true
-                    }
-                },
-                onClose = {
-                    if (!navController.popBackStack()) {
-                        finishApp()
-                    }
-                }
+            val destination = backStackEntry.toRoute<RecipeDetailDestination>()
+            val viewModel = koinViewModel<RecipeDetailViewModel>(
+                parameters = { parametersOf(destination.recipeId) }
             )
-        }
 
-        composable(
-            route = "${RecipeDetailArgs.ROUTE}/{${RecipeDetailArgs.RECIPE_ID}}",
-            arguments = listOf(
-                navArgument(RecipeDetailArgs.RECIPE_ID) {
-                    type = NavType.LongType
-                }
-            )
-        ) { backStackEntry ->
-            val viewModel = koinViewModel<RecipeDetailViewModel>()
             RecipeDetailRoute(
                 viewModel = viewModel,
                 onNavigateBack = {
@@ -102,7 +82,7 @@ fun CookzyNavHost(
                     }
                 },
                 onEditRecipe = { recipeId ->
-                    navController.navigate("${RecipeEditorArgs.ROUTE}/$recipeId")
+                    navController.navigate(RecipeEditorDestination(recipeId))
                 }
             )
         }
