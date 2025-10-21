@@ -65,7 +65,7 @@ Registra tempo total entre início e fim do preparo.
 Representa ações com ícones (⌛, 🔥) para facilitar leitura.  
 
 #### Menções de Ingredientes Interativas
-Ao tocar em um ingrediente citado, exibe tooltip com nome, quantidade e observações.  
+Ao tocar em um ingrediente citado, exibe tooltip com o texto original do ingrediente.  
 
 #### Vídeo com Pontos Ancorados
 Relaciona passos do preparo com timestamps no vídeo original.  
@@ -177,4 +177,3 @@ Permitir que o usuário avalie e comente após o preparo.
 - Importação funcional de ao menos **YouTube**.  
 - Escalonamento de porções e tabela nutricional operantes.  
 - Experiência fluida entre etapas de preparo, vídeo e avaliação.
-
