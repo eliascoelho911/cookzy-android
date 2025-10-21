@@ -52,13 +52,10 @@ class OfflineRecipeRepository(
                 IngredientEntity(
                     recipeId = recipeId,
                     position = index,
-                    name = ingredient.name.trim(),
-                    quantity = ingredient.quantity?.takeIf { it.isNotBlank() }?.trim(),
-                    unit = ingredient.unit?.takeIf { it.isNotBlank() }?.trim(),
-                    note = ingredient.note?.takeIf { it.isNotBlank() }?.trim()
+                    rawText = ingredient.rawText.trim()
                 )
             }
-            .filter { it.name.isNotEmpty() }
+            .filter { it.rawText.isNotEmpty() }
 
         if (sanitizedIngredients.isNotEmpty()) {
             recipeDao.insertIngredients(sanitizedIngredients)
@@ -88,10 +85,7 @@ class OfflineRecipeRepository(
                 .sortedBy { it.position }
                 .map {
                     RecipeIngredient(
-                        name = it.name,
-                        quantity = it.quantity,
-                        unit = it.unit,
-                        note = it.note,
+                        rawText = it.rawText,
                         position = it.position
                     )
                 },

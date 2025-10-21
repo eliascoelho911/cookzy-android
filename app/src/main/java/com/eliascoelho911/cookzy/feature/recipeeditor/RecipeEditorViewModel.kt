@@ -106,14 +106,11 @@ class RecipeEditorViewModel(
             ingredients = currentState.ingredientInputs
                 .mapIndexed { index, input ->
                     RecipeIngredient(
-                        name = input.name.trim(),
-                        quantity = input.quantity.takeIf { it.isNotBlank() },
-                        unit = input.unit.takeIf { it.isNotBlank() },
-                        note = input.note.takeIf { it.isNotBlank() },
+                        rawText = input.rawText.trim(),
                         position = index
                     )
                 }
-                .filter { it.name.isNotEmpty() },
+                .filter { it.rawText.isNotEmpty() },
             steps = currentState.stepInputs
                 .mapIndexed { index, input ->
                     RecipeStep(
@@ -170,10 +167,7 @@ class RecipeEditorViewModel(
                                 .map { ingredient ->
                                     IngredientInput(
                                         id = UUID.randomUUID().toString(),
-                                        name = ingredient.name,
-                                        quantity = ingredient.quantity.orEmpty(),
-                                        unit = ingredient.unit.orEmpty(),
-                                        note = ingredient.note.orEmpty()
+                                        rawText = ingredient.rawText
                                     )
                                 }
                                 .ifEmpty { listOf(IngredientInput()) },
@@ -213,10 +207,7 @@ data class RecipeEditorUiState(
 
 data class IngredientInput(
     val id: String = UUID.randomUUID().toString(),
-    val name: String = "",
-    val quantity: String = "",
-    val unit: String = "",
-    val note: String = ""
+    val rawText: String = ""
 )
 
 data class StepInput(

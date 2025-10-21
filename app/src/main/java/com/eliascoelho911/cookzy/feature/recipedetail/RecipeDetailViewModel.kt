@@ -3,6 +3,9 @@ package com.eliascoelho911.cookzy.feature.recipedetail
 import androidx.lifecycle.viewModelScope
 import com.eliascoelho911.cookzy.core.BaseViewModel
 import com.eliascoelho911.cookzy.domain.repository.RecipeRepository
+import com.eliascoelho911.cookzy.domain.util.deriveQuantity
+import java.math.BigDecimal
+import kotlin.ranges.IntRange
 import kotlinx.coroutines.launch
 
 class RecipeDetailViewModel(
@@ -41,11 +44,11 @@ class RecipeDetailViewModel(
                     ingredients = recipe.ingredients
                         .sortedBy { ingredient -> ingredient.position }
                         .map { ingredient ->
+                            val derivation = deriveQuantity(ingredient.rawText)
                             IngredientDetailUi(
-                                name = ingredient.name,
-                                quantity = ingredient.quantity,
-                                unit = ingredient.unit,
-                                note = ingredient.note
+                                rawText = ingredient.rawText,
+                                derivedQuantity = derivation?.value,
+                                highlightRange = derivation?.range
                             )
                         },
                     steps = recipe.steps
@@ -74,10 +77,9 @@ data class RecipeDetailUiState(
 )
 
 data class IngredientDetailUi(
-    val name: String,
-    val quantity: String?,
-    val unit: String?,
-    val note: String?
+    val rawText: String,
+    val derivedQuantity: BigDecimal?,
+    val highlightRange: IntRange?
 )
 
 data class StepDetailUi(

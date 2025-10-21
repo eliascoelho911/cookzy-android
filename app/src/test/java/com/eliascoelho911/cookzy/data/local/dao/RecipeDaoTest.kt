@@ -26,7 +26,7 @@ class RecipeDaoTest {
     fun setUp() {
         val context: Context = ApplicationProvider.getApplicationContext()
         database = Room.inMemoryDatabaseBuilder(context, CookzyDatabase::class.java)
-            .addMigrations(CookzyDatabase.MIGRATION_0_1)
+            .fallbackToDestructiveMigration()
             .allowMainThreadQueries()
             .build()
         recipeDao = database.recipeDao()
@@ -47,10 +47,7 @@ class RecipeDaoTest {
                 IngredientEntity(
                     recipeId = recipeId,
                     position = 0,
-                    name = "Cenouras",
-                    quantity = "3",
-                    unit = "unidades",
-                    note = null
+                    rawText = "3 cenouras"
                 )
             )
         )
@@ -71,7 +68,7 @@ class RecipeDaoTest {
 
         assertEquals("Bolo de Cenoura", recipeWithDetails.recipe.title)
         assertEquals(1, recipeWithDetails.ingredients.size)
-        assertEquals("Cenouras", recipeWithDetails.ingredients.first().name)
+        assertEquals("3 cenouras", recipeWithDetails.ingredients.first().rawText)
         assertEquals(1, recipeWithDetails.steps.size)
         assertEquals(0, recipeWithDetails.steps.first().position)
     }
@@ -86,10 +83,7 @@ class RecipeDaoTest {
                 IngredientEntity(
                     recipeId = recipeId,
                     position = 0,
-                    name = "Farinha",
-                    quantity = "2",
-                    unit = "xícaras",
-                    note = null
+                    rawText = "2 xícaras de farinha"
                 )
             )
         )
@@ -116,10 +110,7 @@ class RecipeDaoTest {
                 IngredientEntity(
                     recipeId = recipeId,
                     position = 0,
-                    name = "Chocolate em pó",
-                    quantity = "4",
-                    unit = "colheres",
-                    note = "Use chocolate 70%"
+                    rawText = "4 colheres de chocolate em pó (70%)"
                 )
             )
         )
@@ -140,8 +131,7 @@ class RecipeDaoTest {
 
         assertEquals("Bolo de Chocolate", updatedRecipe.recipe.title)
         assertEquals(1, updatedRecipe.ingredients.size)
-        assertEquals("Chocolate em pó", updatedRecipe.ingredients.first().name)
-        assertEquals("Use chocolate 70%", updatedRecipe.ingredients.first().note)
+        assertEquals("4 colheres de chocolate em pó (70%)", updatedRecipe.ingredients.first().rawText)
         assertEquals("Misture e leve ao forno por 40 minutos.", updatedRecipe.steps.first().description)
     }
 }

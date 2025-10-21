@@ -57,7 +57,7 @@ class RecipeEditorViewModelTest {
 
         viewModel.onTitleChange("Bolo de Fubá")
         val ingredientId = viewModel.state.value.ingredientInputs.first().id
-        viewModel.onIngredientChange(ingredientId) { it.copy(name = "Fubá") }
+        viewModel.onIngredientChange(ingredientId) { it.copy(rawText = "Fubá") }
         val stepId = viewModel.state.value.stepInputs.first().id
         viewModel.onStepChange(stepId) { it.copy(description = "Misture tudo e asse.") }
 
@@ -80,10 +80,7 @@ class RecipeEditorViewModelTest {
             title = "Pão Caseiro",
             ingredients = listOf(
                 RecipeIngredient(
-                    name = "Farinha",
-                    quantity = "500",
-                    unit = "g",
-                    note = "De trigo",
+                    rawText = "500 g de farinha de trigo",
                     position = 0
                 )
             ),
@@ -101,6 +98,8 @@ class RecipeEditorViewModelTest {
         advanceUntilIdle()
 
         assertEquals("Pão Caseiro", viewModel.state.value.title)
+        assertEquals("500 g de farinha de trigo", viewModel.state.value.ingredientInputs.first().rawText)
+        assertEquals("Misture tudo e deixe crescer.", viewModel.state.value.stepInputs.first().description)
         viewModel.onTitleChange("Pão Caseiro Integral")
         coEvery { repository.updateRecipe(existingRecipe.id, any()) } returns Unit
 

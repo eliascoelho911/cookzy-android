@@ -22,8 +22,5 @@ data class IngredientEntity(
     val id: Long = 0,
     val recipeId: Long,
     val position: Int,
-    val name: String,
-    val quantity: String?,
-    val unit: String?,
-    val note: String?
+    val rawText: String
 )

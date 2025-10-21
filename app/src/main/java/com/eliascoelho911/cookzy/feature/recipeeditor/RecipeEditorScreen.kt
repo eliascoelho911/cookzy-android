@@ -227,7 +227,7 @@ private fun IngredientSection(
     Column(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        RowTitle(title = "Ingredientes", actionLabel = "Adicionar", onActionClick = onAddIngredient)
+        RowTitle(title = "Ingredientes", actionLabel = "Adicionar ingrediente", onActionClick = onAddIngredient)
 
         ingredients.forEachIndexed { index, ingredient ->
             IngredientCard(
@@ -261,36 +261,13 @@ private fun IngredientCard(
             fontWeight = FontWeight.Medium
         )
         OutlinedTextField(
-            value = ingredient.name,
+            value = ingredient.rawText,
             onValueChange = { value ->
-                onIngredientChange(ingredient.id) { it.copy(name = value) }
+                onIngredientChange(ingredient.id) { it.copy(rawText = value) }
             },
-            label = { Text("Nome") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        OutlinedTextField(
-            value = ingredient.quantity,
-            onValueChange = { value ->
-                onIngredientChange(ingredient.id) { it.copy(quantity = value) }
-            },
-            label = { Text("Quantidade") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        OutlinedTextField(
-            value = ingredient.unit,
-            onValueChange = { value ->
-                onIngredientChange(ingredient.id) { it.copy(unit = value) }
-            },
-            label = { Text("Unidade") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        OutlinedTextField(
-            value = ingredient.note,
-            onValueChange = { value ->
-                onIngredientChange(ingredient.id) { it.copy(note = value) }
-            },
-            label = { Text("Observações") },
-            modifier = Modifier.fillMaxWidth()
+            label = { Text("Texto do ingrediente") },
+            modifier = Modifier.fillMaxWidth(),
+            minLines = 1
         )
         if (canRemove) {
             TextButton(

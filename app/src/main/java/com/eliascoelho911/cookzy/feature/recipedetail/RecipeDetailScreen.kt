@@ -23,7 +23,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
@@ -135,30 +137,19 @@ private fun RecipeDetailContent(
                         fontWeight = FontWeight.SemiBold
                     )
                     state.ingredients.forEach { ingredient ->
-                        Text(
-                            text = buildString {
-                                append("• ")
-                                append(ingredient.name)
-                                val quantity = ingredient.quantity
-                                val unit = ingredient.unit
-                                if (!quantity.isNullOrBlank()) {
-                                    append(" — ")
-                                    append(quantity)
-                                    if (!unit.isNullOrBlank()) {
-                                        append(" ")
-                                        append(unit)
-                                    }
-                                } else if (!unit.isNullOrBlank()) {
-                                    append(" — ")
-                                    append(unit)
-                                }
-                                if (!ingredient.note.isNullOrBlank()) {
-                                    append(" (")
-                                    append(ingredient.note)
-                                    append(")")
+                        val annotated = buildAnnotatedString {
+                            append("• ")
+                            append(ingredient.rawText)
+                            val range = ingredient.highlightRange
+                            if (range != null && range.first >= 0 && range.last >= range.first) {
+                                val start = 2 + range.first
+                                val end = 2 + range.last + 1
+                                if (start in 0..length && end in 0..length && end > start) {
+                                    addStyle(SpanStyle(fontWeight = FontWeight.Bold), start, end)
                                 }
                             }
-                        )
+                        }
+                        Text(text = annotated)
                     }
                 }
             }
