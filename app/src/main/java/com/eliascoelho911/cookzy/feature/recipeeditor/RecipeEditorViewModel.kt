@@ -6,6 +6,8 @@ import com.eliascoelho911.cookzy.domain.model.RecipeDraft
 import com.eliascoelho911.cookzy.domain.model.RecipeIngredient
 import com.eliascoelho911.cookzy.domain.model.RecipeStep
 import com.eliascoelho911.cookzy.domain.repository.RecipeRepository
+import androidx.annotation.StringRes
+import com.eliascoelho911.cookzy.R
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -97,7 +99,7 @@ class RecipeEditorViewModel(
         val sanitizedTitle = currentState.title.trim()
 
         if (sanitizedTitle.isEmpty()) {
-            updateState { it.copy(titleError = "Título é obrigatório") }
+            updateState { it.copy(titleError = R.string.error_title_required) }
             return
         }
 
@@ -132,10 +134,10 @@ class RecipeEditorViewModel(
                 }
 
                 sendEffect(RecipeEditorUiEffect.NavigateToRecipeDetail(recipeId))
-            } catch (error: Throwable) {
+            } catch (_: Throwable) {
                 sendEffect(
                     RecipeEditorUiEffect.ShowError(
-                        message = error.message ?: "Não foi possível salvar a receita."
+                        messageRes = R.string.error_recipe_save
                     )
                 )
             } finally {
@@ -150,7 +152,7 @@ class RecipeEditorViewModel(
             runCatching { recipeRepository.getRecipe(recipeId) }
                 .onSuccess { recipe ->
                     if (recipe == null) {
-                        sendEffect(RecipeEditorUiEffect.ShowError("Receita não encontrada."))
+                        sendEffect(RecipeEditorUiEffect.ShowError(R.string.error_recipe_not_found))
                         sendEffect(RecipeEditorUiEffect.CloseWithoutSaving)
                         return@launch
                     }
@@ -183,10 +185,10 @@ class RecipeEditorViewModel(
                         )
                     }
                 }
-                .onFailure { error ->
+                .onFailure {
                     sendEffect(
                         RecipeEditorUiEffect.ShowError(
-                            message = error.message ?: "Erro ao carregar a receita."
+                            messageRes = R.string.error_recipe_load
                         )
                     )
                     sendEffect(RecipeEditorUiEffect.CloseWithoutSaving)
@@ -197,7 +199,7 @@ class RecipeEditorViewModel(
 
 data class RecipeEditorUiState(
     val title: String = "",
-    val titleError: String? = null,
+    @StringRes val titleError: Int? = null,
     val ingredientInputs: List<IngredientInput> = listOf(IngredientInput()),
     val stepInputs: List<StepInput> = listOf(StepInput()),
     val isLoading: Boolean = false,
@@ -218,5 +220,5 @@ data class StepInput(
 sealed interface RecipeEditorUiEffect {
     data class NavigateToRecipeDetail(val recipeId: Long) : RecipeEditorUiEffect
     data object CloseWithoutSaving : RecipeEditorUiEffect
-    data class ShowError(val message: String) : RecipeEditorUiEffect
+    data class ShowError(@StringRes val messageRes: Int) : RecipeEditorUiEffect
 }

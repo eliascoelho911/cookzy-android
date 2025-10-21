@@ -1,3 +1,36 @@
 <resources>
     <string name="app_name">Cookzy</string>
+    <string name="recipe_editor_top_bar_title_edit">Editar receita</string>
+    <string name="recipe_editor_top_bar_title_new">Nova receita</string>
+    <string name="recipe_editor_cancel">Cancelar</string>
+    <string name="recipe_editor_save">Salvar receita</string>
+    <string name="recipe_editor_discard_changes">Descartar alterações</string>
+    <string name="recipe_editor_title_label">Título</string>
+    <string name="recipe_editor_ingredients_title">Ingredientes</string>
+    <string name="recipe_editor_add_ingredient">Adicionar ingrediente</string>
+    <string name="recipe_editor_ingredient_number">Ingrediente %1$d</string>
+    <string name="recipe_editor_ingredient_label">Texto do ingrediente</string>
+    <string name="recipe_editor_remove_ingredient">Remover ingrediente</string>
+    <string name="recipe_editor_steps_title">Passos de preparo</string>
+    <string name="recipe_editor_add_step">Adicionar passo</string>
+    <string name="recipe_editor_step_number">Passo %1$d</string>
+    <string name="recipe_editor_step_description">Descrição</string>
+    <string name="recipe_editor_remove_step">Remover passo</string>
+    <string name="recipe_detail_top_bar_title">Detalhes da receita</string>
+    <string name="common_back">Voltar</string>
+    <string name="recipe_detail_ingredients_title">Ingredientes</string>
+    <string name="recipe_detail_ingredient_prefix">•</string>
+    <string name="recipe_detail_steps_title">Modo de preparo</string>
+    <string name="recipe_detail_step_number">Passo %1$d</string>
+    <string name="recipe_detail_edit_button">Editar receita</string>
+    <string name="recipe_list_top_bar_title">Minhas receitas</string>
+    <string name="recipe_list_new_recipe">Nova receita</string>
+    <string name="recipe_list_fab_label">+</string>
+    <string name="recipe_list_empty_title">Nenhuma receita ainda</string>
+    <string name="recipe_list_empty_body">Comece criando sua primeira receita com título, ingredientes e preparo.</string>
+    <string name="recipe_list_empty_action">Criar receita agora</string>
+    <string name="error_title_required">Título é obrigatório</string>
+    <string name="error_recipe_save">Não foi possível salvar a receita.</string>
+    <string name="error_recipe_not_found">Receita não encontrada.</string>
+    <string name="error_recipe_load">Erro ao carregar a receita.</string>
 </resources>

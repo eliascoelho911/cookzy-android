@@ -1,5 +1,6 @@
 package com.eliascoelho911.cookzy.feature.recipedetail
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.res.stringResource
+import com.eliascoelho911.cookzy.R
 
 @Composable
 fun RecipeDetailRoute(
@@ -57,10 +60,10 @@ private fun RecipeDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Detalhes da receita") },
+                title = { Text(stringResource(R.string.recipe_detail_top_bar_title)) },
                 navigationIcon = {
                     TextButton(onClick = onNavigateBack) {
-                        Text("Voltar")
+                        Text(stringResource(R.string.common_back))
                     }
                 }
             )
@@ -79,9 +82,9 @@ private fun RecipeDetailScreen(
                 }
             }
 
-            state.errorMessage != null -> {
+            state.errorMessageRes != null -> {
                 ErrorState(
-                    message = state.errorMessage,
+                    messageRes = state.errorMessageRes,
                     onNavigateBack = onNavigateBack,
                     modifier = Modifier
                         .fillMaxSize()
@@ -132,18 +135,23 @@ private fun RecipeDetailContent(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = "Ingredientes",
+                        text = stringResource(R.string.recipe_detail_ingredients_title),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
                     state.ingredients.forEach { ingredient ->
+                        val bulletPrefix = stringResource(R.string.recipe_detail_ingredient_prefix)
                         val annotated = buildAnnotatedString {
-                            append("• ")
+                            append(bulletPrefix)
+                            if (!bulletPrefix.endsWith(" ")) {
+                                append(" ")
+                            }
                             append(ingredient.rawText)
                             val range = ingredient.highlightRange
                             if (range != null && range.first >= 0 && range.last >= range.first) {
-                                val start = 2 + range.first
-                                val end = 2 + range.last + 1
+                                val prefixLength = length - ingredient.rawText.length
+                                val start = prefixLength + range.first
+                                val end = prefixLength + range.last + 1
                                 if (start in 0..length && end in 0..length && end > start) {
                                     addStyle(SpanStyle(fontWeight = FontWeight.Bold), start, end)
                                 }
@@ -167,7 +175,7 @@ private fun RecipeDetailContent(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
-                        text = "Modo de preparo",
+                        text = stringResource(R.string.recipe_detail_steps_title),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -176,7 +184,7 @@ private fun RecipeDetailContent(
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Text(
-                                text = "Passo ${step.position}",
+                                text = stringResource(R.string.recipe_detail_step_number, step.position),
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.Medium
                             )
@@ -194,7 +202,7 @@ private fun RecipeDetailContent(
                 onClick = { onEditRecipe(id) },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Editar receita")
+                Text(stringResource(R.string.recipe_detail_edit_button))
             }
         }
     }
@@ -202,7 +210,7 @@ private fun RecipeDetailContent(
 
 @Composable
 private fun ErrorState(
-    message: String,
+    @StringRes messageRes: Int,
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -212,12 +220,12 @@ private fun ErrorState(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = message,
+            text = stringResource(messageRes),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.error
         )
         Button(onClick = onNavigateBack) {
-            Text("Voltar")
+            Text(stringResource(R.string.common_back))
         }
     }
 }

@@ -23,6 +23,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,10 +31,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
+import com.eliascoelho911.cookzy.R
 
 @Composable
 fun RecipeEditorRoute(
@@ -45,6 +49,7 @@ fun RecipeEditorRoute(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
@@ -52,7 +57,7 @@ fun RecipeEditorRoute(
                 is RecipeEditorUiEffect.NavigateToRecipeDetail -> onNavigateToDetail(effect.recipeId)
                 RecipeEditorUiEffect.CloseWithoutSaving -> onClose()
                 is RecipeEditorUiEffect.ShowError -> coroutineScope.launch {
-                    snackbarHostState.showSnackbar(effect.message)
+                    snackbarHostState.showSnackbar(context.getString(effect.messageRes))
                 }
             }
         }
@@ -95,7 +100,13 @@ private fun RecipeEditorScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = if (state.isEditing) "Editar receita" else "Nova receita"
+                        text = stringResource(
+                            if (state.isEditing) {
+                                R.string.recipe_editor_top_bar_title_edit
+                            } else {
+                                R.string.recipe_editor_top_bar_title_new
+                            }
+                        )
                     )
                 },
                 actions = {
@@ -103,7 +114,7 @@ private fun RecipeEditorScreen(
                         onClick = onCancel,
                         enabled = !state.isSaving
                     ) {
-                        Text("Cancelar")
+                        Text(stringResource(R.string.recipe_editor_cancel))
                     }
                 }
             )
@@ -170,7 +181,7 @@ private fun RecipeEditorScreen(
                             strokeWidth = 2.dp
                         )
                     }
-                    Text("Salvar receita")
+                    Text(stringResource(R.string.recipe_editor_save))
                 }
 
                 TextButton(
@@ -178,7 +189,7 @@ private fun RecipeEditorScreen(
                     enabled = !state.isSaving,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Descartar alterações")
+                    Text(stringResource(R.string.recipe_editor_discard_changes))
                 }
             }
         }
@@ -188,14 +199,14 @@ private fun RecipeEditorScreen(
 @Composable
 private fun TitleSection(
     title: String,
-    titleError: String?,
+    @StringRes titleError: Int?,
     onTitleChange: (String) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = "Título",
+            text = stringResource(R.string.recipe_editor_title_label),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold
         )
@@ -207,7 +218,7 @@ private fun TitleSection(
             supportingText = {
                 if (titleError != null) {
                     Text(
-                        text = titleError,
+                        text = stringResource(titleError),
                         color = MaterialTheme.colorScheme.error
                     )
                 }
@@ -227,7 +238,11 @@ private fun IngredientSection(
     Column(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        RowTitle(title = "Ingredientes", actionLabel = "Adicionar ingrediente", onActionClick = onAddIngredient)
+        RowTitle(
+            title = stringResource(R.string.recipe_editor_ingredients_title),
+            actionLabel = stringResource(R.string.recipe_editor_add_ingredient),
+            onActionClick = onAddIngredient
+        )
 
         ingredients.forEachIndexed { index, ingredient ->
             IngredientCard(
@@ -256,7 +271,7 @@ private fun IngredientCard(
             .padding(8.dp)
     ) {
         Text(
-            text = "Ingrediente ${index + 1}",
+            text = stringResource(R.string.recipe_editor_ingredient_number, index + 1),
             style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.Medium
         )
@@ -265,7 +280,7 @@ private fun IngredientCard(
             onValueChange = { value ->
                 onIngredientChange(ingredient.id) { it.copy(rawText = value) }
             },
-            label = { Text("Texto do ingrediente") },
+            label = { Text(stringResource(R.string.recipe_editor_ingredient_label)) },
             modifier = Modifier.fillMaxWidth(),
             minLines = 1
         )
@@ -274,7 +289,7 @@ private fun IngredientCard(
                 onClick = { onRemoveIngredient(ingredient.id) },
                 modifier = Modifier.align(Alignment.End)
             ) {
-                Text("Remover ingrediente")
+                Text(stringResource(R.string.recipe_editor_remove_ingredient))
             }
         }
     }
@@ -290,7 +305,11 @@ private fun StepSection(
     Column(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        RowTitle(title = "Passos de preparo", actionLabel = "Adicionar passo", onActionClick = onAddStep)
+        RowTitle(
+            title = stringResource(R.string.recipe_editor_steps_title),
+            actionLabel = stringResource(R.string.recipe_editor_add_step),
+            onActionClick = onAddStep
+        )
 
         steps.forEachIndexed { index, step ->
             Column(
@@ -300,7 +319,7 @@ private fun StepSection(
                     .padding(8.dp)
             ) {
                 Text(
-                    text = "Passo ${index + 1}",
+                    text = stringResource(R.string.recipe_editor_step_number, index + 1),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Medium
                 )
@@ -309,7 +328,7 @@ private fun StepSection(
                     onValueChange = { value ->
                         onStepChange(step.id) { it.copy(description = value) }
                     },
-                    label = { Text("Descrição") },
+                    label = { Text(stringResource(R.string.recipe_editor_step_description)) },
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 3
                 )
@@ -318,7 +337,7 @@ private fun StepSection(
                         onClick = { onRemoveStep(step.id) },
                         modifier = Modifier.align(Alignment.End)
                     ) {
-                        Text("Remover passo")
+                        Text(stringResource(R.string.recipe_editor_remove_step))
                     }
                 }
             }

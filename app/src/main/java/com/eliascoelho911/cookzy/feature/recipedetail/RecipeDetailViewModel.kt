@@ -1,6 +1,8 @@
 package com.eliascoelho911.cookzy.feature.recipedetail
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
+import com.eliascoelho911.cookzy.R
 import com.eliascoelho911.cookzy.core.BaseViewModel
 import com.eliascoelho911.cookzy.domain.repository.RecipeRepository
 import com.eliascoelho911.cookzy.domain.util.deriveQuantity
@@ -25,13 +27,13 @@ class RecipeDetailViewModel(
 
     private fun loadRecipe() {
         viewModelScope.launch {
-            updateState { it.copy(isLoading = true, errorMessage = null) }
+            updateState { it.copy(isLoading = true, errorMessageRes = null) }
             val recipe = recipeRepository.getRecipe(recipeId)
             if (recipe == null) {
                 updateState {
                     it.copy(
                         isLoading = false,
-                        errorMessage = "Receita não encontrada."
+                        errorMessageRes = R.string.error_recipe_not_found
                     )
                 }
                 return@launch
@@ -60,7 +62,7 @@ class RecipeDetailViewModel(
                             )
                         },
                     isLoading = false,
-                    errorMessage = null
+                    errorMessageRes = null
                 )
             }
         }
@@ -73,7 +75,7 @@ data class RecipeDetailUiState(
     val ingredients: List<IngredientDetailUi> = emptyList(),
     val steps: List<StepDetailUi> = emptyList(),
     val isLoading: Boolean = false,
-    val errorMessage: String? = null
+    @StringRes val errorMessageRes: Int? = null
 )
 
 data class IngredientDetailUi(

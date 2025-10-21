@@ -20,10 +20,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
+import com.eliascoelho911.cookzy.R
 
 @Composable
 fun RecipeListRoute(
@@ -53,17 +55,17 @@ private fun RecipeListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Minhas receitas") },
+                title = { Text(stringResource(R.string.recipe_list_top_bar_title)) },
                 actions = {
                     TextButton(onClick = onCreateRecipe) {
-                        Text("Nova receita")
+                        Text(stringResource(R.string.recipe_list_new_recipe))
                     }
                 }
             )
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onCreateRecipe) {
-                Text("+")
+                Text(stringResource(R.string.recipe_list_fab_label))
             }
         },
         modifier = modifier
@@ -98,16 +100,16 @@ private fun EmptyState(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Nenhuma receita ainda",
+            text = stringResource(R.string.recipe_list_empty_title),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = "Comece criando sua primeira receita com título, ingredientes e preparo.",
+            text = stringResource(R.string.recipe_list_empty_body),
             style = MaterialTheme.typography.bodyMedium
         )
         TextButton(onClick = onCreateRecipe) {
-            Text("Criar receita agora")
+            Text(stringResource(R.string.recipe_list_empty_action))
         }
     }
 }
