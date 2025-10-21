@@ -27,12 +27,12 @@ private val danglingDotPattern = Regex("\\d+\\.\\s*(?!\\d)")
 
 private val mixedUnicodeNoSpacePattern = Regex("\\b(\\d+)([½¼¾⅓⅔⅛])")
 private val mixedUnicodePattern = Regex("\\b(\\d+)\\s+([½¼¾⅓⅔⅛])")
-private val mixedAsciiPattern = Regex("\\b(\\d+)\\s+(\\d+)/(\\d+)\\b")
+private val mixedAsciiPattern = Regex("\\b(\\d+)\\s+(\\d+)/(\\d+)(?![\\d/])")
 private val unicodeFractionPattern = Regex("([½¼¾⅓⅔⅛])")
-private val asciiFractionPattern = Regex("\\b(\\d+)/(\\d+)\\b")
-private val decimalCommaPattern = Regex("\\b\\d+,\\d+\\b")
-private val decimalDotPattern = Regex("\\b\\d+\\.\\d+\\b")
-private val integerPattern = Regex("\\b\\d+\\b")
+private val asciiFractionPattern = Regex("(?<!\\d)(\\d+)/(\\d+)(?![\\d/])")
+private val decimalCommaPattern = Regex("(?<!\\d)\\d+,\\d+(?![\\d/])")
+private val decimalDotPattern = Regex("(?<!\\d)\\d+\\.\\d+(?![\\d/])")
+private val integerPattern = Regex("(?<![\\d/])\\d+(?![\\d/])")
 
 /**
  * Derives a decimal quantity from a free-form ingredient description.

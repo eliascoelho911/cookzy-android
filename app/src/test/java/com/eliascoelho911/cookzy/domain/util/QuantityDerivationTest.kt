@@ -29,6 +29,34 @@ class QuantityDerivationTest {
     }
 
     @Test
+    fun `supports integer attached to unit`() {
+        val result = deriveQuantity("300g de açúcar")
+        assertEquals(BigDecimal("300"), result?.value)
+        assertEquals(0..2, result?.range)
+    }
+
+    @Test
+    fun `supports decimal with comma attached to unit`() {
+        val result = deriveQuantity("0,5kg de farinha")
+        assertEquals(BigDecimal("0.5"), result?.value)
+        assertEquals(0..2, result?.range)
+    }
+
+    @Test
+    fun `supports decimal with dot attached to unit`() {
+        val result = deriveQuantity("1.25kg de farinha")
+        assertEquals(BigDecimal("1.25"), result?.value)
+        assertEquals(0..3, result?.range)
+    }
+
+    @Test
+    fun `supports fraction attached to unit`() {
+        val result = deriveQuantity("1/2kg de manteiga")
+        assertEquals(BigDecimal("0.5"), result?.value)
+        assertEquals(0..2, result?.range)
+    }
+
+    @Test
     fun `supports mixed number with unicode fraction`() {
         val result = deriveQuantity("1 ¼ xícara de açúcar")
         assertEquals(BigDecimal("1.25"), result?.value)
