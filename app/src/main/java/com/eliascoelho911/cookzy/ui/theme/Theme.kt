@@ -1,4 +1,4 @@
-package com.eliascoelho911.cookzy.android.ui.theme
+package com.eliascoelho911.cookzy.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
