@@ -15,6 +15,7 @@ androidxTestCore = "1.7.0"
 koin = "4.1.1"
 mockk = "1.14.6"
 kotlinxSerialization = "1.9.0"
+robolectric = "4.13"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -48,6 +49,7 @@ io-insertkoin-compose = { group = "io.insert-koin", name = "koin-androidx-compos
 io-insertkoin-navigation = { group = "io.insert-koin", name = "koin-androidx-navigation", version.ref = "koin" }
 io-mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

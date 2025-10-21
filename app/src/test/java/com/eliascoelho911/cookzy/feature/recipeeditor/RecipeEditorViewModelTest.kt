@@ -1,6 +1,5 @@
 package com.eliascoelho911.cookzy.feature.recipeeditor
 
-import androidx.lifecycle.SavedStateHandle
 import com.eliascoelho911.cookzy.domain.model.Recipe
 import com.eliascoelho911.cookzy.domain.model.RecipeIngredient
 import com.eliascoelho911.cookzy.domain.model.RecipeStep
@@ -11,6 +10,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -19,6 +19,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class RecipeEditorViewModelTest {
 
     @get:Rule
@@ -35,7 +36,10 @@ class RecipeEditorViewModelTest {
 
     @Test
     fun onSave_withEmptyTitle_setsError() = runTest {
-        val viewModel = RecipeEditorViewModel(SavedStateHandle(), repository)
+        val viewModel = RecipeEditorViewModel(
+            recipeIdArg = null,
+            recipeRepository = repository
+        )
 
         viewModel.onSave()
 
@@ -46,7 +50,10 @@ class RecipeEditorViewModelTest {
 
     @Test
     fun onSave_withValidData_emitsNavigateEffect() = runTest {
-        val viewModel = RecipeEditorViewModel(SavedStateHandle(), repository)
+        val viewModel = RecipeEditorViewModel(
+            recipeIdArg = null,
+            recipeRepository = repository
+        )
 
         viewModel.onTitleChange("Bolo de Fubá")
         val ingredientId = viewModel.state.value.ingredientInputs.first().id
@@ -89,10 +96,7 @@ class RecipeEditorViewModelTest {
         )
         coEvery { repository.getRecipe(existingRecipe.id) } returns existingRecipe
 
-        val viewModel = RecipeEditorViewModel(
-            savedStateHandle = SavedStateHandle(mapOf("recipeId" to existingRecipe.id)),
-            recipeRepository = repository
-        )
+        val viewModel = RecipeEditorViewModel(existingRecipe.id, repository)
 
         advanceUntilIdle()
 
