@@ -191,3 +191,72 @@ graph TD
 - Hierarquia visual: títulos fortes; ações primárias evidentes; espaçamento base 8dp.
 - Consistência: reuso de cards, chips e cabeçalhos de sheet; Material 3 com tema/tipografia conforme código do app.
 - A11y: alvos 48dp; contraste conforme tema; contentDescription; ordem de foco previsível; linhas 1.5–1.8 em passos.
+
+## Component Library / Design System
+
+**Design System Approach:** adotar Material 3 como base com tema/tipografia já definidos no código (`Theme.kt`, `Color.kt`, `Type.kt`), complementando com tokens específicos quando necessário (ex.: cores de sucesso via `ExtendedColorScheme`). Evitar criar um sistema paralelo; priorizar componentes Compose padrão com sobreposições leves.
+
+Componentes nucleares (propostos):
+
+1. App Bars
+   - Purpose: navegação e busca
+   - Variants: padrão; com campo de busca; com ações (Compartilhar)
+   - States: padrão, scrolled, loading (skeleton do título)
+
+2. FAB + Sheet "Adicionar receita"
+   - Purpose: entrada para Importar/Manual
+   - Variants: ícone + label; apenas ícone
+   - States: enabled/disabled; sheet com cabeçalho consistente
+
+3. Cards
+   - RecipeCard: cover, título, tempo, chips (tags)
+   - BookCard: capa/placeholder, título, contagem
+   - States: loading (skeleton), empty, error (retry)
+
+4. Chips
+   - TagChip, FilterChip (tempo, livro, tag)
+   - States: selected/unselected, enabled/disabled
+
+5. Tabs (Detalhe da Receita)
+   - Ingredientes / Preparo / Nutrição
+   - States: selected/unselected; badge opcional
+
+6. Stepper de Porções
+   - Purpose: ajustar porções (1–99, passo 1, persistência por receita)
+   - Placement: abaixo de "Iniciar preparo", ao lado do botão "Medidas"
+   - States: min/max atingido, erro de validação
+   - Regras: faixa 1–99, passo 1, persistência por receita; arredondamentos definidos (frações aceitas 0,25/0,5/0,75); debounce leve para recálculos; suporte a TalkBack (role=adjustable) e feedback tátil
+
+7. Barra de Preparo (mini‑timer persistente)
+   - Content: título curto + tempo restante + play/pause + fechar
+   - Behavior: tap abre Preparo; swipe para dispensar (confirmar se timer ativo)
+   - Técnica: respeitar WindowInsets; z-order controlado para conviver com IME e sheets; altura mínima estável
+
+8. Timer Controls
+   - Purpose: iniciar/pausar/reset por passo
+   - Variants: embutido no passo; na barra persistente
+   - States: running/paused/finished (com feedback)
+   - Política: um timer “ativo” visível; demais agrupados em notificações; opção de restringir a um por vez
+
+9. Dialogs/Sheets
+   - Conversor de Medidas (sheet), Compartilhar (sheet)
+   - Headers consistentes, ações primárias/secundárias
+
+10. Empty/Erro Views
+   - Ilustração + título + descrição curta + CTA
+   - Variants: Home, Buscar, Livros, Importar
+
+11. IngredientTooltip (futuro)
+   - Tooltip ao tocar em menções de ingredientes nos passos
+   - Acessível e cancelável
+
+12. ExternalVideoCTA
+   - Ação "Abrir vídeo externo (timestamp)" com ícone da plataforma
+   - Locais: abaixo do título no Detalhe (se houver origem) e ao final do texto do passo
+   - Técnica: Intent ACTION_VIEW com fallback para navegador; validação/normalização de timestamp (YouTube/Instagram); ação “Copiar link” se app externo indisponível
+
+Notas técnicas
+- Reuso de tokens e tipografia de `Type.kt` (`AppTypography`), cores de `Color.kt` e esquemas `Theme.kt` (Material 3, inclusive dynamic color quando suportado).
+- Considerar `ExtendedColorScheme.success` já previsto para estados positivos.
+- Tokens sugeridos: espaçamento base 8dp; elevações padronizadas (0, 1, 3, 6, 8); raios de canto consistentes (ex.: 8dp cards, 28dp FAB/sheets).
+- Fontes Google: definir fallback local/sistema equivalente para display/body (em caso de indisponibilidade do provider GMS), garantindo estabilidade de layout.
