@@ -15,6 +15,8 @@ Este documento define os objetivos de experiência do usuário, a arquitetura da
 | 2025-10-21 | 0.3     | Adicionados fluxos de usuário: Cozinhar e Criar Receita   | Sally (UX)  |
 | 2025-10-21 | 0.4     | Preparo sem player interno; abrir vídeo externo com timestamp | Sally (UX)  |
 | 2025-10-22 | 0.5     | Adicionada seção de Responsividade                         | Sally (UX)  |
+| 2025-10-22 | 0.6     | Adicionada seção de Animação & Microinterações             | Sally (UX)  |
+| 2025-10-22 | 0.7     | Adicionadas seções de Desempenho e Próximos Passos         | Sally (UX)  |
 
 ## Objetivos e Princípios de UX
 
@@ -352,3 +354,60 @@ Escala tipográfica (base M3 com famílias acima):
 - Usar WindowSizeClass (compact/medium/expanded) para variações; evitar condicionais ad‑hoc por dispositivo.
 - Sheets: full‑height em Mobile; em ≥ 840 dp, manter peek consistente com largura máx. 640 dp.
 - Espaçamento: escala base 8dp; manter tipografia e tokens conforme `Theme.kt`, `Color.kt`, `Type.kt`.
+
+## Animação & Microinterações
+
+### Princípios de Movimento
+- Propósito > Ornamento: animações devem guiar o entendimento e indicar estado, não distrair.
+- Clareza e parcimônia: microtransições sutis; evitar animações longas/repetitivas.
+- Consistência Material 3: tempos/curvas padrão coerentes entre telas/fluxos.
+- Respeitar “reduzir animações”: oferecer alternativas (fade/instant) quando ativo.
+- Desempenho: alvo 60 fps; evitar relayout custoso durante animação.
+
+### Animações‑Chave
+- Bottom Sheets: translateY + fade do scrim (200–250 ms, ease‑out). Dismiss com overshoot leve (≤ 150 ms).
+- Troca de Abas (Detalhe): underline deslizante + crossfade de conteúdo (150–200 ms).
+- Barra de Preparo (mini‑timer): entrada “slide up + fade” (≈ 180 ms); saída “fade + slide down” (≈ 150 ms). Evitar reflow no conteúdo adjacente.
+- Estados do Timer: transição play/pause com micro‑escala no ícone (≈ 120 ms); conclusão com pulso único e háptico leve.
+- Stepper de Porções: tap com escala 0,98 → 1,00 (80–100 ms); háptico discreto.
+- Snackbars/Toasts: fade/slide bottom (150–200 ms); ações permanecem clicáveis durante a animação.
+- Skeleton/Carregamento: preferir fade de placeholders; desativar shimmer ao “reduzir animações”.
+
+Notas técnicas
+- Priorizar APIs de animação do Compose (transition/animate*, AnimatedContent) com chaves estáveis.
+- Usar curvas padrão do Material (FastOutSlowIn/LinearOutSlowIn) ou equivalentes.
+- Expor uma flag global de “reduzir animações” derivada das preferências do sistema.
+
+## Desempenho
+
+### Metas de Desempenho
+- Início do app: cold start responsivo em até ~1,5s (referência Pixel‑classe), com feedback visual inicial (splash/tema).
+- Resposta de interação: toques reconhecidos < 50 ms; atualizações visuais < 100 ms.
+- Suavidade de animação: 60 fps; jank perceptível < 1% dos frames em fluxos principais.
+
+### Estratégias de Design
+- Preferir skeletons/cargas graduais a spinners; priorizar conteúdo acima da dobra.
+- Deferir trabalho pesado fora do caminho crítico de interação; pré‑carregar imagens/capas de receitas de forma sob demanda.
+- Listas: usar placeholders em `Lazy*`; tamanho/ratio de imagens conhecido para evitar layout shift.
+- Estados estáveis em Compose (remember/derivedState) para reduzir recomposições em componentes interativos (Stepper, Barra de Preparo).
+- Reduzir overdraw: fundos simples; reuso de componentes; evitar sombras excessivas.
+- Áudio/háptico: curtos e opcionais; não bloquear o thread de UI.
+
+## Próximos Passos
+
+### Ações Imediatas
+1. Revisar esta especificação com stakeholders (Produto/Engenharia/Design) e registrar decisões.
+2. Vincular arquivos de design (Figma) às seções de telas e componentes.
+3. Preparar handoff para arquitetura de frontend (Compose/DI/navegação) com o time de Engenharia.
+4. Mapear questões em aberto (ex.: granularidade do mini‑timer, política de múltiplos timers) e definir owners/decisões.
+
+### Checklist de Handoff de Design
+- Todos os fluxos de usuário documentados
+- Inventário de componentes completo
+- Requisitos de acessibilidade definidos
+- Estratégia de responsividade clara
+- Diretrizes de marca incorporadas
+- Metas de desempenho estabelecidas
+
+## Resultados de Checklist
+Nenhuma checklist formal de UI/UX específica encontrada no projeto. Recomenda‑se aplicar uma checklist interna de UI/UX na próxima revisão e registrar os resultados aqui.
