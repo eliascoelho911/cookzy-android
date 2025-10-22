@@ -6,7 +6,8 @@ Objetivo
 - Prover uma visualização focada e livre de distrações para executar o preparo passo a passo, com integração direta aos timers de etapa, leitura confortável e controles essenciais acessíveis.
 
 Anatomia da tela (regiões)
-- App Bar (fixa): voltar (←), título compacto (uma linha, ellipsis), badge de múltiplos timers (N×) quando aplicável.
+- App Bar (fixa): voltar (←), título compacto (uma linha, ellipsis).
+- Indicador de múltiplos timers (fixo acima do Rodapé): botão destacado “⏱ Timers · N” (alto contraste) quando N > 1.
 - Avisos (fixo abaixo da App Bar): região dedicada a mensagens de estado curto.
   - Tipos: Mismatch (timer ≠ passo atual), Timer concluído, Erro de passo/ação, Nudge para iniciar timer.
   - Comportamento: 1 aviso visível por vez; fila (queue) com exibição sequencial.
@@ -37,6 +38,8 @@ Wireframe (Mobile)
 
   [Abrir vídeo externo (00:23)]
 
+               [ ⏱ Timers · 2 ]
+
 ──────────────────────────────────────────
 │   ⏯  29:57                 [  » Avançar ] │
 ──────────────────────────────────────────
@@ -59,6 +62,8 @@ Variações por estado
   💡 Sugestão: inicie um timer para acompanhar o passo.
   [⏱ Iniciar 5:00]
 
+               [ ⏱ Timers · 3 ]
+
 ──────────────────────────────────────────
 │        [ ⏱ Iniciar 5:00 ]   [  » Avançar ] │  ← incentivo explícito
 ──────────────────────────────────────────
@@ -72,6 +77,8 @@ Variações por estado
 └─────────────────────────────────────────┘
 
   3) Asse no forno por [⏱ 30 min].
+
+               [ ⏱ Timers · 2 ]
 
 ──────────────────────────────────────────
 │   ▶️  29:57                 [  » Avançar ] │  ← stateDescription: "Pausado"
@@ -97,26 +104,30 @@ Variações por estado
 
 ```
 ┌──────────────── App Bar ────────────────┐
-│ ←  Panquecas fofas           Passo 1/6 │   2×
+│ ←  Panquecas fofas           Passo 1/6 │
 └─────────────────────────────────────────┘
 
   Aviso: Timer ativo no Passo 3/6 — [ Ir ]
 
   1) Preaqueça o forno a [🔥 180°C].
 
+               [ ⏱ Timers · 2 ]
+
 ──────────────────────────────────────────
 │   ⏯  05:12                 [  » Avançar ] │  ← ⏯ controla o timer do Passo 3/6
 ──────────────────────────────────────────
 ```
 
-5) Múltiplos timers (badge)
+5) Múltiplos timers (indicador destacado)
 
 ```
 ┌──────────────── App Bar ────────────────┐
-│ ←  Bolonhesa                 Passo 2/8 │   3×
+│ ←  Bolonhesa                 Passo 2/8 │
 └─────────────────────────────────────────┘
 
   2) Reduza o molho por [⏱ 15 min].
+
+               [ ⏱ Timers · 3 ]
 
 ──────────────────────────────────────────
 │   ⏯  01:22                 [  » Avançar ] │  ← mostra o mais urgente
@@ -144,16 +155,21 @@ Gestos e navegação
 - Botão » Avançar: avança explicitamente para o próximo passo (mesmo se o usuário estiver lendo lentamente). Ação redundante ao gesto de scroll.
 - Play/Pause: alterna o timer do passo atual, quando existir; se o passo não tiver timer detectado, o botão ⏯ não aparece (em vez disso, o chip [⏱ …] no texto sugere criar o timer).
 - Back/Fechar: retorna à tela anterior mantendo estado do preparo (passo atual e timers).
+ - Botão “⏱ Timers · N” (acima do player): atalho visível para timers múltiplos.
+   - Toque: foca o passo do timer com menor tempo restante (ciclo entre timers a cada toque subsequente).
+   - Long press (pós‑MVP): abrir mini‑lista/sheet de timers para pular diretamente (fora do MVP).
 
 Região de Avisos — regras de prioridade
 - Ordem de prioridade: Erro > Mismatch > Timer concluído > Nudge.
 - Composição visual: container `surfaceVariant` com ícone por tipo (erro, timer, info), uma linha de texto com possível ação inline [Ir]/[Abrir]/[Dispensar]. Responsivo até 2 linhas sob `fontScale` alto.
 - Interação: tocar fora não fecha; cada aviso tem alvo de toque ≥ 48dp para suas ações. Mismatch e Erro são persistentes; demais têm auto-ocultação.
+ - Nudge de visibilidade: quando N > 1 e o usuário abre a tela, exibir por ~4s o aviso “⏱ N timers ativos — use o atalho ‘Timers’ acima do player” (uma vez por sessão de preparo).
 
 Sincronização com timers
 - Se um timer ativo pertence a outro passo (mismatch), exibir um aviso não intrusivo: “Timer ativo no Passo N/M — [Ir]”. Tocar em [Ir] rola e focaliza o passo do timer.
 - Concluído: quando um timer do passo atual termina, destacar o rodapé por ~2s e evidenciar o botão » Avançar.
 - Múltiplos timers: mostrar o mais urgente no rodapé; badge “N×” no App Bar (sem seletor no MVP). Gestão completa ocorre ao navegar para os respectivos passos.
+ - Múltiplos timers: além do mais urgente no rodapé, exibir botão “⏱ Timers · N” acima do player (alto contraste). Ao tocar, navegar para o próximo timer mais urgente (sem lista no MVP).
 
 Divisão visual e comportamento de layout
 - App Bar e Rodapé possuem elevação; a região de Avisos não rola com o conteúdo (fica ancorada abaixo da App Bar).
@@ -166,6 +182,7 @@ Acessibilidade
 - Alvos ≥ 48dp (especialmente o botão » Avançar). Suporte a `fontScale` até 200% sem truncar conteúdo crítico.
 - Leitura por leitor de tela: anunciar “Passo N de M”. Destaques clicáveis (ingrediente/temperatura/tempo) com rótulos completos.
  - Região de Avisos: usar live region (`polite` para Concluído/Nudge, `assertive` para Erro). Ações acessíveis por teclado e leitor de tela.
+ - Botão “⏱ Timers · N” (acima do player): label acessível “Abrir próximo timer. N timers ativos”. Suporta toque, teclado e leitura por leitor de tela; indicar que múltiplos toques ciclam entre timers.
 
 Estados
 - Carregando: esqueleto simples do conteúdo + placeholder dos controles.
@@ -193,3 +210,4 @@ Notas para Dev
 - `PrepUiState` deve conter: `currentStepIndex`, `stepsCount`, `hasTimerForStep`, `remaining`, `running`, `activeTimersCount`, `mismatch`.
 - Preservar `currentStepIndex` e `scroll` ao sair/voltar. O gesto de scroll deve sinalizar claramente avanço/retrocesso de passo (por limiar de altura ou gesto dedicado).
 - Prévias: passo sem timer; com timer rodando; pausado; concluído; mismatch; múltiplos timers.
+ - Comportamento do botão “⏱ Timers · N” (MVP): `onOpenNextTimer()` que computa o próximo timer pelo menor tempo restante (em empate, último iniciado). Não abrir lista; apenas navegar/ciclar.
