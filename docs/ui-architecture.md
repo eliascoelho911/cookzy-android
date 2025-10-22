@@ -174,6 +174,9 @@ Tabela de referência dos principais `@Composable`s a implementar/reutilizar. Se
 | EmptyState | Vazio para listas/telas | `illustration`, `title`, `message`, `primaryAction` | — | elementos com rótulos | Home; Buscar; Livros |
 | ErrorState | Exibir erro e ação | `message`, `onRetry` | — | contraste/ícone | genérico; específico |
 | TabsRecipeDetail | Abas da receita | `selected: Tab`, `onSelect(Tab)` | com badge | foco por teclado; indicador visível | Ingredientes; Preparo; Nutrição |
+| StepRichText | Renderiza passos com destaques | `text: String`, `entities: StepEntities`, `onIngredientTap(IngredientRef)`, `onTimerTap(Duration)`, `onTempLongPress(Temperature)` | sem entidades | spans com semantics clicáveis | sem; com ingrediente; com timer; com temperatura |
+| IngredientTooltip | Tooltip de ingrediente | `anchorRect`, `content: IngredientInfo`, `onConvert()`, `onCopy()`, `onDismiss()` | — | role=dialog; foco inicial | padrão |
+| IngredientRow | Linha de ingrediente com destaque | `text: String`, `quantityRange: IntRange?` | sem range | `AnnotatedString` com bold no range | com/sem destaque |
 | FilterChips | Chips de filtro/busca | `filters`, `onToggle` | selected/unselected | tamanho ≥48dp | estados selecionado/não |
 
 Observação: respeitar tokens de `Theme.kt`, `Color.kt`, `Type.kt` e `ExtendedColorScheme`.
@@ -206,6 +209,32 @@ fun ExternalVideoCTA(
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) { /* ícone + label acessível */ }
+
+@Composable
+fun StepRichText(
+  text: String,
+  entities: StepEntities, // ingredientes/tempos/temperaturas com ranges
+  onIngredientTap: (IngredientRef) -> Unit,
+  onTimerTap: (Duration) -> Unit,
+  onTempLongPress: (Temperature) -> Unit,
+  modifier: Modifier = Modifier,
+) { /* ClickableText + AnnotatedString com spans e ícones inline */ }
+
+@Composable
+fun IngredientTooltip(
+  content: IngredientInfo, // ex.: quantidade + nome
+  onConvert: () -> Unit,
+  onCopy: () -> Unit,
+  onDismiss: () -> Unit,
+  modifier: Modifier = Modifier,
+) { /* Popup/DropdownMenu estilizado; role=dialog; foco inicial */ }
+
+@Composable
+fun IngredientRow(
+  text: String,
+  quantityRange: IntRange?,
+  modifier: Modifier = Modifier,
+) { /* buildAnnotatedString { addStyle(FontWeight.Bold, range) } */ }
 ```
 
 ### Estados & Semântica
@@ -246,6 +275,9 @@ Usar `@ThemePreviews` + `PreviewWrapper { ... }` nos previews de componentes.
 - TabsRecipeDetail: cada aba selecionada.
 - EmptyState: Home/Buscar/Livros.
 - ConverterSheet: válido e com erro de validação (campo vazio/inválido).
+- StepRichText: sem entidades; com ingrediente; com timer; com temperatura.
+- IngredientTooltip: padrão.
+- IngredientRow: com/sem destaque da quantidade; variação com fontScale 2.0.
 
 ### Prévias de Telas
 - Lista de Receitas: vazio; com itens; erro.

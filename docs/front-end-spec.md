@@ -174,10 +174,46 @@ graph TD
 - Key Elements: título; botão “Iniciar preparo”; botão “Medidas” (abre Conversor como sheet); Stepper de porções inline posicionado abaixo do “Iniciar preparo” e ao lado do botão “Medidas”; tabs (Ingredientes/Preparo/Nutrição); botão “Compartilhar”; CTA “Abrir vídeo externo (timestamp)” abaixo do título quando houver origem de vídeo.
 - Interaction Notes: Stepper com faixa 1–99 (passo 1), persistido por receita; recalcula quantidades em Ingredientes; Compartilhar abre sheet; voltar mantém rolagem/aba ativa.
 
+#### Ingredientes — Formatação e Interações
+- Formatação: quantidade em negrito no texto do ingrediente (ex.: “**200 g** farinha de trigo”).
+- Derivação: usar `deriveQuantity()` e range retornado no estado da UI para aplicar `SpanStyle(fontWeight = Bold)` via `AnnotatedString`.
+- Reatividade: ao alterar porções, recalcular e atualizar o trecho em negrito sem layout shift perceptível.
+- Conversão rápida (opcional): long‑press na quantidade → abre Conversor (sheet) com o valor pré‑preenchido; fechar por Back/tap fora.
+- A11y: leitura “200 gramas de farinha de trigo”; unidade conforme locale; foco linear por itens; ações têm rótulos claros.
+
 ### Preparo
 - Purpose: executar passo a passo com foco
 - Key Elements: passo atual em destaque; botão Iniciar/Pausar timer quando houver tempo; botão “Concluir passo” para avançar; prévia (1 linha) do próximo passo; Conversor (sheet); CTA “Abrir vídeo externo (timestamp)” ao final do texto do passo; Barra de Preparo fixa no rodapé (título curto + tempo restante + play/pause + fechar).
 - Interaction Notes: barra persiste em todo o app enquanto ativa; tap abre Preparo; swipe para dispensar (confirmar se timer ativo); timers continuam em background com notificação.
+
+#### Preparo — Destaques e Tooltips (MVP)
+
+Reconhecimento e enriquecimento inline de entidades no texto dos passos. Os elementos são decorativos e acionáveis, mantendo acessibilidade.
+
+- Ingrediente com Tooltip
+  - Detecção: match por dicionário de ingredientes do passo e/ou anotações do parser; fallback por heurística (palavra no conjunto de ingredientes).
+  - Visual: sublinhado pontilhado no texto; cor padrão do link normal.
+  - Ação: tap → tooltip ancorado exibindo “quantidade + nome” (ex.: “400g de farinha de trigo”). Ações secundárias: “Converter medidas” (abre Conversor como sheet), “Copiar”.
+  - A11y: role=dialog; foco inicial no conteúdo; `contentDescription` descritivo; fechar por Back/tap fora.
+
+- Destaque de Temperatura
+  - Detecção: regex `(?i)(\d{2,3})\s?[°º]\s?[cf]` e variações “180°C”, “350°F”.
+  - Visual: chip inline com ícone 🔥 e valor (ex.: “🔥 180°C”); cor de ênfase usa `onSecondaryContainer`/`secondaryContainer` (ou tokens de Warning sugeridos na paleta).
+  - Ações: tap → nenhuma ação obrigatória; long‑press → “Converter °C/°F”.
+  - Microinteração: quando um passo introduz nova temperatura (difere da anterior), aplicar pulso leve no chip (≤120 ms) para chamar atenção.
+  - A11y: label completo (ex.: “Temperatura: 180 graus Celsius”).
+
+- Destaque de Timer
+  - Detecção: regex de duração “(\d+)(\s?)(min|minutos|m|h|hora|horas)” e combinações “1 h 30 min”.
+  - Visual: chip inline com ícone ⏱ e valor (ex.: “⏱ 30 min”).
+  - Ações: tap → sugere criar timer do passo com a duração detectada (sheet ou snackbar com ação “Criar timer”); ao confirmar, o passo ganha controle play/pause e a Barra de Preparo aparece/persiste.
+  - Sincronização: pausa/retoma refletida tanto no chip quanto nos controles do passo e na Prep Bar.
+  - A11y: label completo (ex.: “Tempo: 30 minutos”).
+
+Estados e Erros
+- Texto sem entidades: renderização normal (sem sublinhado/chips).
+- Over‑match: evitar matches sobrepostos; priorizar timer > temperatura > ingrediente, ou usar ranges não conflitantes.
+- Preferências: unidades (°C/°F) e idioma dos rótulos respeitam locale e settings do app.
 
 ### Buscar
 - Purpose: localizar receitas rapidamente
@@ -244,14 +280,15 @@ Componentes nucleares (propostos):
 9. Dialogs/Sheets
    - Conversor de Medidas (sheet), Compartilhar (sheet)
    - Headers consistentes, ações primárias/secundárias
+   - Tooltip de Ingrediente: ancorado, sem cabeçalho; até 2 ações inline; densidade compacta.
 
 10. Empty/Erro Views
    - Ilustração + título + descrição curta + CTA
    - Variants: Home, Buscar, Livros, Importar
 
-11. IngredientTooltip (futuro)
-   - Tooltip ao tocar em menções de ingredientes nos passos
-   - Acessível e cancelável
+11. IngredientTooltip
+   - Tooltip ao tocar em menções de ingredientes nos passos (conteúdo: “quantidade + nome”; ações: Converter/ Copiar)
+   - Acessível (role=dialog) e cancelável (Back/tap fora)
 
 12. ExternalVideoCTA
    - Ação "Abrir vídeo externo (timestamp)" com ícone da plataforma
@@ -419,6 +456,7 @@ Escala tipográfica
 - Troca de Abas (Detalhe): underline deslizante + crossfade de conteúdo (150–200 ms).
 - Barra de Preparo (mini‑timer): entrada “slide up + fade” (≈ 180 ms); saída “fade + slide down” (≈ 150 ms). Evitar reflow no conteúdo adjacente.
 - Estados do Timer: transição play/pause com micro‑escala no ícone (≈ 120 ms); conclusão com pulso único e háptico leve.
+- Destaques Preparo: pulso leve ao introduzir nova temperatura; highlight sutil ao confirmar criação de timer (breve glow no chip).
 - Stepper de Porções: tap com escala 0,98 → 1,00 (80–100 ms); háptico discreto.
 - Snackbars/Toasts: fade/slide bottom (150–200 ms); ações permanecem clicáveis durante a animação.
 - Skeleton/Carregamento: preferir fade de placeholders; desativar shimmer ao “reduzir animações”.
