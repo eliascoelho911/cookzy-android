@@ -109,6 +109,9 @@ Notas para Dev
 
 Propósito: inserir/editar nutrição por porção. Opcional, sem bloqueio do salvar.
 
+Padrão de Sheet
+- Usar `CookzyModalBottomSheet` como base (título + IconButton fechar; corpo com campos; footer com botões Salvar/Limpar quando aplicável).
+
 ```
 ┌────────────── Bottom Sheet: Nutrição por porção ──────────────┐
 │  Nutrição por porção                               [  Fechar ] │

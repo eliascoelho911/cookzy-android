@@ -16,6 +16,9 @@ Elementos‑chave
 - Tabs: Ingredientes | Preparo | Nutrição.
 - Barra de Preparo (mini‑timer) persistente no rodapé quando houver preparo ativo.
 
+Padrão de Sheet
+- Sheets (Conversor de Medidas) devem usar o componente base `CookzyModalBottomSheet` (título + IconButton fechar, corpo rolável e footer opcional).
+
 Wireframe (Mobile)
 
 ```
