@@ -260,3 +260,45 @@ Notas técnicas
 - Considerar `ExtendedColorScheme.success` já previsto para estados positivos.
 - Tokens sugeridos: espaçamento base 8dp; elevações padronizadas (0, 1, 3, 6, 8); raios de canto consistentes (ex.: 8dp cards, 28dp FAB/sheets).
 - Fontes Google: definir fallback local/sistema equivalente para display/body (em caso de indisponibilidade do provider GMS), garantindo estabilidade de layout.
+
+## Branding & Style Guide
+
+### Identidade Visual
+**Brand Guidelines:** Alinhado a Material 3 com estética “verde terroso” do Cookzy. Paleta e tipografia definidas no código (`Color.kt`, `Theme.kt`, `Type.kt`).
+
+### Paleta de Cores
+| Color Type | Hex Code | Usage |
+|---|---|---|
+| Primary | #3B6939 | Ações primárias, destaques, links de ação |
+| Secondary | #775A0B | Ações de apoio, acentos contextuais |
+| Accent (Tertiary) | #8F4C37 | Realces visuais, estados secundários |
+| Success | #39693B | Estados de sucesso, mensagens positivas |
+| Warning | #FFDF9E | Avisos suaves (bg); texto com onSecondaryContainer (#5B4300) |
+| Error | #904A44 | Erros, validações, toasts/snackbars de erro |
+| Neutral | #424940 | Texto secundário/bordas; com fundos `surfaceVariant` (#DEE5D8) |
+
+Obs: todos os pares onColor/containers seguem `Color.kt` e o esquema do `MaterialTheme.colorScheme` (light/dark e contrastes).
+
+### Tipografia
+- Primary: Nunito (display)
+- Secondary: Open Sans (body)
+- Monospace: sistema
+
+Escala tipográfica (base M3 com famílias acima):
+| Element | Size | Weight | Line Height |
+|---|---|---|---|
+| H1 | 36sp | 600 | 44sp |
+| H2 | 28sp | 600 | 36sp |
+| H3 | 24sp | 600 | 32sp |
+| Body | 16sp | 400 | 24sp |
+| Small | 12sp | 400 | 16sp |
+
+### Iconografia
+**Icon Library:** Material Symbols (Rounded)
+
+**Usage Guidelines:** ícones de ação com 24dp padrão; usar variante filled para ações primárias e outlined para secundárias; manter rótulos acessíveis (contentDescription) e contraste adequado.
+
+### Espaçamento & Layout
+**Grid System:** baseline de 8dp, colunas responsivas conforme breakpoints.
+
+**Spacing Scale:** 4, 8, 12, 16, 24, 32, 40, 48, 64 (preferir múltiplos de 8). 
