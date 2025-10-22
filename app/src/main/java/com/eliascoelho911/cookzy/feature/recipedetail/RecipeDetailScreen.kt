@@ -31,6 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.res.stringResource
 import com.eliascoelho911.cookzy.R
+import androidx.compose.ui.tooling.preview.Preview
+import com.eliascoelho911.cookzy.ui.preview.PreviewWrapper
+import com.eliascoelho911.cookzy.ui.preview.ThemePreviews
 
 @Composable
 fun RecipeDetailRoute(
@@ -227,5 +230,41 @@ private fun ErrorState(
         Button(onClick = onNavigateBack) {
             Text(stringResource(R.string.common_back))
         }
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun Preview_RecipeDetail_Loading() {
+    PreviewWrapper {
+        RecipeDetailScreen(
+            state = RecipeDetailPreviewData.stateLoading(),
+            onNavigateBack = {},
+            onEditRecipe = {}
+        )
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun Preview_RecipeDetail_Error() {
+    PreviewWrapper {
+        RecipeDetailScreen(
+            state = RecipeDetailPreviewData.stateError(),
+            onNavigateBack = {},
+            onEditRecipe = {}
+        )
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun Preview_RecipeDetail_Success() {
+    PreviewWrapper {
+        RecipeDetailScreen(
+            state = RecipeDetailPreviewData.stateSuccess(),
+            onNavigateBack = {},
+            onEditRecipe = {}
+        )
     }
 }

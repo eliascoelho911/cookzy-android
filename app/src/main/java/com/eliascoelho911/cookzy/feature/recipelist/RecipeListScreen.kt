@@ -26,6 +26,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import com.eliascoelho911.cookzy.R
+import androidx.compose.ui.tooling.preview.Preview
+import com.eliascoelho911.cookzy.ui.preview.PreviewWrapper
+import com.eliascoelho911.cookzy.ui.preview.ThemePreviews
 
 @Composable
 fun RecipeListRoute(
@@ -150,6 +153,30 @@ private fun RecipeListItem(
             text = recipe.title,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold
+        )
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun Preview_RecipeList_Empty() {
+    PreviewWrapper {
+        RecipeListScreen(
+            state = RecipeListPreviewData.stateEmpty(),
+            onCreateRecipe = {},
+            onRecipeSelected = {}
+        )
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun Preview_RecipeList_Populated() {
+    PreviewWrapper {
+        RecipeListScreen(
+            state = RecipeListPreviewData.statePopulated(),
+            onCreateRecipe = {},
+            onRecipeSelected = {}
         )
     }
 }

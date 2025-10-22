@@ -38,6 +38,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import com.eliascoelho911.cookzy.R
+import androidx.compose.ui.tooling.preview.Preview
+import com.eliascoelho911.cookzy.ui.preview.PreviewWrapper
+import com.eliascoelho911.cookzy.ui.preview.ThemePreviews
 
 @Composable
 fun RecipeEditorRoute(
@@ -193,6 +196,66 @@ private fun RecipeEditorScreen(
                 }
             }
         }
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun Preview_RecipeEditor_New() {
+    PreviewWrapper {
+        RecipeEditorScreen(
+            state = RecipeEditorPreviewData.stateNew(),
+            snackbarHostState = SnackbarHostState(),
+            onTitleChange = {},
+            onIngredientChange = { _, _ -> },
+            onAddIngredient = {},
+            onRemoveIngredient = {},
+            onStepChange = { _, _ -> },
+            onAddStep = {},
+            onRemoveStep = {},
+            onCancel = {},
+            onSave = {}
+        )
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun Preview_RecipeEditor_Editing() {
+    PreviewWrapper {
+        RecipeEditorScreen(
+            state = RecipeEditorPreviewData.stateEditing(),
+            snackbarHostState = SnackbarHostState(),
+            onTitleChange = {},
+            onIngredientChange = { _, _ -> },
+            onAddIngredient = {},
+            onRemoveIngredient = {},
+            onStepChange = { _, _ -> },
+            onAddStep = {},
+            onRemoveStep = {},
+            onCancel = {},
+            onSave = {}
+        )
+    }
+}
+
+@ThemePreviews
+@Composable
+private fun Preview_RecipeEditor_Saving() {
+    PreviewWrapper {
+        RecipeEditorScreen(
+            state = RecipeEditorPreviewData.stateSaving(),
+            snackbarHostState = SnackbarHostState(),
+            onTitleChange = {},
+            onIngredientChange = { _, _ -> },
+            onAddIngredient = {},
+            onRemoveIngredient = {},
+            onStepChange = { _, _ -> },
+            onAddStep = {},
+            onRemoveStep = {},
+            onCancel = {},
+            onSave = {}
+        )
     }
 }
 
