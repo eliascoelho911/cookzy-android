@@ -14,6 +14,7 @@ Este documento define os objetivos de experiência do usuário, a arquitetura da
 | 2025-10-21 | 0.2     | IA refinada e navegação consolidadas com decisões do time | Sally (UX)  |
 | 2025-10-21 | 0.3     | Adicionados fluxos de usuário: Cozinhar e Criar Receita   | Sally (UX)  |
 | 2025-10-21 | 0.4     | Preparo sem player interno; abrir vídeo externo com timestamp | Sally (UX)  |
+| 2025-10-22 | 0.5     | Adicionada seção de Responsividade                         | Sally (UX)  |
 
 ## Objetivos e Princípios de UX
 
@@ -302,3 +303,52 @@ Escala tipográfica (base M3 com famílias acima):
 **Grid System:** baseline de 8dp, colunas responsivas conforme breakpoints.
 
 **Spacing Scale:** 4, 8, 12, 16, 24, 32, 40, 48, 64 (preferir múltiplos de 8). 
+
+## Acessibilidade
+
+**Standard:** WCAG 2.2 AA + Diretrizes Android Accessibility + Material 3
+
+### Requisitos-Chave
+**Visual:**
+- Contraste ≥ 4.5:1 para texto normal e ≥ 3:1 para títulos grandes; validar claro/escuro.
+- Indicadores de foco visíveis (hardware keyboard/TV); estados selected/pressed/disabled claros.
+- Tamanho de texto: suportar fontScale do sistema até 200%; evitar alturas fixas.
+
+**Interação:**
+- Navegação por teclado: ordem de foco previsível; Enter/Space para ações; setas em listas.
+- Leitor de tela: contentDescription em imagens/ícones; merge de semantics em linhas clicáveis; anunciar estado/timer/stepper.
+- Toque: alvos ≥ 48dp; gestos com alternativa clicável.
+- Preferências: respeitar “reduzir animações”; haptics opcionais e discretos.
+
+**Conteúdo:**
+- Alternativas textuais para imagens/covers.
+- Estrutura: roles Heading em títulos, ordem de leitura lógica.
+- Formulários: labels associados; mensagens de erro claras e vinculadas ao campo.
+
+### Estratégia de Testes
+- Manual: TalkBack nos fluxos principais; Switch/Voice Access básicos; verificação de foco/tab order; fontScale 1.3/1.6/2.0.
+- Automático: Accessibility Scanner (Android), lint de acessibilidade, testes de UI com Semantics (Compose).
+- Contraste: auditoria de cores (light/dark/medium/high contrast), especialmente sucesso/erro/disabled.
+- Motion: validar com animações reduzidas; garantir feedback alternativo (visual/sonoro/háptico leve).
+
+## Responsividade
+
+### Breakpoints
+
+| Breakpoint | Min Width | Max Width | Dispositivos Alvo                                |
+|---|---|---|---|
+| Mobile     | 0 dp      | 599 dp    | Phones (compact)                                 |
+| Tablet     | 600 dp    | 839 dp    | Tablets pequenos, fold em retrato                |
+| Desktop    | 840 dp    | 1199 dp   | Tablets grandes, fold em paisagem, ChromeOS      |
+| Wide       | 1200 dp   | —         | Monitores externos, tablets muito grandes        |
+
+### Padrões de Adaptação
+- Layout: manter 1 coluna no MVP (sem rail/multipainel). Futuro: 2 painéis ≥ 840 dp (Ingredientes | Preparo) e grade “Livros” com 3–4 colunas.
+- Navegação: permanecer com App Bar; sem Navigation Rail neste MVP. Voltar/Up preserva estado (aba/scroll). Sheets com largura máx. 640 dp em telas largas.
+- Prioridade de conteúdo: em Mobile, colapsar descrições longas com “ver mais”. Em ≥ 840 dp, ampliar resumos/chips mantendo carga cognitiva baixa.
+- Interação: alvos ≥ 48dp em todos tamanhos; CTAs “pegajosos” respeitando bordas seguras; considerar teclado/mouse em tablets/ChromeOS.
+
+### Observações Técnicas
+- Usar WindowSizeClass (compact/medium/expanded) para variações; evitar condicionais ad‑hoc por dispositivo.
+- Sheets: full‑height em Mobile; em ≥ 840 dp, manter peek consistente com largura máx. 640 dp.
+- Espaçamento: escala base 8dp; manter tipografia e tokens conforme `Theme.kt`, `Color.kt`, `Type.kt`.
