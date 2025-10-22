@@ -18,6 +18,7 @@ Este documento define os objetivos de experiência do usuário, a arquitetura da
 | 2025-10-22 | 0.6     | Adicionada seção de Animação & Microinterações             | Sally (UX)  |
 | 2025-10-22 | 0.7     | Adicionadas seções de Desempenho e Próximos Passos         | Sally (UX)  |
 | 2025-10-22 | 0.8     | Home: carrossel de recentes com 1 card/viewport (snap, PEEK, sem indicador); carrossel de livros (filtro); cabeçalho com contagem e toggle lista/grade; remover tags na Recipe List | Sally (UX)  |
+| 2025-10-22 | 0.9     | Importar: loading em tela cheia; revisão feita no Editor (variante) com link de origem no Cabeçalho; padronização dos sheets (footer vertical full‑width, IconButton fechar) | Sally (UX) |
 
 ## Objetivos e Princípios de UX
 
@@ -69,7 +70,7 @@ graph TD
 
     FAB["FAB ➜ Sheet Adicionar receita"] --> IMP[Importar]
     FAB --> NM[Adicionar manualmente]
-    IMP --> IO[Escolher origem] --> IR[Revisar] --> SAVE[Salvar] --> R
+    IMP --> IO[Sheet: origem/URL] --> EX[Extraindo (tela cheia)] --> REV[Revisar (Editor)] --> SAVE[Salvar] --> R
 
     BAR["Barra de Preparo (mini‑timer persistente)"] -->|toque| T2
 ```
@@ -139,9 +140,9 @@ graph TD
     VAL -- Sim --> SAVE[Salvar]
     SAVE --> R[Detalhe da Receita]
 
-    IMP --> SRC[Escolher origem / colar link]
-    SRC --> EXT[Extrair dados]
-    EXT --> REV[Revisar e corrigir]
+    IMP --> SRC[Sheet: origem/URL]
+    SRC --> L[Loading (tela cheia)]
+    L --> REV[Revisar (Editor)]
     REV --> SAVEI[Salvar]
     SAVEI --> R
 ```
@@ -179,8 +180,16 @@ Regras de Habilitação do Salvar
 
 ### FAB Sheet — Adicionar receita
 - Purpose: criar por importação ou manual
-- Key Elements: lista com opções e ícones (YouTube/Instagram/Link genérico, Manual); descrição curta por item.
-- Interaction Notes: 48dp touch targets; foco inicial no primeiro item; suporte a teclado.
+- Key Elements: lista com opções e ícones (YouTube/Instagram/Link genérico, Manual); descrição curta por item; header com título + IconButton fechar; footer vertical (até 2 botões, full‑width) quando houver.
+- Interaction Notes: 48dp touch targets; foco inicial no primeiro item; suporte a teclado; “Importar” abre a sheet “Importar receita (origem/URL)”.
+
+### Importar
+- Purpose: importar de YouTube (MVP) colando link, extrair dados e revisar antes de salvar
+- Key Elements:
+  - Sheet “Importar receita”: selecionar origem (YouTube) e colar URL; validação inline; footer com botões em coluna (Cancelar/Extrair).
+  - Loading: tela cheia com scrim e indicador central (“Importando receita…”), bloqueante e não cancelável no MVP.
+  - Revisão: mesma tela do Editor (variante “Revisar importação”) com “Link de origem” no Card Cabeçalho (abrir link externo).
+- Interaction Notes: ao tocar “Extrair”, fechar a sheet e exibir loading de tela cheia; em sucesso abrir o Editor (variante Revisar importação); em erro reabrir sheet de erro com “Tentar novamente/Editar manualmente”.
 
 ### Detalhe da Receita
 - Purpose: centro de verdade da receita
@@ -190,7 +199,7 @@ Regras de Habilitação do Salvar
 ### Editor de Receita
 - Purpose: criar/editar receita com campos mínimos e alguns metadados opcionais.
 - Key Elements: App Bar com voltar e salvar (check); Cards: Cabeçalho (Título, Imagem, Porções, Tempo, Livros de Receitas), Nutrição (abre sheet), Ingredientes (lista reordenável), Instruções (lista reordenável).
-- Interaction Notes: salvar habilita quando requisitos mínimos atendidos; Porções/Tempo/Livros de Receitas/Imagem/Nutrição opcionais; reordenar por alça “≡” com auto‑scroll e chaves estáveis; confirmação de descarte ao sair com alterações (ou autosave/rascunho).
+- Interaction Notes: salvar habilita quando requisitos mínimos atendidos; Porções/Tempo/Livros de Receitas/Imagem/Nutrição opcionais; reordenar por alça “≡” com auto‑scroll e chaves estáveis; confirmação de descarte ao sair com alterações (ou autosave/rascunho). Variante “Revisar importação”: App Bar “Revisar importação” e “Link de origem” no Card Cabeçalho (abrir link).
 
 #### Sheet — Nutrição por porção (detalhes)
 - Campos: Calorias (kcal), Carboidratos (g), Proteínas (g), Gorduras (g). Opcionais adicionais: Fibra (g), Açúcares (g), Sódio (mg).
@@ -248,7 +257,7 @@ Estados e Erros
 - Home: ilustração + CTA “Criar primeira receita”.
 - Buscar: ilustração + CTA “Tentar outra busca”.
 - Livros: ilustração + CTA “Criar livro”.
-- Importar: mensagens de falha com ação “Tentar novamente/Editar manualmente”.
+- Importar: mensagens de falha com ação “Tentar novamente/Editar manualmente” na sheet de Importar; durante extração, mostrar loading de tela cheia (bloqueante, não cancelável).
 
 ### Notas gerais de UI
 - Hierarquia visual: títulos fortes; ações primárias evidentes; espaçamento base 8dp.

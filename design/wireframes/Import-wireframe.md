@@ -9,7 +9,7 @@ Visão Geral do Fluxo
 1) FAB Sheet → Importar
 2) Sheet “Importar” (origem + URL) → Extrair
 3) Extraindo (tela cheia) → sucesso OU erro
-4) Revisão da Importação (tela) → Salvar
+4) Revisão no Editor (variante) → Salvar
 5) Sucesso → navegar para Detalhe da Receita
 
 Padrão de Sheet
@@ -81,32 +81,29 @@ Ações
 - Tentar novamente: retorna ao estado do formulário com o último link preenchido e foco no botão “Extrair”.
 - Editar manualmente: fecha o sheet e abre o Editor de receita vazio (ou com título pré-preenchido se disponível).
 
-## 4) Revisão da Importação — Tela
+## 4) Revisão da Importação — no Editor
 
 Objetivo
-- Permitir revisar/ajustar dados extraídos e salvar a receita. Reutiliza componentes do Editor para consistência.
+- Permitir revisar/ajustar dados extraídos e salvar a receita. Usa a MESMA tela do Editor (design/wireframes/RecipeEditor-wireframe.md) com a variante “Revisar importação”.
 
 Elementos‑chave
 - App Bar: “Revisar importação” com voltar e ação Salvar (✔).
-- Card “Origem”: plataforma + link com ação “Abrir link externo”.
-- Cards do Editor: Cabeçalho (Título/Imagem/Porções/Tempo/Livros), Ingredientes (lista), Instruções (lista). Nutrição opcional.
+- Card Cabeçalho (do Editor): inclui “Link de origem” (plataforma + URL) com ação “Abrir link”.
+- Demais Cards do Editor: Cabeçalho (Título/Imagem/Porções/Tempo/Livros), Ingredientes (lista), Instruções (lista). Nutrição opcional.
 - Feedback de validação mínimo igual ao Editor (título obrigatório, ≥1 ingrediente e ≥1 passo).
 
-Wireframe (Mobile)
+Wireframe (Mobile) — (mesmo Editor, com origem no Cabeçalho)
 
 ```
 ┌──────────────────── App Bar ─────────────────────┐
 │ ←  Revisar importação                     [  ✔ ] │
 └──────────────────────────────────────────────────┘
 
-  ┌───────────── Card: Origem ───────────────┐
-  Plataforma: YouTube   [ Abrir link ]
-  Link: https://youtu.be/abc123
-  └───────────────────────────────────────────┘
-
   ┌───────────── Card: Cabeçalho ────────────┐
   [ Título da receita extraído ]
   [_______________________________________]
+  Origem: YouTube   [ Abrir link ]
+  Link: https://youtu.be/abc123
   Porções  [  −  2  + ]    Tempo (min) [ 25 ]
   └──────────────────────────────────────────┘
 
@@ -146,7 +143,7 @@ Responsividade
 Notas para Dev
 - Sheet: `CookzyModalBottomSheet` com `rememberModalBottomSheetState(skipPartiallyExpanded = true)`.
 - Validação de URL (YouTube): regex simples e normalização (youtu.be / youtube.com/watch). Disparar extração apenas se válido.
-- Extração: mostrar estado de loading no sheet; em sucesso, fechar sheet e navegar para a tela de revisão.
-- Revisão: pode reutilizar `RecipeEditorScreen` com estado pré-preenchido e título “Revisar importação”; alterar rótulos/ações conforme necessário.
-- Erros: em extração → sheet com mensagem; em salvar → Snackbar na tela de revisão.
+- Extração: exibir `LongOperationDialog` de tela cheia enquanto processa; ao sucesso, fechar loading e abrir `RecipeEditorScreen` (variante “Revisar importação”).
+- Revisão: `RecipeEditorScreen` exibe “Link de origem” DENTRO do Card Cabeçalho com ação “Abrir link” (Intent ACTION_VIEW). Estado pré-preenchido pelos dados extraídos.
+- Erros: em extração → sheet de erro; em salvar → Snackbar na tela de revisão.
 - Duplicatas: opcional (futuro) — detectar por título+origem e oferecer “Manter ambas/Mesclar”.

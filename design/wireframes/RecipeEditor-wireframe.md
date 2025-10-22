@@ -13,6 +13,7 @@ Elementos‑chave
 - Sessões apresentadas como Cards: “Cabeçalho”, “Nutrição”, “Ingredientes”, “Instruções”.
 - Cards “Ingredientes” e “Instruções” suportam reordenar por arrastar (alça “≡”), além de adicionar/remover.
 - Validações inline com mensagens claras; feedback por Snackbar para erros gerais (ex.: falha ao salvar).
+ - Origem (quando houver importação): exibir “Link de origem” no Card Cabeçalho com ação “Abrir link”.
 
 Wireframe (Mobile)
 
@@ -31,6 +32,7 @@ Wireframe (Mobile)
   Porções                 [  −   2   +  ]        ← Stepper 1–99 (padrão 1)
   Tempo (min)             [      25      ]        ← numérico opcional
   Livros de Receitas      [ + adicionar livro de receitas ]     ← chips: [massa] [almoço] [veg]
+  Link de origem (opcional)  https://youtu.be/abc123    [ Abrir link ]
   └────────────────────────────────────────────┘
 
   ┌───────────── Card: Nutrição ──────────────┐
@@ -87,6 +89,11 @@ Estados
 - Edição: populações existentes; ✔ habilita quando estado atual atende mínimos; loading substitui ✔ durante operação.
 - Falha ao salvar: manter dados e foco; Snackbar + ícone de erro transitório na App Bar.
 
+Variante — Revisar Importação
+- Quando aberto a partir do fluxo de Importar, usar o mesmo Editor com título da App Bar “Revisar importação”.
+- Exibir “Link de origem” no Card Cabeçalho (plataforma + URL) com ação “Abrir link”.
+- Após salvar, navegar para o Detalhe da receita.
+
 Acessibilidade
 - Alvos ≥ 48dp; labels claros; ordem de foco natural.
 - Ícone de salvar com `contentDescription` (“Salvar receita”).
@@ -104,6 +111,7 @@ Notas para Dev
 - Desabilitar ✔ via estado derivado dos mínimos; exibir `CircularProgressIndicator` pequeno no lugar do ícone durante salvar.
 - Listas reordenáveis (ingredientes/instruções): usar alça “≡”, chaves estáveis, auto‑scroll ao arrastar e feedback háptico ao soltar.
 - Acessibilidade de reordenação: incluir ações “Mover para cima/baixo” no menu do item e anunciar posição final.
+ - Origem: quando presente, renderizar no Card Cabeçalho um campo somente leitura com URL normalizada e botão “Abrir link” (Intent ACTION_VIEW). Persistir metadado de origem com a receita.
 
 ### Sheet Nutrição — Detalhes
 
