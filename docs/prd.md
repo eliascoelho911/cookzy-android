@@ -44,7 +44,7 @@ Organizar receitas em coleções temáticas.
 
 #### Busca e Filtros
 Encontrar receitas rapidamente.  
-✅ Busca por título, ingredientes e tags; resultados navegáveis.  
+✅ Busca por título, ingredientes e livros de receitas; resultados navegáveis.  
 
 #### Importação de Receitas
 Importar receitas de **YouTube, TikTok, Instagram e Facebook**.  

@@ -7,7 +7,7 @@ Objetivo
 
 Elementos‑chave
 - App Bar com título e ícone de busca.
-- Lista vertical de receitas (cards com título, tempo, tags).
+- Lista vertical de receitas (cards com título, tempo, livros de receitas).
 - Empty/Erro/Skeleton.
 - FAB “Adicionar receita” → abre sheet com opções (Importar/Manual).
 
@@ -42,7 +42,7 @@ Interações
 - Buscar: via ícone na App Bar (campo inline/rota dedicada, conforme spec).
 
 Acessibilidade
-- contentDescription no card (título + tempo + tags).
+- contentDescription no card (título + tempo + livros de receitas).
 - Foco/ordem natural; alvos ≥ 48dp; contraste conforme tema.
 
 Responsividade
@@ -51,4 +51,3 @@ Responsividade
 Notas para Dev
 - Arquivo base: app/src/main/java/.../recipelist/RecipeListScreen.kt
 - Adicionar preview para: vazio; com itens; erro.
-

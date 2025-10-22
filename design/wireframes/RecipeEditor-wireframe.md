@@ -30,7 +30,7 @@ Wireframe (Mobile)
 
   Porções                 [  −   2   +  ]        ← Stepper 1–99 (padrão 1)
   Tempo (min)             [      25      ]        ← numérico opcional
-  Tags                    [ + adicionar tag ]     ← chips: [massa] [almoço] [veg]
+  Livros de Receitas      [ + adicionar livro de receitas ]     ← chips: [massa] [almoço] [veg]
   └────────────────────────────────────────────┘
 
   ┌───────────── Card: Nutrição ──────────────┐
@@ -63,7 +63,7 @@ Wireframe (Mobile)
 
 Requisitos Mínimos (conforme spec)
 - Salvar habilita somente com: Título preenchido + ≥ 1 ingrediente + ≥ 1 passo.
-- Card “Imagem” e Card “Nutrição” são opcionais e não bloqueiam o salvar no MVP. Campos “Porções/Tempo/Tags” são opcionais (padrões: porções=1; tempo vazio; sem tags).
+- Card “Imagem” e Card “Nutrição” são opcionais e não bloqueiam o salvar no MVP. Campos “Porções/Tempo/Livros de Receitas” são opcionais (padrões: porções=1; tempo vazio; sem livros de receitas).
 
 Interações
 - Voltar (←):
@@ -73,7 +73,7 @@ Interações
 - Imagem: solicita permissão sob demanda; abre seletor/câmera; mostra preview/estado de carregamento; permite remover.
 - Porções (no Card Cabeçalho): Stepper 1–99; anuncia mudanças; persiste valor para a receita.
 - Tempo (min): campo numérico (0–999); formatação e validação simples; opcional.
-- Tags: campo de entrada com chips adicionáveis/removíveis; sugestões/autocomplete opcional; limite suave de 8 tags.
+- Livros de Receitas: campo de entrada com chips adicionáveis/removíveis; sugestões/autocomplete opcional; limite suave de 8 livros de receitas.
 - Nutrição: abre sheet “Nutrição por porção” (opcional/placeholder); pode ser configurado depois da criação.
 - Ingredientes/Instruções: “+ Adicionar …” foca imediatamente no novo item; remover com [✕] respeitando mínimo; reordenar por arrastar a alça “≡”.
 
@@ -90,7 +90,7 @@ Estados
 Acessibilidade
 - Alvos ≥ 48dp; labels claros; ordem de foco natural.
 - Ícone de salvar com `contentDescription` (“Salvar receita”).
-- Card “Cabeçalho” com `role=group`; Stepper de Porções com `role=adjustable`; Tempo com teclado numérico e label claro; Tags com chips acessíveis (remover/ativar por teclado).
+- Card “Cabeçalho” com `role=group`; Stepper de Porções com `role=adjustable`; Tempo com teclado numérico e label claro; Livros de Receitas com chips acessíveis (remover/ativar por teclado).
 - Card “Nutrição” com role=button e `stateDescription` quando houver valores preenchidos.
 - Erros vinculados aos campos via semantics; leitura de Snackbar com prioridade apropriada.
 - Reordenação acessível: além do arrastar, oferecer no item ações “Mover para cima/baixo” e “Mover para posição…”. Anunciar “Movido para posição N”.

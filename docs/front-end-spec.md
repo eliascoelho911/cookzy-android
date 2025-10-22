@@ -148,14 +148,14 @@ graph TD
 
 Layout do Editor (MVP)
 - Estrutura em cards: Cabeçalho, Nutrição, Ingredientes, Instruções.
-- Cabeçalho: Título (obrigatório), Imagem (opcional), Porções (Stepper 1–99, padrão 1), Tempo (min, opcional), Tags (chips opcionais).
+- Cabeçalho: Título (obrigatório), Imagem (opcional), Porções (Stepper 1–99, padrão 1), Tempo (min, opcional), Livros de Receitas (chips opcionais).
 - Nutrição: card com entrada para sheet “Nutrição por porção” (opcional).
 - Ingredientes: lista com “+ Adicionar ingrediente ou seção”; reordenável por alça “≡”; remover por item.
 - Instruções: lista com “+ Adicionar passo ou seção”; reordenável por alça “≡”; remover por item.
 
 Regras de Habilitação do Salvar
 - Habilitar salvar somente quando Título preenchido + ≥1 ingrediente + ≥1 passo.
-- Porções/Tempo/Tags/Imagem/Nutrição não bloqueiam salvar.
+- Porções/Tempo/Livros de Receitas/Imagem/Nutrição não bloqueiam salvar.
 
 **Edge Cases & Erros:**
 - Perda de dados ao sair do Editor (autosave ou rascunho com confirmação ao descartar).
@@ -173,7 +173,7 @@ Regras de Habilitação do Salvar
 ### Home
 - Purpose: descoberta rápida (recentes) + acesso a livros
 - Key Elements: App Bar com busca; carrossel “Receitas recentes” com 2 cards médios por viewport (peek visível); grade “Livros” em 2 colunas (phone); FAB “Adicionar receita”.
-- Interaction Notes: FAB abre sheet (Importar/Manual); cartões mostram cover, tempo e tags; estados vazio/erro/skeleton.
+- Interaction Notes: FAB abre sheet (Importar/Manual); cartões mostram cover, tempo e livros de receitas; estados vazio/erro/skeleton.
 
 ### FAB Sheet — Adicionar receita
 - Purpose: criar por importação ou manual
@@ -187,8 +187,8 @@ Regras de Habilitação do Salvar
 
 ### Editor de Receita
 - Purpose: criar/editar receita com campos mínimos e alguns metadados opcionais.
-- Key Elements: App Bar com voltar e salvar (check); Cards: Cabeçalho (Título, Imagem, Porções, Tempo, Tags), Nutrição (abre sheet), Ingredientes (lista reordenável), Instruções (lista reordenável).
-- Interaction Notes: salvar habilita quando requisitos mínimos atendidos; Porções/Tempo/Tags/Imagem/Nutrição opcionais; reordenar por alça “≡” com auto‑scroll e chaves estáveis; confirmação de descarte ao sair com alterações (ou autosave/rascunho).
+- Key Elements: App Bar com voltar e salvar (check); Cards: Cabeçalho (Título, Imagem, Porções, Tempo, Livros de Receitas), Nutrição (abre sheet), Ingredientes (lista reordenável), Instruções (lista reordenável).
+- Interaction Notes: salvar habilita quando requisitos mínimos atendidos; Porções/Tempo/Livros de Receitas/Imagem/Nutrição opcionais; reordenar por alça “≡” com auto‑scroll e chaves estáveis; confirmação de descarte ao sair com alterações (ou autosave/rascunho).
 
 #### Sheet — Nutrição por porção (detalhes)
 - Campos: Calorias (kcal), Carboidratos (g), Proteínas (g), Gorduras (g). Opcionais adicionais: Fibra (g), Açúcares (g), Sódio (mg).
@@ -239,7 +239,7 @@ Estados e Erros
 
 ### Buscar
 - Purpose: localizar receitas rapidamente
-- Key Elements: campo/ícone de busca na App Bar; sugestões; chips de filtro (tempo, livro, tag); lista de resultados.
+- Key Elements: campo/ícone de busca na App Bar; sugestões; chips de filtro (tempo, livro, livro de receitas); lista de resultados.
 - Interaction Notes: debounce na digitação; histórico recente; estados vazio/erro/skeleton.
 
 ### Estados vazios/erro
@@ -270,12 +270,12 @@ Componentes nucleares (propostos):
    - States: enabled/disabled; sheet com cabeçalho consistente
 
 3. Cards
-   - RecipeCard: cover, título, tempo, chips (tags)
+   - RecipeCard: cover, título, tempo, chips (livros de receitas)
    - BookCard: capa/placeholder, título, contagem
    - States: loading (skeleton), empty, error (retry)
 
 4. Chips
-   - TagChip, FilterChip (tempo, livro, tag)
+   - Chip de Livros de Receitas, FilterChip (tempo, livro, livro de receitas)
    - States: selected/unselected, enabled/disabled
 
 5. Tabs (Detalhe da Receita)

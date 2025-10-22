@@ -165,7 +165,7 @@ Tabela de referência dos principais `@Composable`s a implementar/reutilizar. Se
 | Componente | Propósito | Props (chave) | Estados | A11y | Prévias Requeridas |
 |---|---|---|---|---|---|
 | AppTopBar | Barra superior com título/ações | `title: String`, `onBack: (() -> Unit)?`, `actions: @Composable RowScope.() -> Unit` | padrão, scrolled | botão voltar com label; ordem de foco | padrão; com back; com ações |
-| RecipeCard | Card de receita em listas | `title`, `time: Duration?`, `tags: List<String>`, `onClick` | loading, error, vazio | contentDescription no card; foco visível | normal; loading; error |
+| RecipeCard | Card de receita em listas | `title`, `time: Duration?`, `livrosDeReceitas: List<String>`, `onClick` | loading, error, vazio | contentDescription no card; foco visível | normal; loading; error |
 | BookCard | Card de livro/coleção | `title`, `count: Int`, `onClick` | vazio | leitura por leitor de tela com contagem | normal; vazio |
 | PortionStepper | Ajuste de porções | `value: Int`, `onChange(Int)`, `range: IntRange` | min/max, inválido | role=adjustable; announce mudanças | 1, meio, max; fontScale 2.0 |
 | PrepBar | Mini‑timer persistente | `title`, `remaining: Duration`, `running: Boolean`, `onToggle()`, `onClose()` | running/paused/finished | announce tempo/restante e estado | running; paused; finished |

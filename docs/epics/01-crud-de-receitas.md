@@ -11,7 +11,7 @@ Epic central do produto. Sustenta todos os demais fluxos (busca, preparo, nutri�
 - Fora de escopo (MVP): sincronização em nuvem; compartilhamento externo; colaboração multiusuário.
 
 ## Requisitos Funcionais
-- Criar receita com campos: título, ingredientes em texto livre (um por linha, `rawText`) e preparo em campo único; tags e mídia opcionais.
+- Criar receita com campos: título, ingredientes em texto livre (um por linha, `rawText`) e preparo em campo único; livros de receitas e mídia opcionais.
 - Inferir quantidade dos ingredientes a partir de `rawText` quando possível, sem persistir (recalculada on-demand). A unidade do ingrediente não é armazenada.
 - Editar e excluir receitas com confirmação de exclusão.
 - Persistir dados localmente (Room/SQLite) e manter entre sessões.
