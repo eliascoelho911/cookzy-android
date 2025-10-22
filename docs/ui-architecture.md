@@ -174,6 +174,7 @@ Tabela de referência dos principais `@Composable`s a implementar/reutilizar. Se
 | EmptyState | Vazio para listas/telas | `illustration`, `title`, `message`, `primaryAction` | — | elementos com rótulos | Home; Buscar; Livros |
 | ErrorState | Exibir erro e ação | `message`, `onRetry` | — | contraste/ícone | genérico; específico |
 | TabsRecipeDetail | Abas da receita | `selected: Tab`, `onSelect(Tab)` | com badge | foco por teclado; indicador visível | Ingredientes; Preparo; Nutrição |
+| ReorderableList | Lista com arrastar p/ ordenar | `items`, `onMove(from,to)`, `key` | arrastando/solto | alça com hit ≥48dp; ações acessíveis | ingredientes; instruções |
 | StepRichText | Renderiza passos com destaques | `text: String`, `entities: StepEntities`, `onIngredientTap(IngredientRef)`, `onTimerTap(Duration)`, `onTempLongPress(Temperature)` | sem entidades | spans com semantics clicáveis | sem; com ingrediente; com timer; com temperatura |
 | IngredientTooltip | Tooltip de ingrediente | `anchorRect`, `content: IngredientInfo`, `onConvert()`, `onCopy()`, `onDismiss()` | — | role=dialog; foco inicial | padrão |
 | IngredientRow | Linha de ingrediente com destaque | `text: String`, `quantityRange: IntRange?` | sem range | `AnnotatedString` com bold no range | com/sem destaque |

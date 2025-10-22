@@ -146,6 +146,17 @@ graph TD
 
 **Campos mínimos (sugeridos):** Título, ≥1 ingrediente, ≥1 passo do preparo.
 
+Layout do Editor (MVP)
+- Estrutura em cards: Cabeçalho, Nutrição, Ingredientes, Instruções.
+- Cabeçalho: Título (obrigatório), Imagem (opcional), Porções (Stepper 1–99, padrão 1), Tempo (min, opcional), Tags (chips opcionais).
+- Nutrição: card com entrada para sheet “Nutrição por porção” (opcional).
+- Ingredientes: lista com “+ Adicionar ingrediente ou seção”; reordenável por alça “≡”; remover por item.
+- Instruções: lista com “+ Adicionar passo ou seção”; reordenável por alça “≡”; remover por item.
+
+Regras de Habilitação do Salvar
+- Habilitar salvar somente quando Título preenchido + ≥1 ingrediente + ≥1 passo.
+- Porções/Tempo/Tags/Imagem/Nutrição não bloqueiam salvar.
+
 **Edge Cases & Erros:**
 - Perda de dados ao sair do Editor (autosave ou rascunho com confirmação ao descartar).
 - Falha na importação (mensagem com opção de tentar novamente/editar manualmente).
@@ -153,7 +164,7 @@ graph TD
 - Falha de rede durante extração (retry exponencial; permitir editar manualmente).
 - Imagens/cover opcionais com permissões tratadas sob demanda.
 
-**Notas:** editor segue Material 3; validação inline com mensagens claras. Após salvar (manual ou importado), redirecionar diretamente para o Detalhe.
+**Notas:** editor segue Material 3; validação inline com mensagens claras; listas de Ingredientes e Instruções suportam reordenação por arrastar com feedback háptico (quando disponível) e alternativas acessíveis via menu (“Mover para cima/baixo”). Após salvar (manual ou importado), redirecionar diretamente para o Detalhe.
 
 ## Wireframes & Mockups
 
@@ -173,6 +184,17 @@ graph TD
 - Purpose: centro de verdade da receita
 - Key Elements: título; botão “Iniciar preparo”; botão “Medidas” (abre Conversor como sheet); Stepper de porções inline posicionado abaixo do “Iniciar preparo” e ao lado do botão “Medidas”; tabs (Ingredientes/Preparo/Nutrição); botão “Compartilhar”; CTA “Abrir vídeo externo (timestamp)” abaixo do título quando houver origem de vídeo.
 - Interaction Notes: Stepper com faixa 1–99 (passo 1), persistido por receita; recalcula quantidades em Ingredientes; Compartilhar abre sheet; voltar mantém rolagem/aba ativa.
+
+### Editor de Receita
+- Purpose: criar/editar receita com campos mínimos e alguns metadados opcionais.
+- Key Elements: App Bar com voltar e salvar (check); Cards: Cabeçalho (Título, Imagem, Porções, Tempo, Tags), Nutrição (abre sheet), Ingredientes (lista reordenável), Instruções (lista reordenável).
+- Interaction Notes: salvar habilita quando requisitos mínimos atendidos; Porções/Tempo/Tags/Imagem/Nutrição opcionais; reordenar por alça “≡” com auto‑scroll e chaves estáveis; confirmação de descarte ao sair com alterações (ou autosave/rascunho).
+
+#### Sheet — Nutrição por porção (detalhes)
+- Campos: Calorias (kcal), Carboidratos (g), Proteínas (g), Gorduras (g). Opcionais adicionais: Fibra (g), Açúcares (g), Sódio (mg).
+- Validação: valores positivos; aceitar vírgula como separador decimal; normalização interna.
+- Ações: “Salvar” aplica e fecha; “Limpar” zera campos; fechar por gesto/tocar fora/Back retorna foco ao card.
+- A11y: rótulos com unidade no label; leitura “por porção”; ordem de foco previsível.
 
 #### Ingredientes — Formatação e Interações
 - Formatação: quantidade em negrito no texto do ingrediente (ex.: “**200 g** farinha de trigo”).
