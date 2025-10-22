@@ -66,7 +66,6 @@ graph TD
     R --> SH["Compartilhar (sheet)"]
 
     T2 --> EXT["Abrir vídeo externo (timestamp)"]
-    T2 --> CM["Conversor de Medidas (sheet)"]
 
     FAB["FAB ➜ Sheet Adicionar receita"] --> IMP[Importar]
     FAB --> NM[Adicionar manualmente]
@@ -79,7 +78,7 @@ graph TD
 
 - Primária: App Bar (sem Bottom Bar) com ícone/campo de busca nas telas principais; rotas empilhadas (Compose Navigation) a partir da Home para `recipe/{id}`, `book/{id}`, editor e busca.
 - Ações globais: FAB abre bottom sheet “Adicionar receita” com opções Importar ou Adicionar manualmente.
-- Secundária (por tela): abas em Detalhe da Receita (Ingredientes / Preparo / Nutrição); bottom sheets para Conversor de Medidas e Compartilhar; Escalonar Porções via Number Stepper inline na própria tela.
+- Secundária (por tela): abas em Detalhe da Receita (Ingredientes / Preparo / Nutrição); bottom sheet de Compartilhar; Escalonar Porções via Number Stepper inline na própria tela.
 - Mini‑timer: exibido como “Barra de Preparo” persistente no rodapé enquanto um preparo está ativo; toque abre a tela de Preparo.
 - Pós‑importação: redirecionar diretamente para a tela de Detalhe da receita salva.
 - Tablet/Wide: manter layout de phone (sem Navigation Rail) neste MVP.
@@ -90,7 +89,7 @@ graph TD
 
 ### Cozinhar (Preparo passo a passo)
 
-**Objetivo do Usuário:** concluir o preparo de uma receita com apoio de timers, vídeo e conversões sem perder o contexto.
+**Objetivo do Usuário:** concluir o preparo de uma receita com apoio de timers e vídeo sem perder o contexto.
 
 **Pontos de Entrada:** Detalhe da Receita → aba Preparo; Barra de Preparo (mini‑timer persistente); notificação de término de timer; link externo para vídeo no timestamp (YouTube/Instagram);
 
@@ -103,7 +102,6 @@ graph TD
     S1 --> DEC{Tempo detectado?}
     DEC -- "Sim (toque)" --> T[Iniciar timer] --> BAR["Barra de Preparo (persistente)"]
     DEC -- Não --> NEXT[Avançar passo]
-    S1 --> CV["Conversor (sheet) opcional"]
     S1 --> EXT["Abrir vídeo externo (timestamp)"]
     BAR -->|toque| P
     NEXT --> S2[Próximo passo] --> FIM[Todos os passos concluídos]
@@ -193,7 +191,7 @@ Regras de Habilitação do Salvar
 
 ### Detalhe da Receita
 - Purpose: centro de verdade da receita
-- Key Elements: título; botão “Iniciar preparo”; botão “Medidas” (abre Conversor como sheet); Stepper de porções inline posicionado abaixo do “Iniciar preparo” e ao lado do botão “Medidas”; tabs (Ingredientes/Preparo/Nutrição); botão “Compartilhar”; CTA “Abrir vídeo externo (timestamp)” abaixo do título quando houver origem de vídeo.
+- Key Elements: título; botão “Iniciar preparo”; Stepper de porções inline posicionado abaixo do “Iniciar preparo”; tabs (Ingredientes/Preparo/Nutrição); botão “Compartilhar”; CTA “Abrir vídeo externo (timestamp)” abaixo do título quando houver origem de vídeo.
 - Interaction Notes: Stepper com faixa 1–99 (passo 1), persistido por receita; recalcula quantidades em Ingredientes; Compartilhar abre sheet; voltar mantém rolagem/aba ativa.
 
 ### Editor de Receita
@@ -211,12 +209,11 @@ Regras de Habilitação do Salvar
 - Formatação: quantidade em negrito no texto do ingrediente (ex.: “**200 g** farinha de trigo”).
 - Derivação: usar `deriveQuantity()` e range retornado no estado da UI para aplicar `SpanStyle(fontWeight = Bold)` via `AnnotatedString`.
 - Reatividade: ao alterar porções, recalcular e atualizar o trecho em negrito sem layout shift perceptível.
-- Conversão rápida (opcional): long‑press na quantidade → abre Conversor (sheet) com o valor pré‑preenchido; fechar por Back/tap fora.
 - A11y: leitura “200 gramas de farinha de trigo”; unidade conforme locale; foco linear por itens; ações têm rótulos claros.
 
 ### Preparo
 - Purpose: executar passo a passo com foco
-- Key Elements: passo atual em destaque; botão Iniciar/Pausar timer quando houver tempo; botão “Concluir passo” para avançar; prévia (1 linha) do próximo passo; Conversor (sheet); CTA “Abrir vídeo externo (timestamp)” ao final do texto do passo; Barra de Preparo fixa no rodapé (título curto + tempo restante + play/pause + fechar).
+- Key Elements: passo atual em destaque; botão Iniciar/Pausar timer quando houver tempo; botão “Concluir passo” para avançar; prévia (1 linha) do próximo passo; CTA “Abrir vídeo externo (timestamp)” ao final do texto do passo; Barra de Preparo fixa no rodapé (título curto + tempo restante + play/pause + fechar).
 - Interaction Notes: barra persiste em todo o app enquanto ativa; tap abre Preparo; swipe para dispensar (confirmar se timer ativo); timers continuam em background com notificação.
 
 #### Preparo — Destaques e Tooltips (MVP)
@@ -226,13 +223,13 @@ Reconhecimento e enriquecimento inline de entidades no texto dos passos. Os elem
 - Ingrediente com Tooltip
   - Detecção: match por dicionário de ingredientes do passo e/ou anotações do parser; fallback por heurística (palavra no conjunto de ingredientes).
   - Visual: sublinhado pontilhado no texto; cor padrão do link normal.
-  - Ação: tap → tooltip ancorado exibindo “quantidade + nome” (ex.: “400g de farinha de trigo”). Ações secundárias: “Converter medidas” (abre Conversor como sheet), “Copiar”.
+  - Ação: tap → tooltip ancorado exibindo “quantidade + nome” (ex.: “400g de farinha de trigo”). Ação secundária: “Copiar”.
   - A11y: role=dialog; foco inicial no conteúdo; `contentDescription` descritivo; fechar por Back/tap fora.
 
 - Destaque de Temperatura
   - Detecção: regex `(?i)(\d{2,3})\s?[°º]\s?[cf]` e variações “180°C”, “350°F”.
   - Visual: chip inline com ícone 🔥 e valor (ex.: “🔥 180°C”); cor de ênfase usa `onSecondaryContainer`/`secondaryContainer` (ou tokens de Warning sugeridos na paleta).
-  - Ações: tap → nenhuma ação obrigatória; long‑press → “Converter °C/°F”.
+  - Ações: tap → nenhuma ação obrigatória.
   - Microinteração: quando um passo introduz nova temperatura (difere da anterior), aplicar pulso leve no chip (≤120 ms) para chamar atenção.
   - A11y: label completo (ex.: “Temperatura: 180 graus Celsius”).
 
@@ -296,7 +293,7 @@ Componentes nucleares (propostos):
 
 6. Stepper de Porções
    - Purpose: ajustar porções (1–99, passo 1, persistência por receita)
-   - Placement: abaixo de "Iniciar preparo", ao lado do botão "Medidas"
+   - Placement: abaixo de "Iniciar preparo"
    - States: min/max atingido, erro de validação
    - Regras: faixa 1–99, passo 1, persistência por receita; arredondamentos definidos (frações aceitas 0,25/0,5/0,75); debounce leve para recálculos; suporte a TalkBack (role=adjustable) e feedback tátil
 
@@ -312,7 +309,7 @@ Componentes nucleares (propostos):
    - Política: um timer “ativo” visível; demais agrupados em notificações; opção de restringir a um por vez
 
 9. Dialogs/Sheets
-   - Conversor de Medidas (sheet), Compartilhar (sheet)
+   - Compartilhar (sheet)
    - Headers consistentes, ações primárias/secundárias
    - Tooltip de Ingrediente: ancorado, sem cabeçalho; até 2 ações inline; densidade compacta.
 
@@ -331,7 +328,7 @@ Componentes nucleares (propostos):
 13. RecipeCountLabel
    - Purpose: mostrar “N receitas” após filtros
    - Behavior: atualiza reativamente conforme filtro/consulta
-   - Tooltip ao tocar em menções de ingredientes nos passos (conteúdo: “quantidade + nome”; ações: Converter/ Copiar)
+   - Tooltip ao tocar em menções de ingredientes nos passos (conteúdo: “quantidade + nome”; ação: Copiar)
    - Acessível (role=dialog) e cancelável (Back/tap fora)
 
 12. ExternalVideoCTA

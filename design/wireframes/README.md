@@ -12,11 +12,10 @@ Este diretório contém wireframes de baixa fidelidade para as principais telas 
 - Livros de Receitas — Detalhe: design/wireframes/BookDetail-wireframe.md
 
 Wireframes pendentes
-- Conversor de Medidas (bottom sheet): campos, validações e erros — base em docs/epics/10-conversor-de-medidas.md e front-end-spec (Conversor)
 - Compartilhar (sheet): acionado no Detalhe, payload/preview — base em docs/epics/13-compartilhamento.md
 - Prep Bar (mini‑timer): estados rodando/pausado/concluído e regras de exibição persistente — base em docs/front-end-spec.md
 
 Observações gerais
 - Foco mobile (phone); manter 1 coluna no MVP. Em ≥ 840 dp, futuro multipainel está fora de escopo.
 - Acessibilidade: alvos ≥ 48dp; ordem de foco previsível; rótulos e roles semânticos.
-- Sheets (Conversor, Compartilhar, FabSheet, Nutrição) devem usar o componente base `CookzyModalBottomSheet` (header com título + IconButton fechar, corpo dinâmico e até dois botões no footer em coluna, full‑width). Interações e comportamentos seguem docs/front-end-spec.md.
+- Sheets (Compartilhar, FabSheet, Nutrição) devem usar o componente base `CookzyModalBottomSheet` (header com título + IconButton fechar, corpo dinâmico e até dois botões no footer em coluna, full‑width). Interações e comportamentos seguem docs/front-end-spec.md.

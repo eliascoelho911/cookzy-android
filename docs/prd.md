@@ -26,7 +26,7 @@ O Cookzy centraliza todas as receitas do usuário em um único aplicativo, permi
 - Consultar receitas já salvas e preparar passo a passo.  
 - Criar ou editar receitas próprias.  
 - Importar receitas de vídeos (YouTube, TikTok etc.) e segui-las com timers automáticos.  
-- Calcular porções e converter medidas durante o preparo.  
+- Calcular porções durante o preparo.  
 
 ---
 
@@ -74,10 +74,6 @@ Relaciona passos do preparo com timestamps no vídeo original.
 
 ### 🧮 Cálculos e Nutrição
 
-#### Conversor de Medidas
-Conversão entre xícaras, ml e colheres.  
-✅ Recalcula valores dinamicamente.  
-
 #### Escalonamento de Porções
 Ajusta quantidades dos ingredientes conforme o número de porções desejadas.  
 ✅ Atualiza automaticamente as quantidades e a tabela nutricional.  
@@ -122,8 +118,7 @@ Permitir que o usuário avalie e comente após o preparo.
 13. Revisar e confirmar dados extraídos  
 
 **E. Utilitários**  
-14. Conversor de medidas  
-15. Compartilhar receita  
+14. Compartilhar receita  
 
 **F. Pós-Uso**  
 16. Autoavaliação  
@@ -131,7 +126,7 @@ Permitir que o usuário avalie e comente após o preparo.
 **Componentes transversais:**  
 - Mini-timer flutuante  
 - Tooltip de ingrediente  
-- Bottom sheets (Conversor, Compartilhar)  
+- Bottom sheets (Compartilhar)  
 - Notificações locais  
 
 **Fluxos principais:**  

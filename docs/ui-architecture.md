@@ -173,13 +173,13 @@ Tabela de referência dos principais `@Composable`s a implementar/reutilizar. Se
 | PortionStepper | Ajuste de porções | `value: Int`, `onChange(Int)`, `range: IntRange` | min/max, inválido | role=adjustable; announce mudanças | 1, meio, max; fontScale 2.0 |
 | PrepBar | Mini‑timer persistente | `title`, `remaining: Duration`, `running: Boolean`, `onToggle()`, `onClose()` | running/paused/finished | announce tempo/restante e estado | running; paused; finished |
 | ExternalVideoCTA | Ação “Abrir vídeo externo” | `platform: Platform`, `timestamp: Long`, `onClick` | indisponível | label com plataforma e tempo | disponível; indisponível |
-| ConverterSheet | Sheet de conversão de medidas | `onDismiss`, inputs/outputs | erro/validação | foco inicial no primeiro campo | válido; com erro |
+ 
 | EmptyState | Vazio para listas/telas | `illustration`, `title`, `message`, `primaryAction` | — | elementos com rótulos | Home; Buscar; Livros |
 | ErrorState | Exibir erro e ação | `message`, `onRetry` | — | contraste/ícone | genérico; específico |
 | TabsRecipeDetail | Abas da receita | `selected: Tab`, `onSelect(Tab)` | com badge | foco por teclado; indicador visível | Ingredientes; Preparo; Nutrição |
 | ReorderableList | Lista com arrastar p/ ordenar | `items`, `onMove(from,to)`, `key` | arrastando/solto | alça com hit ≥48dp; ações acessíveis | ingredientes; instruções |
-| StepRichText | Renderiza passos com destaques | `text: String`, `entities: StepEntities`, `onIngredientTap(IngredientRef)`, `onTimerTap(Duration)`, `onTempLongPress(Temperature)` | sem entidades | spans com semantics clicáveis | sem; com ingrediente; com timer; com temperatura |
-| IngredientTooltip | Tooltip de ingrediente | `anchorRect`, `content: IngredientInfo`, `onConvert()`, `onCopy()`, `onDismiss()` | — | role=dialog; foco inicial | padrão |
+| StepRichText | Renderiza passos com destaques | `text: String`, `entities: StepEntities`, `onIngredientTap(IngredientRef)`, `onTimerTap(Duration)` | sem entidades | spans com semantics clicáveis | sem; com ingrediente; com timer; com temperatura |
+| IngredientTooltip | Tooltip de ingrediente | `anchorRect`, `content: IngredientInfo`, `onCopy()`, `onDismiss()` | — | role=dialog; foco inicial | padrão |
 | IngredientRow | Linha de ingrediente com destaque | `text: String`, `quantityRange: IntRange?` | sem range | `AnnotatedString` com bold no range | com/sem destaque |
 | FilterChips | Chips de filtro/busca | `filters`, `onToggle` | selected/unselected | tamanho ≥48dp | estados selecionado/não |
 | CookzyModalBottomSheet | Sheet base com título e ações | `title: String`, `sheetState: SheetState`, `onDismissRequest`, `secondaryButton?`, `primaryButton?`, `content` | com/sem footer | announces sheet; foco e botões acessíveis; footer vertical (full‑width) | aberto; com/sem footer |
@@ -288,7 +288,7 @@ Usar `@ThemePreviews` + `PreviewWrapper { ... }` nos previews de componentes.
 - RecipeCard: normal, loading, error.
 - TabsRecipeDetail: cada aba selecionada.
 - EmptyState: Home/Buscar/Livros.
-- ConverterSheet: válido e com erro de validação (campo vazio/inválido).
+ 
 - StepRichText: sem entidades; com ingrediente; com timer; com temperatura.
 - IngredientTooltip: padrão.
 - IngredientRow: com/sem destaque da quantidade; variação com fontScale 2.0.

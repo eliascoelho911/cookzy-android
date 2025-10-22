@@ -16,7 +16,6 @@ Este índice organiza os épicos extraídos do PRD em seções temáticas, com l
 9. [09 — Vídeo com Pontos Ancorados](09-video-com-pontos-ancorados.md)
 
 ## 🧮 Cálculos e Nutrição
-10. [10 — Conversor de Medidas](10-conversor-de-medidas.md)
 11. [11 — Escalonamento de Porções](11-escalonamento-de-porcoes.md)
 12. [12 — Tabela Nutricional](12-tabela-nutricional.md)
 
