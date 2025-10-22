@@ -107,7 +107,8 @@ Variações por estado
   ✓ Timer concluído — Molho pronto!
   3) Asse no forno por [⏱ 30 min].
  
-    │  ✓ 00:00   • Passo 3/6 (Assar)     [Ir ao passo] │
+    │  ✓ 00:00   • Passo 3/6 (Assar)
+    │      Adicionar tempo:  [ +1:00 ]  [ +5:00 ]  [ Personalizar… ]   [Ir ao passo]  [Passo atual]
 
 ──────────────────────────────────────────
 │  [ « Retroceder ]       [  » Avançar ] │  ← realce por ~2s
@@ -187,15 +188,17 @@ Região de Avisos — regras de prioridade
 - Ordem de prioridade: Erro > Mismatch > Timer concluído > Nudge.
 - Composição visual: container `surfaceVariant` com ícone por tipo (erro, timer, info), uma linha de texto com possível ação inline [Ir ao passo]/[Abrir]/[Dispensar]. Responsivo até 2 linhas sob `fontScale` alto.
 - Interação: tocar fora não fecha; cada aviso tem alvo de toque ≥ 48dp para suas ações. Mismatch e Erro são persistentes; demais têm auto-ocultação.
-- Nudge de visibilidade: quando N > 1 e o usuário abre a tela, exibir por ~4s o aviso “⏱ N timers ativos — veja o painel ‘Timers’ acima do player” (uma vez por sessão de preparo).
-- Coexistência Avisos × Painel:
-  - Painel expandido → ocultar Avisos (ou reduzir a chip sem CTA).
-  - Aviso de Erro (`assertive`) → colapsar Painel automaticamente.
-  - CTA “Ir ao passo” só aparece em Avisos quando o Painel estiver colapsado (evita duplicação com a lista).
+  - Nudge de visibilidade: quando N > 1 e o usuário abre a tela, exibir por ~4s o aviso “⏱ N timers ativos — veja o painel ‘Timers’ acima do player” (uma vez por sessão de preparo).
+  - Coexistência Avisos × Painel:
+    - Painel expandido → ocultar Avisos (ou reduzir a chip sem CTA).
+    - Aviso de Erro (`assertive`) → colapsar Painel automaticamente.
+    - CTA “Ir ao passo” só aparece em Avisos quando o Painel estiver colapsado (evita duplicação com a lista).
+    - Em “Timer concluído”, quando o Painel estiver colapsado, incluir ação rápida “[+1:00]” no aviso; quando expandido, ocultar do aviso e manter as ações na linha do Painel.
 
 Sincronização com timers
 - Se um timer ativo pertence a outro passo (mismatch), exibir um aviso não intrusivo: “Timer ativo no Passo N/M — [Ir ao passo]”. A ação navega/focaliza o passo do timer quando o Painel está colapsado; se expandido, a ação equivalente está na lista.
 - Concluído: quando um timer do passo atual termina, destacar a linha correspondente no Painel (fundo tonal + ícone ✓) e evidenciar o botão » Avançar por ~2s.
+- Adicionar tempo (em concluído): selecionar um incremento (ex.: +1:00, +5:00 ou personalizado) reinicia o timer com o tempo adicional, muda o estado para “Rodando” e reordena a lista conforme o novo restante. Preservar foco visual e semântico na mesma linha.
 - Múltiplos timers: além do mais urgente, o Painel de Timers mostra o conjunto completo (expandido) ou previews (colapsado). Gestão completa ocorre via lista expandida.
   - Ordenação: menor tempo restante primeiro; empate → último iniciado.
   - Estabilidade de foco: não reordenar enquanto o usuário estiver interagindo (lock até inatividade de 2s); pin do “Passo atual” no topo durante a interação.
@@ -211,8 +214,8 @@ Acessibilidade
 - Ícones com `contentDescription` claros; `stateDescription` para ⏯ (“Rodando”/“Pausado”).
 - Alvos ≥ 48dp (especialmente os botões « Retroceder e » Avançar). Suporte a `fontScale` até 200% sem truncar conteúdo crítico.
 - Leitura por leitor de tela: anunciar “Passo N de M”. Destaques clicáveis (ingrediente/temperatura/tempo) com rótulos completos.
-- Região de Avisos: usar live region (`polite` para Concluído/Nudge, `assertive` para Erro). Ações acessíveis por teclado e leitor de tela.
-- Painel de Timers: no colapsado anunciar “N timers ativos. Toque para expandir”. No expandido, role=list com cada item anunciando rótulo, progresso e tempo restante; ações ⏯/[Ir ao passo] com labels claros. A linha do passo atual deve ter `selected=true` e `stateDescription="Passo atual"`.
+- Região de Avisos: usar live region (`polite` para Concluído/Nudge, `assertive` para Erro). Ações acessíveis por teclado e leitor de tela. Em concluído, a ação do aviso deve ter label “Adicionar 1 minuto ao timer”.
+- Painel de Timers: no colapsado anunciar “N timers ativos. Toque para expandir”. No expandido, role=list com cada item anunciando rótulo, progresso e tempo restante; ações ⏯/[Ir ao passo]/[Adicionar tempo] com labels claros (ex.: “Adicionar 5 minutos ao timer”). A linha do passo atual deve ter `selected=true` e `stateDescription="Passo atual"`.
 
 Estados
 - Carregando: esqueleto simples do conteúdo + placeholder dos controles.
@@ -236,6 +239,7 @@ Notas para Dev
     onBack: () -> Unit,
     onOpenExternalVideo: (timestamp: Long) -> Unit,
     onGoToTimerStep: () -> Unit,
+    onAddTime: (timerId: String, amount: Duration) -> Unit,
   )
   ```
 - `PrepUiState` deve conter: `currentStepIndex`, `stepsCount`, `hasTimerForStep`, `remaining`, `running`, `activeTimersCount`, `mismatch`.
@@ -243,3 +247,4 @@ Notas para Dev
 - Prévias: passo sem timer; com timer rodando; pausado; concluído; mismatch; múltiplos timers.
 - Painel de Timers (MVP): `timers: List<TimerUi>`, `onToggle(timerId)`, `onGoTo(timerId)`, `expanded: Boolean`, `onExpandToggle()`; animação simples de altura/alpha.
 - Tokens do Painel: altura da linha 56–64dp; barra de progresso 4dp; fonte monoespaçada para mm:ss; cores running=primary, paused=onSurfaceVariant, finished=success; destacar “Passo atual” com container tonal.
+ - Adicionar tempo: quick actions configuráveis (ex.: +30s, +1m, +5m) e opção “Personalizar…” abrindo dialog com presets/teclado numérico; após adicionar, estado volta a “Rodando”.
