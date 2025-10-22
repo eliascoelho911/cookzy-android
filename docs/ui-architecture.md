@@ -164,7 +164,7 @@ Tabela de referência dos principais `@Composable`s a implementar/reutilizar. Se
 
 | Componente | Propósito | Props (chave) | Estados | A11y | Prévias Requeridas |
 |---|---|---|---|---|---|
-| AppTopBar | Barra superior com título/ações | `title: String`, `onBack: (() -> Unit)?`, `actions: @Composable RowScope.() -> Unit` | padrão, scrolled | botão voltar com label; ordem de foco | padrão; com back; com ações |
+| AppTopBar | Barra superior com título/ações (suporta busca inline opcional) | `title: String`, `onBack: (() -> Unit)?`, `actions: @Composable RowScope.() -> Unit`, `search: SearchUi?` | padrão, scrolled, search-active | botão voltar com label; ordem de foco; campo de busca com hint/clear | padrão; com back; com ações; com busca |
 | RecentRecipesCarousel | Carrossel de receitas recentes | `items: List<Recipe>`, `onClick(Recipe)`, `peekDp: Dp` | vazio | anunciar “deslize p/ ver mais”; foco previsível | vazio; 1 item; vários |
 | BookFilterCarousel | Carrossel de livros (filtro) | `books: List<Book>`, `selected: Book?`, `onSelect(Book?)` | selected/unselected | role=tab/toggle; item “Todos” com label | sem seleção; com seleção |
 | ListGridToggle | Alternância lista ↔ grade | `isGrid: Boolean`, `onToggle(Boolean)` | list/grid | role=toggle; descriptions | list; grid |
@@ -191,6 +191,13 @@ Observação: respeitar tokens de `Theme.kt`, `Color.kt`, `Type.kt` e `ExtendedC
 ### Especificações por Componente (assinaturas sugeridas)
 
 ```kotlin
+data class SearchUi(
+  val query: String,
+  val onQueryChange: (String) -> Unit,
+  val onClear: () -> Unit,
+  val placeholder: String,
+)
+
 @Composable
 fun PortionStepper(
   value: Int,

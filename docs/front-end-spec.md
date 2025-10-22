@@ -175,8 +175,8 @@ Regras de Habilitação do Salvar
 
 ### Home
 - Purpose: descoberta rápida (recentes) + filtro por livros + navegação para receitas
-- Key Elements: App Bar com busca; carrossel “Receitas recentes” com 1 card por viewport (full‑bleed, snap e PEEK do próximo; sem indicador de página); carrossel “Livros (filtro)” com capas circulares + rótulo (inclui “Todos”); cabeçalho da lista com “N receitas” + botões de alternância lista/grade; lista/grade de receitas; FAB “Adicionar receita”.
-- Interaction Notes: selecionar um livro no carrossel filtra a lista/grade abaixo; cabeçalho atualiza a contagem após filtros; alternância de layout persiste em preferência local; cartões mostram cover, tempo e livros de receitas (sem tags); estados vazio/erro/skeleton.
+- Key Elements: App Bar reutilizada (mesma componente das telas de Livros) com suporte a busca inline opcional (campo embutido que pode ser ativado/desativado); carrossel “Receitas recentes” com 1 card por viewport (full‑bleed, snap e PEEK do próximo; sem indicador de página); carrossel “Livros (filtro)” com capas circulares + rótulo (inclui “Todos”); cabeçalho da lista com “N receitas” + botões de alternância lista/grade; lista/grade de receitas; FAB “Adicionar receita”.
+- Interaction Notes: selecionar um livro no carrossel filtra a lista/grade abaixo; cabeçalho atualiza a contagem após filtros; alternância de layout persiste em preferência local; cartões mostram cover, tempo e livros de receitas (sem tags); estados vazio/erro/skeleton. A busca inline na App Bar mantém foco e clear (✕); pode tanto abrir a rota de Buscar dedicada quanto aplicar filtro leve local, conforme decisão técnica, mantendo consistência com Livros.
 
 ### FAB Sheet — Adicionar receita
 - Purpose: criar por importação ou manual

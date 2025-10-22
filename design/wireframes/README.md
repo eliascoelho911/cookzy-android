@@ -8,9 +8,10 @@ Este diretório contém wireframes de baixa fidelidade para as principais telas 
 - Search: design/wireframes/Search-wireframe.md
 - FAB Sheet: design/wireframes/FabSheet-wireframe.md
 - Importar: design/wireframes/Import-wireframe.md
+- Livros de Receitas — Lista: design/wireframes/BooksList-wireframe.md
+- Livros de Receitas — Detalhe: design/wireframes/BookDetail-wireframe.md
 
 Wireframes pendentes
-- Livros de Receitas: lista e detalhe do livro + associação/desassociação — base em docs/epics/02-livros-de-receitas.md
 - Conversor de Medidas (bottom sheet): campos, validações e erros — base em docs/epics/10-conversor-de-medidas.md e front-end-spec (Conversor)
 - Compartilhar (sheet): acionado no Detalhe, payload/preview — base em docs/epics/13-compartilhamento.md
 - Prep Bar (mini‑timer): estados rodando/pausado/concluído e regras de exibição persistente — base em docs/front-end-spec.md

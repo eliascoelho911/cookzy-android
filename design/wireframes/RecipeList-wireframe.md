@@ -9,7 +9,7 @@ Decisão desta revisão
 - Inspirado no layout do anexo, o topo da tela agora traz um carrossel horizontal “Receitas recentes” exibindo UMA receita completa por vez (full‑bleed de um card por viewport, com snap). A spec já foi alinhada para refletir 1 por viewport no MVP.
 
 Elementos‑chave
-- App Bar com título e ícone de busca.
+- App Bar reutilizada (Home) com suporte a busca inline opcional: exibe campo de busca embutido quando ativo; caso contrário, mostra título e ação de buscar.
 - Carrossel horizontal “Receitas recentes” (1 card por viewport; snapping; com PEEK do próximo item — sem indicador de página).
 - Carrossel horizontal “Livros de receitas” (filtro) com capas circulares + rótulo; seleciona um livro e filtra a lista abaixo; inclui opção “Todos”.
 - Lista de receitas com cabeçalho “N receitas” e ações para alternar layout (lista ↔ grade).
@@ -19,9 +19,10 @@ Elementos‑chave
 Wireframe (Mobile)
 
 ```
-┌──────────────── App Bar ────────────────┐
-│  Receitas                        [🔍]   │  ← ícone/ação de busca
-└─────────────────────────────────────────┘
+┌──────────────── App Bar ───────────────────────────────────────────┐
+│  Receitas      [ 🔎  Buscar receitas…                   ( ✕ ) ]   │
+│                   ↑ busca inline opcional (expandida)              │
+└───────────────────────────────────────────────────────────────────┘
 
   Recentes
 ┌───────────────── Carrossel (HorizontalPager) ─────────────────┐
@@ -68,7 +69,7 @@ Interações
 - Cabeçalho da lista: mostra contagem “N receitas” após filtros; botões alternam layout lista ↔ grade e persistem preferência local.
 - Lista/Grade: tap no card → Detalhe.
 - FAB → sheet “Adicionar receita” (Importar/Manual). Alvos ≥ 48dp.
-- Buscar: via ícone na App Bar (campo inline/rota dedicada, conforme spec).
+- Buscar (App Bar): ao ativar busca, mostrar campo inline na App Bar com debounce (300–500 ms). Limpar (✕) retorna ao título. A lógica pode abrir a rota de Busca dedicada OU aplicar filtro local leve, conforme decisão técnica; manter comportamento consistente com Livros.
 
 Acessibilidade
 - Carrossel Recentes: leitura do card inclui título, tempo e livros; anunciar “deslize para ver mais”.
@@ -82,6 +83,7 @@ Responsividade
 
 Notas para Dev
 - Arquivo base: app/src/main/java/.../recipelist/RecipeListScreen.kt
+- App Bar: reutilizar `AppTopBar` (docs/ui-architecture.md) com `search: SearchUi?` para modo de busca inline.
 - Recentes: `HorizontalPager` (pageSize = Fill, contentPadding para PEEK; pageSpacing leve; snap). Sem indicador; considerar sombreado suave no PEEK.
 - Livros (filtro): `LazyRow` com itens circulares (capa + label) como `FilterChip`/`AssistChip` selecionáveis; incluir item “Todos”.
 - Cabeçalho: “N receitas” deriva da lista filtrada; toggles com `IconToggleButton` ou dois `IconButton`s mutuamente exclusivos (persistir em `DataStore`).
