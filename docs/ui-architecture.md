@@ -5,6 +5,7 @@
 | Date       | Version | Description                                | Author     |
 |------------|---------|--------------------------------------------|------------|
 | 2025-10-22 | 0.1     | Documento criado (esqueleto inicial)       | Sally (UX) |
+| 2025-10-22 | 0.2     | Inventário de componentes e padrões de preview | Sally (UX) |
 
 ## Visão Geral
 
@@ -123,7 +124,108 @@ Referências (arquivos atuais):
 - Diretrizes
   - Placeholders/skeletons; evitar layout shift (imagens com tamanho conhecido)
   - Chaves estáveis em listas; reduzir recomposições (remember/derivedState)
-  - Overdraw baixo; evitar sombras excessivas
+- Overdraw baixo; evitar sombras excessivas
+
+## Inventário de Componentes (Compose)
+
+Tabela de referência dos principais `@Composable`s a implementar/reutilizar. Servirá para handoff e para organizar prévias e testes.
+
+| Componente | Propósito | Props (chave) | Estados | A11y | Prévias Requeridas |
+|---|---|---|---|---|---|
+| AppTopBar | Barra superior com título/ações | `title: String`, `onBack: (() -> Unit)?`, `actions: @Composable RowScope.() -> Unit` | padrão, scrolled | botão voltar com label; ordem de foco | padrão; com back; com ações |
+| RecipeCard | Card de receita em listas | `title`, `time: Duration?`, `tags: List<String>`, `onClick` | loading, error, vazio | contentDescription no card; foco visível | normal; loading; error |
+| BookCard | Card de livro/coleção | `title`, `count: Int`, `onClick` | vazio | leitura por leitor de tela com contagem | normal; vazio |
+| PortionStepper | Ajuste de porções | `value: Int`, `onChange(Int)`, `range: IntRange` | min/max, inválido | role=adjustable; announce mudanças | 1, meio, max; fontScale 2.0 |
+| PrepBar | Mini‑timer persistente | `title`, `remaining: Duration`, `running: Boolean`, `onToggle()`, `onClose()` | running/paused/finished | announce tempo/restante e estado | running; paused; finished |
+| ExternalVideoCTA | Ação “Abrir vídeo externo” | `platform: Platform`, `timestamp: Long`, `onClick` | indisponível | label com plataforma e tempo | disponível; indisponível |
+| ConverterSheet | Sheet de conversão de medidas | `onDismiss`, inputs/outputs | erro/validação | foco inicial no primeiro campo | válido; com erro |
+| EmptyState | Vazio para listas/telas | `illustration`, `title`, `message`, `primaryAction` | — | elementos com rótulos | Home; Buscar; Livros |
+| ErrorState | Exibir erro e ação | `message`, `onRetry` | — | contraste/ícone | genérico; específico |
+| TabsRecipeDetail | Abas da receita | `selected: Tab`, `onSelect(Tab)` | com badge | foco por teclado; indicador visível | Ingredientes; Preparo; Nutrição |
+| FilterChips | Chips de filtro/busca | `filters`, `onToggle` | selected/unselected | tamanho ≥48dp | estados selecionado/não |
+
+Observação: respeitar tokens de `Theme.kt`, `Color.kt`, `Type.kt` e `ExtendedColorScheme`.
+
+### Especificações por Componente (assinaturas sugeridas)
+
+```kotlin
+@Composable
+fun PortionStepper(
+  value: Int,
+  onChange: (Int) -> Unit,
+  range: IntRange = 1..99,
+  modifier: Modifier = Modifier,
+) { /* UI + semantics(role = adjustable) */ }
+
+@Composable
+fun PrepBar(
+  title: String,
+  remaining: Duration,
+  running: Boolean,
+  onToggle: () -> Unit,
+  onClose: () -> Unit,
+  modifier: Modifier = Modifier,
+) { /* slide/fade in/out; evitar layout shift */ }
+
+@Composable
+fun ExternalVideoCTA(
+  platform: Platform, // YouTube, Instagram, etc.
+  timestampSec: Long?,
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+) { /* ícone + label acessível */ }
+```
+
+### Estados & Semântica
+- PortionStepper: anunciar novo valor; teclas setas/volume ajustam; limites com feedback háptico leve.
+- PrepBar: ícone play/pause com `stateDescription`; tempo restante legível por leitor de tela.
+- ExternalVideoCTA: rótulo inclui plataforma e timestamp normalizado.
+
+## Padrões de Preview (Compose)
+
+Objetivo: garantir que cada componente/tela tenha prévias úteis para revisão rápida, QA e desenvolvimento acelerado.
+
+### Convenções
+- Nome: `Preview<Component>_<State>` (ex.: `PreviewPortionStepper_Min`, `PreviewPrepBar_Running`).
+- Tema: envolver sempre em `AppTheme(darkTheme = false/true)`.
+- Fontes: adicionar variação com `uiMode = Configuration.UI_MODE_NIGHT_YES` e `fontScale` (quando aplicável via parâmetro em prévia customizada).
+- Tamanhos: pelo menos um device phone (411x891 dp) e uma variação ≥ 840 dp para telas largas quando aplicável.
+- A11y: criar prévia com `fontScale` ~2.0 para validar quebras/overflow.
+
+### MultiPreview utilitário
+
+```kotlin
+@Preview(name = "Light")
+@Preview(name = "Dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
+annotation class ThemePreviews
+
+@Composable
+fun PreviewWrapper(content: @Composable () -> Unit) {
+  AppTheme { content() }
+}
+```
+
+Usar `@ThemePreviews` + `PreviewWrapper { ... }` nos previews de componentes.
+
+### Prévias por Componente (mínimo)
+- PortionStepper: min, middle, max; fontScale 2.0.
+- PrepBar: running, paused, finished.
+- RecipeCard: normal, loading, error.
+- TabsRecipeDetail: cada aba selecionada.
+- EmptyState: Home/Buscar/Livros.
+- ConverterSheet: válido e com erro de validação (campo vazio/inválido).
+
+### Prévias de Telas
+- Lista de Receitas: vazio; com itens; erro.
+  - Arquivo: app/src/main/java/com/eliascoelho911/cookzy/feature/recipelist/RecipeListScreen.kt
+- Detalhe da Receita: carregando; sucesso; erro.
+  - Arquivo: app/src/main/java/com/eliascoelho911/cookzy/feature/recipedetail/RecipeDetailScreen.kt
+- Editor de Receita: novo; edição existente; validação com erros.
+  - Arquivo: app/src/main/java/com/eliascoelho911/cookzy/feature/recipeeditor/RecipeEditorScreen.kt
+
+### Dados de Preview
+- Criar `PreviewData.kt` em cada feature com fábricas estáveis de modelos (ex.: `sampleRecipe()`).
+- Considerar `@PreviewParameter` para gerar casos comuns (quando útil).
 
 ## Pontos em Aberto
 
@@ -135,4 +237,3 @@ Referências (arquivos atuais):
 
 - Especificação de UI/UX: docs/front-end-spec.md
 - PRD: docs/prd.md
-
