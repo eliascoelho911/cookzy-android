@@ -3,7 +3,8 @@
 Fonte: docs/front-end-spec.md (Barra de Preparo/mini‑timer) • docs/ui-architecture.md (Inventário de Componentes: PrepBar).
 
 Objetivo
-- Manter um mini‑timer persistente no rodapé, visível em todo o app enquanto houver timer de etapa ativo, oferecendo retorno rápido à Tela de Preparo (focada) e controles essenciais (play/pausa/avançar passo). Não haverá cronômetro global de sessão de preparo.
+- Sessão única de preparo: existe apenas uma sessão ativa por vez (vinculada a uma receita).
+- Manter um mini‑timer persistente no rodapé, visível em todo o app enquanto houver timer de etapa ativo ou recém‑concluído (janela curta), oferecendo retorno rápido à Tela de Preparo (focada) e controles essenciais (play/pausa/avançar passo). Não haverá cronômetro global de sessão de preparo.
 
 Elementos‑chave
 - Contêiner fixo no rodapé (full‑width), elevado acima do conteúdo; respeita barras do sistema (gesture/nav bar).
@@ -12,6 +13,7 @@ Elementos‑chave
 - Controles: Play/Pause (toggle) e Avançar passo (»). O botão “encerrar” não existe; encerrar/editar timers acontece na aba Preparo.
 - Múltiplos timers: exibir o próximo a concluir; badge “2×/3×” indica quantidade. Toque abre a Tela de Preparo para gestão completa pelo Painel de Timers.
 - Não aparece dentro da Tela de Preparo focada (RecipePrepScreen) para evitar duplicação de controles com o Rodapé e Painel de Timers.
+- Formato do tempo: mm:ss; adotar h:mm:ss automaticamente quando a duração ≥ 1h.
 
 Wireframe (Mobile)
 
@@ -47,13 +49,14 @@ Variações de estado
 ```
 
 - Concluído
-  - Sinal sonoro/vibração + destaque por 2s; mantém barra até ação do usuário.
+  - Sinal sonoro/vibração + destaque por alguns segundos (janela curta ≈ 6s), respeitando DND/ajustes do SO.
   - Ações: abrir Preparo (toque) ou avançar passo (»), quando aplicável. Reiniciar/encerrar acontecem na aba Preparo.
-  - Ação rápida opcional: [+1:00] (adiciona 1 min ao timer concluído e volta a “Rodando”), alinhado ao comportamento da Tela de Preparo quando o Painel/Aviso está colapsado.
+  - Ação rápida principal: [+5:00] (adiciona 5 min ao timer concluído e volta a “Rodando”). Opcional: pressiona e segura para presets (ex.: +30s/+1m/+5m).
+  - Ao fim da janela, se não houver interação, a barra passa a exibir o próximo timer ativo/pausado. Se não houver mais timers, a barra se oculta.
 
 ```
 ────────────────────────────────────────────────────────────────
-│  ✓ Timer concluído — Molho pronto!        [+1:00]  Abrir   »  │
+│  ✓ Timer concluído — Molho pronto!        [+5:00]  Abrir   »  │
 ────────────────────────────────────────────────────────────────
 ```
 
@@ -61,36 +64,25 @@ Variações de estado
   - Exibe o mais urgente; badge “N×” indica a contagem total.
   - Prioridade: menor tempo restante; em empate, último iniciado.
 
-– Mismatch (timer ≠ passo atual)
-- Situação: um timer está rodando para o Passo N, mas a interface de Preparo está posicionada em outro passo (usuário avançou/retrocedeu pelo texto/scroll).
-- Comportamento da barra: a área principal mostra o passo do timer; surge CTA “Ir ao passo do timer”. O botão “Avançar (»)” continua avançando o passo corrente (não o do timer).
-
-```
-────────────────────────────────────────────────────────────────
-│  ⏱ Passo 3/6 rodando (Molho)         05:12   ⏯   »    2×     │
-│  Você está no Passo 1/6.   [ Ir ao passo do timer ]          │
-────────────────────────────────────────────────────────────────
-```
-
-- Toque na área principal ou no CTA “Ir ao passo do timer” → abre a Tela de Preparo (focada) e foca o Passo 3/6 (timer) mantendo-o como timer ativo.
+<!-- Mismatch (timer ≠ passo atual) não se aplica à Prep Bar, pois a barra não é renderizada na RecipePrepScreen; a gestão de mismatch ocorre dentro da própria tela de preparo. -->
 
 Regras de exibição (persistência)
-- Aparece quando: houver ao menos um timer de etapa rodando ou pausado.
-- Some quando: não restarem timers ativos/pausados.
+- Aparece quando: houver ao menos um timer de etapa rodando ou pausado, ou um timer recém‑concluído dentro da janela de exibição.
+- Some quando: não restarem timers ativos/pausados e nenhum concluído dentro da janela.
 - Não renderizar na `RecipePrepScreen` (Tela de Preparo focada); nessa tela, a gestão ocorre via Painel de Timers e Rodapé próprios.
-- Navegação: toque (fora dos ícones) sempre abre a Tela de Preparo (focada) da receita ativa.
+- Navegação: toque (fora dos ícones) sempre abre a Tela de Preparo (focada) da sessão ativa.
 
 Interações
 - Toque na área principal → abre a Tela de Preparo (focada).
 - ⏯ Play/Pause → alterna estado do timer focado; anuncia “Timer pausado/retomado”.
 - » Avançar → avança para o próximo passo da receita (mesmo fora da Tela de Preparo). Voltar de passo acontece por gesto/scroll dentro da Tela de Preparo.
 - Badge “N×” → indica contagem; a gestão de múltiplos é feita na Tela de Preparo, via Painel de Timers (não há carrossel na barra).
- - [+1:00] (quando visível) → adiciona tempo ao timer mostrado e muda para “Rodando”.
+ - [+5:00] (quando visível) → adiciona 5min ao timer mostrado e muda para “Rodando”. Pressionar e segurar pode abrir presets adicionais.
 
 Acessibilidade
 - Role: `button` para a área principal; ícones com `contentDescription` claros (“Pausar timer”, “Retomar timer”, “Avançar passo”).
 - `stateDescription`: “Rodando”/“Pausado”/“Concluído”; anunciar tempo restante (ex.: “oito minutos e vinte e um segundos restantes”).
-- Concluído: expor ação com label acessível “Adicionar 1 minuto ao timer” quando a ação rápida estiver presente. Preferir live region `polite` para anúncio de conclusão fora da Tela de Preparo.
+- Concluído: expor ação com label acessível “Adicionar 5 minutos ao timer” quando a ação rápida estiver presente. Preferir live region `polite` para anúncio de conclusão fora da Tela de Preparo.
 - Alvos ≥ 48dp; ordem de foco previsível: área principal → Play/Pause → Avançar.
 - Respeita `fontScale` até 200% sem truncar o tempo; overflow elíptico no título.
 
@@ -100,8 +92,8 @@ Responsividade
 
  Sincronização com timers (alinhado à Tela de Preparo)
  - Seleção do item exibido (quando N>1): menor tempo restante primeiro; empate → último iniciado.
+ - Prioridade de exibição: se houver timer concluído recente, mostrar o aviso de “Concluído” durante a janela; em seguida, voltar ao mais urgente (rodando/pausado).
  - Estabilidade: evitar reordenações visuais enquanto o usuário interage com a barra; atualizar apenas mm:ss (monoespaçado) e ícone de estado.
- - Mismatch: quando presente, a barra reflete o passo do timer; o botão » atua sobre o `currentStepIndex` persistido da sessão de preparo (não muda o alvo do timer).
 
  Notas para Dev
   - Composable sugerido (alinhado a docs/ui-architecture.md):
@@ -115,12 +107,10 @@ Responsividade
     onToggle: () -> Unit,
     onNextStep: () -> Unit,
     onOpenPrep: () -> Unit,
-    mismatch: Boolean,
-    onGoToTimerStep: () -> Unit,
     onAddTime: (amount: Duration) -> Unit = {},
   ) { /* … */ }
   ```
-  - Estados obrigatórios de preview: Rodando; Pausado; Concluído (com [+1:00]); Múltiplos timers (badge > 1); Mismatch (timer ≠ passo atual).
-  - Semântica: `Modifier.semantics { stateDescription = … }` e `contentDescription` nos ícones; `testTag` para automação. A ação rápida deve ter `contentDescription` “Adicionar 1 minuto ao timer”.
-  - Navegação: `onOpenPrep()` direciona a `recipe/{id}/prep` (Tela de Preparo focada); `onGoToTimerStep()` foca o passo do timer dentro dessa tela.
+  - Estados obrigatórios de preview: Rodando; Pausado; Concluído (overlay ~6s com [+5:00]); Múltiplos timers (badge > 1).
+  - Semântica: `Modifier.semantics { stateDescription = … }` e `contentDescription` nos ícones; `testTag` para automação. A ação rápida deve ter `contentDescription` “Adicionar 5 minutos ao timer”.
+  - Navegação: `onOpenPrep()` direciona a `recipe/{id}/prep` (Tela de Preparo focada).
   - Cores/tokens: usar Material 3 + tokens do tema do app; contrastes revisados para claro/escuro; mm:ss com fonte monoespaçada.
