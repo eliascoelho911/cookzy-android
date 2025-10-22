@@ -10,10 +10,10 @@ Este diretório contém wireframes de baixa fidelidade para as principais telas 
 - Importar: design/wireframes/Import-wireframe.md
 - Livros de Receitas — Lista: design/wireframes/BooksList-wireframe.md
 - Livros de Receitas — Detalhe: design/wireframes/BookDetail-wireframe.md
+ - Prep Bar (mini‑timer): design/wireframes/PrepBar-wireframe.md
 
 Wireframes pendentes
 - Compartilhar (sheet): acionado no Detalhe, payload/preview — base em docs/epics/13-compartilhamento.md
-- Prep Bar (mini‑timer): estados rodando/pausado/concluído e regras de exibição persistente — base em docs/front-end-spec.md
 
 Observações gerais
 - Foco mobile (phone); manter 1 coluna no MVP. Em ≥ 840 dp, futuro multipainel está fora de escopo.
