@@ -5,6 +5,17 @@ Fonte: docs/front-end-spec.md (Fluxo Cozinhar), docs/ui-architecture.md (Navega�
 Objetivo
 - Prover uma visualização focada e livre de distrações para executar o preparo passo a passo, com integração direta aos timers de etapa, leitura confortável e controles essenciais acessíveis.
 
+Anatomia da tela (regiões)
+- App Bar (fixa): voltar (←), título compacto (uma linha, ellipsis), badge de múltiplos timers (N×) quando aplicável.
+- Avisos (fixo abaixo da App Bar): região dedicada a mensagens de estado curto.
+  - Tipos: Mismatch (timer ≠ passo atual), Timer concluído, Erro de passo/ação, Nudge para iniciar timer.
+  - Comportamento: 1 aviso visível por vez; fila (queue) com exibição sequencial.
+  - Duração: Mismatch (persistente até resolver/dispensar), Concluído (~10s ou interação), Erro (persistente até fechar), Nudge (~8s ou iniciar/dispensar).
+  - Ações inline contextuais: [Ir], [Abrir], [Dispensar].
+- Conteúdo do Passo (rolável): texto do passo com destaques; gestos de scroll que avançam/retrocedem passo por limiar.
+- Acessórios do Passo (inline, opcional): CTA de vídeo externo com timestamp.
+- Rodapé (fixo): controles ⏯/tempo (quando houver timer no passo) e botão » Avançar.
+
 Elementos‑chave
 - App Bar minimalista: voltar (←) e título compacto da receita (uma linha, ellipsis).
 - Indicador de progresso: “Passo N/M”.
@@ -18,6 +29,8 @@ Wireframe (Mobile)
 ┌──────────────── App Bar ────────────────┐
 │ ←  Panquecas fofas           Passo 3/6 │
 └─────────────────────────────────────────┘
+
+▉ Avisos (se houver)
 
   3) Asse no forno por [⏱ 30 min].
      Dica: vire na metade do tempo.
@@ -76,7 +89,7 @@ Variações por estado
   3) Asse no forno por [⏱ 30 min].
 
 ──────────────────────────────────────────
-│   ⏯  00:00              [  » Avançar — Próximo ] │  ← realce por ~2s
+│             [  » Avançar — Próximo ] │  ← realce por ~2s
 ──────────────────────────────────────────
 ```
 
@@ -132,16 +145,27 @@ Gestos e navegação
 - Play/Pause: alterna o timer do passo atual, quando existir; se o passo não tiver timer detectado, o botão ⏯ não aparece (em vez disso, o chip [⏱ …] no texto sugere criar o timer).
 - Back/Fechar: retorna à tela anterior mantendo estado do preparo (passo atual e timers).
 
+Região de Avisos — regras de prioridade
+- Ordem de prioridade: Erro > Mismatch > Timer concluído > Nudge.
+- Composição visual: container `surfaceVariant` com ícone por tipo (erro, timer, info), uma linha de texto com possível ação inline [Ir]/[Abrir]/[Dispensar]. Responsivo até 2 linhas sob `fontScale` alto.
+- Interação: tocar fora não fecha; cada aviso tem alvo de toque ≥ 48dp para suas ações. Mismatch e Erro são persistentes; demais têm auto-ocultação.
+
 Sincronização com timers
 - Se um timer ativo pertence a outro passo (mismatch), exibir um aviso não intrusivo: “Timer ativo no Passo N/M — [Ir]”. Tocar em [Ir] rola e focaliza o passo do timer.
 - Concluído: quando um timer do passo atual termina, destacar o rodapé por ~2s e evidenciar o botão » Avançar.
 - Múltiplos timers: mostrar o mais urgente no rodapé; badge “N×” no App Bar (sem seletor no MVP). Gestão completa ocorre ao navegar para os respectivos passos.
+
+Divisão visual e comportamento de layout
+- App Bar e Rodapé possuem elevação; a região de Avisos não rola com o conteúdo (fica ancorada abaixo da App Bar).
+- O conteúdo do passo ocupa a área entre Avisos e Rodapé; o CTA de vídeo fica dentro dessa área, acima do Rodapé.
+- Em orientação landscape, manter as mesmas regiões; garantir que o Rodapé permaneça tocável e que a região de Avisos não sobreponha conteúdo crítico.
 
 Acessibilidade
 - Ordem de foco previsível: título → conteúdo do passo → vídeo (se houver) → controles do rodapé.
 - Ícones com `contentDescription` claros; `stateDescription` para ⏯ (“Rodando”/“Pausado”).
 - Alvos ≥ 48dp (especialmente o botão » Avançar). Suporte a `fontScale` até 200% sem truncar conteúdo crítico.
 - Leitura por leitor de tela: anunciar “Passo N de M”. Destaques clicáveis (ingrediente/temperatura/tempo) com rótulos completos.
+ - Região de Avisos: usar live region (`polite` para Concluído/Nudge, `assertive` para Erro). Ações acessíveis por teclado e leitor de tela.
 
 Estados
 - Carregando: esqueleto simples do conteúdo + placeholder dos controles.
