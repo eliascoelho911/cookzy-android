@@ -91,6 +91,38 @@ Referências (arquivos atuais):
 - Tipografia via Google Fonts Provider; prever fallback quando indisponível
 - Respeitar escala de espaçamento base 8dp e shapes consistentes
 
+### Tabela de Tokens (sincronizada com o código)
+
+| Role | Constante (Light) | Hex | Constante (Dark) | Hex |
+|---|---|---|---|---|
+| Primary | `primaryLight` | #3B6939 | `primaryDark` | #A1D39A |
+| On Primary | `onPrimaryLight` | #FFFFFF | `onPrimaryDark` | #0A390F |
+| Primary Container | `primaryContainerLight` | #BCF0B4 | `primaryContainerDark` | #235024 |
+| On Primary Container | `onPrimaryContainerLight` | #235024 | `onPrimaryContainerDark` | #BCF0B4 |
+| Secondary | `secondaryLight` | #775A0B | `secondaryDark` | #E9C16C |
+| On Secondary | `onSecondaryLight` | #FFFFFF | `onSecondaryDark` | #3F2E00 |
+| Secondary Container | `secondaryContainerLight` | #FFDF9E | `secondaryContainerDark` | #5B4300 |
+| On Secondary Container | `onSecondaryContainerLight` | #5B4300 | `onSecondaryContainerDark` | #FFDF9E |
+| Tertiary | `tertiaryLight` | #8F4C37 | `tertiaryDark` | #FFB59F |
+| On Tertiary | `onTertiaryLight` | #FFFFFF | `onTertiaryDark` | #561F0E |
+| Error | `errorLight` | #904A44 | `errorDark` | #FFB4AC |
+| On Error | `onErrorLight` | #FFFFFF | `onErrorDark` | #561E1A |
+| Background | `backgroundLight` | #F7FBF1 | `backgroundDark` | #10140F |
+| On Background | `onBackgroundLight` | #191D17 | `onBackgroundDark` | #E0E4DB |
+| Surface | `surfaceLight` | #F7FBF1 | `surfaceDark` | #10140F |
+| On Surface | `onSurfaceLight` | #191D17 | `onSurfaceDark` | #E0E4DB |
+| Surface Variant | `surfaceVariantLight` | #DEE5D8 | `surfaceVariantDark` | #424940 |
+| On Surface Variant | `onSurfaceVariantLight` | #424940 | `onSurfaceVariantDark` | #C2C9BD |
+| Outline | `outlineLight` | #72796F | `outlineDark` | #8C9388 |
+| Outline Variant | `outlineVariantLight` | #C2C9BD | `outlineVariantDark` | #424940 |
+| Success | `successLight` | #39693B | `successDark` | #9FD49C |
+| On Success | `onSuccessLight` | #FFFFFF | `onSuccessDark` | #063911 |
+| Success Container | `successContainerLight` | #BAF0B6 | `successContainerDark` | #215025 |
+| On Success Container | `onSuccessContainerLight` | #215025 | `onSuccessContainerDark` | #BAF0B6 |
+
+Tipografia
+- `AppTypography`: usa baseline do Material 3 com famílias definidas em `Type.kt` (Nunito display; Open Sans body/labels).
+
 ## Responsividade
 
 - Seguir a seção “Responsividade” da spec (docs/front-end-spec.md)

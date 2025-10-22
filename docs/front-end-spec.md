@@ -258,8 +258,8 @@ Componentes nucleares (propostos):
    - Locais: abaixo do título no Detalhe (se houver origem) e ao final do texto do passo
    - Técnica: Intent ACTION_VIEW com fallback para navegador; validação/normalização de timestamp (YouTube/Instagram); ação “Copiar link” se app externo indisponível
 
-Notas técnicas
-- Reuso de tokens e tipografia de `Type.kt` (`AppTypography`), cores de `Color.kt` e esquemas `Theme.kt` (Material 3, inclusive dynamic color quando suportado).
+- Notas técnicas
+- Reuso de tokens e tipografia de `Type.kt` (`AppTypography`), cores de `Color.kt` e esquemas `Theme.kt` (Material 3; sem dynamic color no momento).
 - Considerar `ExtendedColorScheme.success` já previsto para estados positivos.
 - Tokens sugeridos: espaçamento base 8dp; elevações padronizadas (0, 1, 3, 6, 8); raios de canto consistentes (ex.: 8dp cards, 28dp FAB/sheets).
 - Fontes Google: definir fallback local/sistema equivalente para display/body (em caso de indisponibilidade do provider GMS), garantindo estabilidade de layout.
@@ -282,19 +282,69 @@ Notas técnicas
 
 Obs: todos os pares onColor/containers seguem `Color.kt` e o esquema do `MaterialTheme.colorScheme` (light/dark e contrastes).
 
+Tokens de Cores (Light) — referência do código
+| Token | Constante | Hex |
+|---|---|---|
+| Primary | primaryLight | #3B6939 |
+| On Primary | onPrimaryLight | #FFFFFF |
+| Primary Container | primaryContainerLight | #BCF0B4 |
+| On Primary Container | onPrimaryContainerLight | #235024 |
+| Secondary | secondaryLight | #775A0B |
+| On Secondary | onSecondaryLight | #FFFFFF |
+| Secondary Container | secondaryContainerLight | #FFDF9E |
+| On Secondary Container | onSecondaryContainerLight | #5B4300 |
+| Tertiary | tertiaryLight | #8F4C37 |
+| On Tertiary | onTertiaryLight | #FFFFFF |
+| Error | errorLight | #904A44 |
+| On Error | onErrorLight | #FFFFFF |
+| Background | backgroundLight | #F7FBF1 |
+| On Background | onBackgroundLight | #191D17 |
+| Surface | surfaceLight | #F7FBF1 |
+| On Surface | onSurfaceLight | #191D17 |
+| Surface Variant | surfaceVariantLight | #DEE5D8 |
+| On Surface Variant | onSurfaceVariantLight | #424940 |
+| Outline | outlineLight | #72796F |
+| Outline Variant | outlineVariantLight | #C2C9BD |
+| Success | successLight | #39693B |
+| On Success | onSuccessLight | #FFFFFF |
+| Success Container | successContainerLight | #BAF0B6 |
+| On Success Container | onSuccessContainerLight | #215025 |
+
+Tokens de Cores (Dark)
+| Token | Constante | Hex |
+|---|---|---|
+| Primary | primaryDark | #A1D39A |
+| On Primary | onPrimaryDark | #0A390F |
+| Primary Container | primaryContainerDark | #235024 |
+| On Primary Container | onPrimaryContainerDark | #BCF0B4 |
+| Secondary | secondaryDark | #E9C16C |
+| On Secondary | onSecondaryDark | #3F2E00 |
+| Secondary Container | secondaryContainerDark | #5B4300 |
+| On Secondary Container | onSecondaryContainerDark | #FFDF9E |
+| Tertiary | tertiaryDark | #FFB59F |
+| On Tertiary | onTertiaryDark | #561F0E |
+| Error | errorDark | #FFB4AC |
+| On Error | onErrorDark | #561E1A |
+| Background | backgroundDark | #10140F |
+| On Background | onBackgroundDark | #E0E4DB |
+| Surface | surfaceDark | #10140F |
+| On Surface | onSurfaceDark | #E0E4DB |
+| Surface Variant | surfaceVariantDark | #424940 |
+| On Surface Variant | onSurfaceVariantDark | #C2C9BD |
+| Outline | outlineDark | #8C9388 |
+| Outline Variant | outlineVariantDark | #424940 |
+| Success | successDark | #9FD49C |
+| On Success | onSuccessDark | #063911 |
+| Success Container | successContainerDark | #215025 |
+| On Success Container | onSuccessContainerDark | #BAF0B6 |
+
 ### Tipografia
-- Primary: Nunito (display)
-- Secondary: Open Sans (body)
+- Display: Nunito (aplicado a display/headline/title)
+- Body/Labels: Open Sans (aplicado a body/label)
 - Monospace: sistema
 
-Escala tipográfica (base M3 com famílias acima):
-| Element | Size | Weight | Line Height |
-|---|---|---|---|
-| H1 | 36sp | 600 | 44sp |
-| H2 | 28sp | 600 | 36sp |
-| H3 | 24sp | 600 | 32sp |
-| Body | 16sp | 400 | 24sp |
-| Small | 12sp | 400 | 16sp |
+Escala tipográfica
+- Segue o baseline do Material 3 (`Typography()`), sem overrides de tamanho/line‑height no código; somente famílias foram alteradas em `Type.kt`.
 
 ### Iconografia
 **Icon Library:** Material Symbols (Rounded)
