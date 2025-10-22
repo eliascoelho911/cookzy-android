@@ -14,6 +14,7 @@ Elementos‑chave
 - Stepper de Porções inline (1–99) posicionado abaixo do “Iniciar preparo”.
 - Tabs: Ingredientes | Preparo | Nutrição.
 - Barra de Preparo (mini‑timer) persistente no rodapé quando houver preparo ativo.
+ - Barra de Preparo (mini‑timer) persistente no rodapé quando houver timer de etapa ativo.
 
 Padrão de Sheet
  
@@ -71,17 +72,17 @@ Estados
 - Erro: mensagem + ação “Voltar”.
 - Sucesso: conforme wireframe.
 
-Interações
-- “Iniciar preparo” → seleciona aba Preparo e inicia fluxo; Prep Bar aparece e persiste em todo o app.
+ Interações
+- “Iniciar preparo” → abre a Tela de Preparo (focada) já posicionada no primeiro passo aplicável; Prep Bar aparece e persiste em todo o app quando um timer de etapa estiver ativo.
 - Stepper (1–99) → recalcula quantidades da aba Ingredientes; persiste por receita.
 - Compartilhar → sheet com opções do sistema.
 - CTA “Abrir vídeo externo” (no Hero e no passo) → Intent ACTION_VIEW (fallback navegador).
 - Editar (ícone ✎ na App Bar) → navega para o Editor da receita atual.
 
- Interações de Preparo — Destaques
+  Interações de Preparo — Destaques
  - Ingrediente (tooltip): palavras mapeadas para ingredientes aparecem com sublinhado pontilhado; toque exibe tooltip ancorado com “quantidade + nome”; ação secundária: “Copiar”. Dismiss por tap fora/voltar.
  - Temperatura: padrões como “180°C/ºC” recebem chip inline [🔥 valor]; cor usa `warning/onSecondaryContainer`. Mudanças de temperatura entre passos podem animar com micro-pulso.
- - Timer: padrões “30 min/1 h/45m” recebem chip [⏱ valor]; tap sugere criar timer do passo com esse valor; ao confirmar, botão do passo vira play/pause e Prep Bar ativa com o tempo restante.
+- Timer: padrões “30 min/1 h/45m” recebem chip [⏱ valor]; tap sugere criar timer do passo com esse valor; ao confirmar, botão do passo vira play/pause e Prep Bar ativa com o tempo restante.
 
 Acessibilidade
 - Stepper com role=adjustable; anunciar mudanças; limites com feedback discreto.
@@ -95,9 +96,10 @@ Acessibilidade
 Responsividade
 - MVP: 1 coluna. Futuro (≥ 840 dp): multipainel (Ingredientes | Preparo) fora deste escopo.
 
-Notas para Dev
+ Notas para Dev
 - Arquivo base: app/src/main/java/.../recipedetail/RecipeDetailScreen.kt
 - Adicionar previews: carregando; erro; sucesso (cada aba selecionada).
+- Navegação: a Prep Bar, ao ser tocada, abre `recipe/{id}/prep` (Tela de Preparo focada) em vez de retornar à aba Preparo.
 
 ### Aba Ingredientes — Detalhes
 

@@ -10,7 +10,8 @@ Este diretório contém wireframes de baixa fidelidade para as principais telas 
 - Importar: design/wireframes/Import-wireframe.md
 - Livros de Receitas — Lista: design/wireframes/BooksList-wireframe.md
 - Livros de Receitas — Detalhe: design/wireframes/BookDetail-wireframe.md
- - Prep Bar (mini‑timer): design/wireframes/PrepBar-wireframe.md
+- Prep Bar (mini‑timer): design/wireframes/PrepBar-wireframe.md
+ - Preparo (Tela focada): design/wireframes/PrepScreen-wireframe.md
 
 Wireframes pendentes
 - Compartilhar (sheet): acionado no Detalhe, payload/preview — base em docs/epics/13-compartilhamento.md

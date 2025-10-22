@@ -3,11 +3,11 @@
 Fonte: docs/front-end-spec.md (Barra de Preparo/mini‑timer) • docs/ui-architecture.md (Inventário de Componentes: PrepBar).
 
 Objetivo
-- Manter um mini‑timer persistente no rodapé, visível em todo o app enquanto houver timer de etapa ativo, oferecendo retorno rápido à aba Preparo e controles essenciais (play/pausa/avançar passo). Não haverá cronômetro global de sessão de preparo.
+- Manter um mini‑timer persistente no rodapé, visível em todo o app enquanto houver timer de etapa ativo, oferecendo retorno rápido à Tela de Preparo (focada) e controles essenciais (play/pausa/avançar passo). Não haverá cronômetro global de sessão de preparo.
 
 Elementos‑chave
 - Contêiner fixo no rodapé (full‑width), elevado acima do conteúdo; respeita barras do sistema (gesture/nav bar).
-- Toque na área principal → abre Detalhe da Receita na aba Preparo (retoma o passo atual).
+- Toque na área principal → abre a Tela de Preparo (focada) e posiciona no passo do timer.
 - Título compacto (receita e/ou passo) e tempo restante em destaque (mm:ss) quando existir timer de etapa.
 - Controles: Play/Pause (toggle) e Avançar passo (»). O botão “encerrar” não existe; encerrar/editar timers acontece na aba Preparo.
 - Múltiplos timers: exibir o próximo a concluir; badge “2×/3×” indica quantidade. Toque abre a aba Preparo para gestão completa.
@@ -20,7 +20,7 @@ Wireframe (Mobile)
 ────────────────────────────────────────────────────────────────
 │  🍳 Panquecas — Passo 3/6           08:21      ⏯     »    2× │
 ────────────────────────────────────────────────────────────────
-   ▲ toque (área principal) abre Aba Preparo      ▲     ▲    ▲
+   ▲ toque (área principal) abre Tela de Preparo  ▲     ▲    ▲
                                                  play   avança badge
 ```
 
@@ -41,7 +41,7 @@ Variações de estado
 
 ```
 ────────────────────────────────────────────────────────────────
-│  🍝 Bolonhesa — Timer do molho       12:47     ▶️     ✕       │
+│  🍝 Bolonhesa — Timer do molho       12:47     ▶️     »       │
 ────────────────────────────────────────────────────────────────
 ```
 
@@ -70,17 +70,17 @@ Variações de estado
 ────────────────────────────────────────────────────────────────
 ```
 
-- Toque na área principal ou no CTA “Ir ao passo do timer” → navega/rola para o Passo 3/6 na aba Preparo e mantém o timer focado.
+- Toque na área principal ou no CTA “Ir ao passo do timer” → abre a Tela de Preparo (focada) e foca o Passo 3/6 (timer) mantendo-o como timer ativo.
 
 Regras de exibição (persistência)
 - Aparece quando: houver ao menos um timer de etapa rodando ou pausado.
 - Some quando: não restarem timers ativos/pausados.
-- Navegação: toque (fora dos ícones) sempre abre a aba Preparo da receita ativa.
+- Navegação: toque (fora dos ícones) sempre abre a Tela de Preparo (focada) da receita ativa.
 
 Interações
-- Toque na área principal → abre Detalhe → aba Preparo (mantém scroll/etapa).
+- Toque na área principal → abre a Tela de Preparo (focada).
 - ⏯ Play/Pause → alterna estado do timer focado; anuncia “Timer pausado/retomado”.
-- » Avançar → avança para o próximo passo da receita (mesmo fora da aba Preparo). Voltar de passo acontece por gesto/scroll dentro da aba Preparo.
+- » Avançar → avança para o próximo passo da receita (mesmo fora da Tela de Preparo). Voltar de passo acontece por gesto/scroll dentro da Tela de Preparo.
 - Badge “N×” → indica contagem; a gestão de múltiplos é feita na aba Preparo (não há carrossel de timers no MVP).
 
 Acessibilidade
@@ -111,5 +111,5 @@ Notas para Dev
   ```
 - Estados obrigatórios de preview: Rodando; Pausado; Concluído; Múltiplos timers (badge > 1); Mismatch (timer ≠ passo atual).
 - Semântica: `Modifier.semantics { stateDescription = … }` e `contentDescription` nos ícones; `testTag` para automação.
-- Navegação: `onOpenPrep()` direciona a `recipe/{id}` com aba Preparo selecionada; `onGoToTimerStep()` rola/foca o passo do timer.
+- Navegação: `onOpenPrep()` direciona a `recipe/{id}/prep` (Tela de Preparo focada); `onGoToTimerStep()` foca o passo do timer dentro dessa tela.
 - Cores/tokens: usar Material 3 + tokens do tema do app; contrastes revisados para claro/escuro.
