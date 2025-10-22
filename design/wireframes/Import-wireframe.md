@@ -8,7 +8,7 @@ Objetivo
 Visão Geral do Fluxo
 1) FAB Sheet → Importar
 2) Sheet “Importar” (origem + URL) → Extrair
-3) Extraindo (loading) → sucesso OU erro
+3) Extraindo (tela cheia) → sucesso OU erro
 4) Revisão da Importação (tela) → Salvar
 5) Sucesso → navegar para Detalhe da Receita
 
@@ -42,22 +42,25 @@ Validações (sheet)
 - Mostrar mensagem de erro inline abaixo do campo quando inválido.
 - Foco inicial no campo URL; teclado aberto.
 
-## 2) Extraindo dados (loading no sheet)
+## 2) Extraindo dados (tela cheia)
 
 ```
-┌──────────────────────── Bottom Sheet ──────────────────────────┐
-│  Importar receita                                   [  ✕  ]     │
-├────────────────────────────────────────────────────────────────┤
-│ [ ⟳ ] Extraindo dados da receita…                                │
-│ Isso pode levar alguns segundos.                                 │
-├────────────────────────────────────────────────────────────────┤
-│  [ Cancelar ]                                                   │
-│  [  Processando… ]                                              │
-└────────────────────────────────────────────────────────────────┘
+┌───────────────────── Tela Atual (Home/Lista) ─────────────────────┐
+│                                                                    │
+│   ────────────────────────── SCRIM ───────────────────────────     │
+│   │                                                              │  │
+│   │      [ ⟳ ]                                                   │  │
+│   │      Importando receita…                                     │  │
+│   │      (isso pode levar alguns segundos)                       │  │
+│   │                                                              │  │
+│   ──────────────────────────────────────────────────────────────     │
+│                                                                    │
+└────────────────────────────────────────────────────────────────────┘
 ```
 
-- Desabilitar campo e controles enquanto processa.
-- Cancelar fecha o sheet e aborta a tarefa (se suportado), ou apenas fecha a UI (efeito a definir com Eng).
+- Exibir overlay de operação longa em tela cheia usando `LongOperationOverlay`.
+- Ao iniciar a extração, fechar o sheet de Importar para reduzir camadas (ou mantê-lo atrás — overlay bloqueia interação; decisão opcional). 
+- Overlay é bloqueante e não possui “Cancelar” no MVP (padrão pode suportar, mas desabilitado aqui).
 
 ## 3) Erro na extração (sheet)
 
