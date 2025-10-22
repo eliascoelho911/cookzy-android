@@ -17,6 +17,7 @@ Este documento define os objetivos de experiência do usuário, a arquitetura da
 | 2025-10-22 | 0.5     | Adicionada seção de Responsividade                         | Sally (UX)  |
 | 2025-10-22 | 0.6     | Adicionada seção de Animação & Microinterações             | Sally (UX)  |
 | 2025-10-22 | 0.7     | Adicionadas seções de Desempenho e Próximos Passos         | Sally (UX)  |
+| 2025-10-22 | 0.8     | Home: carrossel de recentes com 1 card/viewport (snap, PEEK, sem indicador); carrossel de livros (filtro); cabeçalho com contagem e toggle lista/grade; remover tags na Recipe List | Sally (UX)  |
 
 ## Objetivos e Princípios de UX
 
@@ -46,7 +47,8 @@ Este documento define os objetivos de experiência do usuário, a arquitetura da
 ```mermaid
 graph TD
     H[Home] --> H1[Carrossel: receitas recentes]
-    H --> H2[Grade: livros de receitas]
+    H --> H2[Carrossel: livros (filtro)]
+    H --> H3[Lista/Grade: receitas]
     H --> R[Receita: Detalhe]
     H --> L[Livros]
     H --> NE[Nova Receita / Editor]
@@ -171,9 +173,9 @@ Regras de Habilitação do Salvar
 **Arquivos de design:** Figma — definir link posteriormente
 
 ### Home
-- Purpose: descoberta rápida (recentes) + acesso a livros
-- Key Elements: App Bar com busca; carrossel “Receitas recentes” com 2 cards médios por viewport (peek visível); grade “Livros” em 2 colunas (phone); FAB “Adicionar receita”.
-- Interaction Notes: FAB abre sheet (Importar/Manual); cartões mostram cover, tempo e livros de receitas; estados vazio/erro/skeleton.
+- Purpose: descoberta rápida (recentes) + filtro por livros + navegação para receitas
+- Key Elements: App Bar com busca; carrossel “Receitas recentes” com 1 card por viewport (full‑bleed, snap e PEEK do próximo; sem indicador de página); carrossel “Livros (filtro)” com capas circulares + rótulo (inclui “Todos”); cabeçalho da lista com “N receitas” + botões de alternância lista/grade; lista/grade de receitas; FAB “Adicionar receita”.
+- Interaction Notes: selecionar um livro no carrossel filtra a lista/grade abaixo; cabeçalho atualiza a contagem após filtros; alternância de layout persiste em preferência local; cartões mostram cover, tempo e livros de receitas (sem tags); estados vazio/erro/skeleton.
 
 ### FAB Sheet — Adicionar receita
 - Purpose: criar por importação ou manual
@@ -270,13 +272,14 @@ Componentes nucleares (propostos):
    - States: enabled/disabled; sheet com cabeçalho consistente
 
 3. Cards
-   - RecipeCard: cover, título, tempo, chips (livros de receitas)
-   - BookCard: capa/placeholder, título, contagem
+   - RecipeCard: cover, título, tempo, livro(s) de receitas
+   - BookCard: capa/placeholder, título, contagem (para tela de Livros)
    - States: loading (skeleton), empty, error (retry)
 
-4. Chips
-   - Chip de Livros de Receitas, FilterChip (tempo, livro, livro de receitas)
+4. Filtros de Livros (Carrossel)
+   - Itens circulares com capa + rótulo; inclui opção “Todos”
    - States: selected/unselected, enabled/disabled
+   - Ações: tap seleciona/limpa filtro; rolagem horizontal
 
 5. Tabs (Detalhe da Receita)
    - Ingredientes / Preparo / Nutrição
@@ -309,6 +312,16 @@ Componentes nucleares (propostos):
    - Variants: Home, Buscar, Livros, Importar
 
 11. IngredientTooltip
+
+12. LayoutToggle
+   - Purpose: alternar lista ↔ grade na Home
+   - Variants: dois ícones (`ViewList`/`GridView` ou equivalentes)
+   - States: list/grid selecionado; disabled durante carregamento
+   - A11y: role=toggle; `contentDescription` descritivo; persistência em DataStore
+
+13. RecipeCountLabel
+   - Purpose: mostrar “N receitas” após filtros
+   - Behavior: atualiza reativamente conforme filtro/consulta
    - Tooltip ao tocar em menções de ingredientes nos passos (conteúdo: “quantidade + nome”; ações: Converter/ Copiar)
    - Acessível (role=dialog) e cancelável (Back/tap fora)
 
@@ -454,7 +467,7 @@ Escala tipográfica
 | Wide       | 1200 dp   | —         | Monitores externos, tablets muito grandes        |
 
 ### Padrões de Adaptação
-- Layout: manter 1 coluna no MVP (sem rail/multipainel). Futuro: 2 painéis ≥ 840 dp (Ingredientes | Preparo) e grade “Livros” com 3–4 colunas.
+- Layout: manter 1 coluna no MVP (sem rail/multipainel). Futuro: 2 painéis ≥ 840 dp (Ingredientes | Preparo) e grade de receitas com 3–4 colunas.
 - Navegação: permanecer com App Bar; sem Navigation Rail neste MVP. Voltar/Up preserva estado (aba/scroll). Sheets com largura máx. 640 dp em telas largas.
 - Prioridade de conteúdo: em Mobile, colapsar descrições longas com “ver mais”. Em ≥ 840 dp, ampliar resumos/chips mantendo carga cognitiva baixa.
 - Interação: alvos ≥ 48dp em todos tamanhos; CTAs “pegajosos” respeitando bordas seguras; considerar teclado/mouse em tablets/ChromeOS.

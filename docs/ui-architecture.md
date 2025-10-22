@@ -165,6 +165,9 @@ Tabela de referência dos principais `@Composable`s a implementar/reutilizar. Se
 | Componente | Propósito | Props (chave) | Estados | A11y | Prévias Requeridas |
 |---|---|---|---|---|---|
 | AppTopBar | Barra superior com título/ações | `title: String`, `onBack: (() -> Unit)?`, `actions: @Composable RowScope.() -> Unit` | padrão, scrolled | botão voltar com label; ordem de foco | padrão; com back; com ações |
+| RecentRecipesCarousel | Carrossel de receitas recentes | `items: List<Recipe>`, `onClick(Recipe)`, `peekDp: Dp` | vazio | anunciar “deslize p/ ver mais”; foco previsível | vazio; 1 item; vários |
+| BookFilterCarousel | Carrossel de livros (filtro) | `books: List<Book>`, `selected: Book?`, `onSelect(Book?)` | selected/unselected | role=tab/toggle; item “Todos” com label | sem seleção; com seleção |
+| ListGridToggle | Alternância lista ↔ grade | `isGrid: Boolean`, `onToggle(Boolean)` | list/grid | role=toggle; descriptions | list; grid |
 | RecipeCard | Card de receita em listas | `title`, `time: Duration?`, `livrosDeReceitas: List<String>`, `onClick` | loading, error, vazio | contentDescription no card; foco visível | normal; loading; error |
 | BookCard | Card de livro/coleção | `title`, `count: Int`, `onClick` | vazio | leitura por leitor de tela com contagem | normal; vazio |
 | PortionStepper | Ajuste de porções | `value: Int`, `onChange(Int)`, `range: IntRange` | min/max, inválido | role=adjustable; announce mudanças | 1, meio, max; fontScale 2.0 |
