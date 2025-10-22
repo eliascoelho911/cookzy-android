@@ -134,7 +134,7 @@ Padrão de Sheet
 Regras e validações
 - Unidades fixas por campo: kcal, g e mg conforme label.
 - Valores inteiros/decimais positivos; aceitar vírgula como separador decimal; normalizar para ponto.
-- “Salvar” grava no estado e fecha a sheet; “Limpar” zera todos os campos.
+- “Salvar” grava no estado e fecha a sheet; “Limpar” zera todos os campos. Footer em coluna (full‑width), seguindo `CookzyModalBottomSheet`.
 - Se todos os campos estiverem vazios, considerar “nutrição não informada”.
 
 Acessibilidade (sheet)

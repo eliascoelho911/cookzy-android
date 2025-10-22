@@ -182,7 +182,7 @@ Tabela de referência dos principais `@Composable`s a implementar/reutilizar. Se
 | IngredientTooltip | Tooltip de ingrediente | `anchorRect`, `content: IngredientInfo`, `onConvert()`, `onCopy()`, `onDismiss()` | — | role=dialog; foco inicial | padrão |
 | IngredientRow | Linha de ingrediente com destaque | `text: String`, `quantityRange: IntRange?` | sem range | `AnnotatedString` com bold no range | com/sem destaque |
 | FilterChips | Chips de filtro/busca | `filters`, `onToggle` | selected/unselected | tamanho ≥48dp | estados selecionado/não |
-| CookzyModalBottomSheet | Sheet base com título e ações | `title: String`, `sheetState: SheetState`, `onDismissRequest`, `secondaryButton?`, `primaryButton?`, `content` | com/sem footer | announces sheet; foco e botões acessíveis | aberto; com/sem footer |
+| CookzyModalBottomSheet | Sheet base com título e ações | `title: String`, `sheetState: SheetState`, `onDismissRequest`, `secondaryButton?`, `primaryButton?`, `content` | com/sem footer | announces sheet; foco e botões acessíveis; footer vertical (full‑width) | aberto; com/sem footer |
 
 Observação: respeitar tokens de `Theme.kt`, `Color.kt`, `Type.kt` e `ExtendedColorScheme`.
 

@@ -151,19 +151,26 @@ private fun Footer(
     secondary: SheetButton?,
     primary: SheetButton?,
 ) {
-    Row(
+    Column(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.End,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         if (secondary != null) {
-            TextButton(onClick = secondary.onClick, enabled = secondary.enabled) {
+            TextButton(
+                onClick = secondary.onClick,
+                enabled = secondary.enabled,
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(text = secondary.label)
             }
-            Spacer(Modifier.width(8.dp))
         }
         if (primary != null) {
-            Button(onClick = primary.onClick, enabled = primary.enabled) {
+            Button(
+                onClick = primary.onClick,
+                enabled = primary.enabled,
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(text = primary.label)
             }
         }
