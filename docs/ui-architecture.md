@@ -1,0 +1,138 @@
+# Cookzy — Front-end Architecture (Android Compose)
+
+## Change Log
+
+| Date       | Version | Description                                | Author     |
+|------------|---------|--------------------------------------------|------------|
+| 2025-10-22 | 0.1     | Documento criado (esqueleto inicial)       | Sally (UX) |
+
+## Visão Geral
+
+Este documento descreve como implementar a UI do Cookzy usando Jetpack Compose, Navigation Compose e Koin, alinhado à Especificação de UI/UX (docs/front-end-spec.md). Foca em padrões de navegação, gerenciamento de estado, injeção de dependências, tema e diretrizes de testes.
+
+## Stack de Front-end
+
+- Linguagem: Kotlin
+- UI: Jetpack Compose + Material 3
+- Navegação: Navigation Compose com rotas tipadas (kotlinx.serialization)
+- DI: Koin
+- Concor­rência: Coroutines/Flow
+- Persistência: Room (para dados locais)
+- Tipografia: Google Fonts Provider (Nunito, Open Sans)
+- Deep Links: `cookzy://recipes` (editor/detail)
+
+## Estrutura do Projeto (UI)
+
+- Pacotes principais
+  - android: Activity host e bootstrap (MainActivity)
+  - ui: `CookzyApp`, `CookzyNavHost` e elementos cross‑cutting
+  - ui/theme: `Theme.kt`, `Color.kt`, `Type.kt`
+  - navigation: destinos tipados e deep links
+  - di: módulos Koin
+  - feature/*: telas + ViewModels por funcionalidade
+  - core: base de ViewModel e utilitários de estado/efeito
+
+Referências (arquivos atuais):
+- app/src/main/java/com/eliascoelho911/cookzy/ui/CookzyApp.kt:1
+- app/src/main/java/com/eliascoelho911/cookzy/ui/CookzyNavHost.kt:1
+- app/src/main/java/com/eliascoelho911/cookzy/navigation/CookzyDestinations.kt:1
+- app/src/main/java/com/eliascoelho911/cookzy/di/AppModules.kt:1
+- app/src/main/java/com/eliascoelho911/cookzy/ui/theme/Theme.kt:1
+- app/src/main/java/com/eliascoelho911/cookzy/ui/theme/Color.kt:1
+- app/src/main/java/com/eliascoelho911/cookzy/ui/theme/Type.kt:1
+
+## Navegação
+
+- Padrão: rotas tipadas usando `@Serializable` + `NavHost`
+  - Destinos: `RecipeListDestination`, `RecipeEditorDestination`, `RecipeDetailDestination`
+  - Deep links: base `cookzy://recipes`, sufixos `/editor` e `/detail`
+- Gráfico de navegação
+  - Start: `RecipeListDestination`
+  - Transições:
+    - Lista → Editor (criar/editar)
+    - Lista/Editor/Detalhe → Detalhe com `recipeId`
+- Boas práticas
+  - Encapsular navegação nos destinos tipados
+  - Evitar strings de rota soltas; usar classes de destino
+  - Preservar estado na pilha (scroll/aba) nos pops
+
+## Injeção de Dependências (Koin)
+
+- Módulos em `di/AppModules.kt`:
+  - databaseModule: `CookzyDatabase` e `recipeDao()`
+  - repositoryModule: `OfflineRecipeRepository` → `RecipeRepository`
+  - viewModelModule: `RecipeListViewModel`, `RecipeEditorViewModel(params)`, `RecipeDetailViewModel(params)`
+- Padrão de uso em telas:
+  - `val vm = koinViewModel<FeatureViewModel>(parameters = { parametersOf(arg) })`
+
+## Gerenciamento de Estado
+
+- Base: `BaseViewModel<State, Effect>` com:
+  - `StateFlow<State>` para UI state imutável
+  - Canal de `Effect` (one‑shot) para navegação/toasts, etc.
+  - Helpers: `updateState {}`, `sendEffect(effect)`
+- Princípios
+  - Um ViewModel por feature/tela
+  - UI coleta `state` e `effects` via `collectAsStateWithLifecycle`/`LaunchedEffect`
+  - Evitar lógica pesada no Composable; manter no ViewModel
+
+## Composição de UI
+
+- Separar `Route` (injeção/navegação) do `Screen` (UI pura)
+- Reutilizar componentes: Cards, Chips, Stepper, Barra de Preparo, Sheets
+- Previews obrigatórias por estado relevante (carregando, vazio, erro, sucesso)
+- Semântica: fornecer `contentDescription`, roles e ordem de foco previsível
+
+## Tema & Tokens
+
+- `AppTheme` aplica `MaterialTheme` com `AppTypography` e `Color.kt`
+- `ExtendedColorScheme` expõe família de cores de sucesso
+- Tipografia via Google Fonts Provider; prever fallback quando indisponível
+- Respeitar escala de espaçamento base 8dp e shapes consistentes
+
+## Responsividade
+
+- Seguir a seção “Responsividade” da spec (docs/front-end-spec.md)
+- Adotar `WindowSizeClass` quando introduzir variações (≥ 840 dp multipainel futuramente)
+- Sheets com largura máx. ~640 dp em telas largas
+
+## Acessibilidade
+
+- Target: WCAG 2.2 AA + diretrizes Android
+- Regras
+  - Alvos de toque ≥ 48dp; foco visível
+  - `contentDescription`/`semantics` adequados
+  - Suporte a leitor de tela, teclado e preferências de reduzir animações
+
+## Animações & Microinterações
+
+- Usar APIs Compose (AnimatedContent/animate*) e curvas Material
+- Respeitar flag de “reduzir animações”; oferecer alternativas (fade/instant)
+- Timings sugeridos na spec (tabs, sheets, barra de preparo, stepper)
+
+## Testes
+
+- Unitário ViewModel: MockK + Coroutines Test (`MainDispatcherRule`)
+  - Ex.: app/src/test/java/com/eliascoelho911/cookzy/feature/recipeeditor/RecipeEditorViewModelTest.kt:1
+- UI (futuro): Compose UI Test + Semantics para estados e navegação
+- A11y: Accessibility Scanner manual e validações semânticas em testes
+
+## Performance
+
+- Objetivos: 60 fps; resposta < 100 ms em interações
+- Diretrizes
+  - Placeholders/skeletons; evitar layout shift (imagens com tamanho conhecido)
+  - Chaves estáveis em listas; reduzir recomposições (remember/derivedState)
+  - Overdraw baixo; evitar sombras excessivas
+
+## Pontos em Aberto
+
+- Política de múltiplos timers (um ativo por vez vs paralelos)
+- Mini‑timer persistente: escopo de vida e comportamento ao fechar
+- CTA “Abrir vídeo externo”: fallback quando app externo indisponível
+
+## Referências
+
+- Especificação de UI/UX: docs/front-end-spec.md
+- PRD: docs/prd.md
+

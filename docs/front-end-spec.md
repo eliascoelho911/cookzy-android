@@ -400,6 +400,7 @@ Notas técnicas
 2. Vincular arquivos de design (Figma) às seções de telas e componentes.
 3. Preparar handoff para arquitetura de frontend (Compose/DI/navegação) com o time de Engenharia.
 4. Mapear questões em aberto (ex.: granularidade do mini‑timer, política de múltiplos timers) e definir owners/decisões.
+5. Consultar e manter alinhado com o documento de Arquitetura de Front‑end: docs/ui-architecture.md
 
 ### Checklist de Handoff de Design
 - Todos os fluxos de usuário documentados
