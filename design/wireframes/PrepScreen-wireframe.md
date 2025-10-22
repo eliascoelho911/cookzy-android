@@ -1,6 +1,7 @@
 # Preparo — Tela Focada — Wireframe (MVP)
 
 Fonte: docs/front-end-spec.md (Fluxo Cozinhar), docs/ui-architecture.md (Navegação/Componentes), integração com Prep Bar.
+Observação: a PrepBar NÃO é renderizada nesta tela (RecipePrepScreen); os controles ficam no Rodapé e no Painel de Timers.
 
 Objetivo
 - Prover uma visualização focada e livre de distrações para executar o preparo passo a passo, com integração direta aos timers de etapa, leitura confortável e controles essenciais acessíveis.

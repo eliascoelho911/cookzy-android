@@ -54,6 +54,7 @@ Referências (arquivos atuais):
     - Lista/Editor/Detalhe → Detalhe com `recipeId`
     - Detalhe → Preparo focado (`recipe/{id}/prep`)
     - Prep Bar → Preparo focado (`recipe/{id}/prep`)
+  - Regra: a PrepBar não é exibida enquanto `RecipePrepDestination` estiver visível (evita sobreposição/duplicação de controles).
 - Boas práticas
   - Encapsular navegação nos destinos tipados
   - Evitar strings de rota soltas; usar classes de destino
@@ -83,6 +84,9 @@ Referências (arquivos atuais):
 
 - Separar `Route` (injeção/navegação) do `Screen` (UI pura)
 - Reutilizar componentes: Cards, Chips, Stepper, Barra de Preparo, Painel de Timers, Sheets
+- Observações globais de preparo:
+  - Sessão única de preparo: apenas uma sessão ativa por vez (por receita).
+  - PrepBar não renderiza sobre a RecipePrepScreen; gestão de timers nessa tela ocorre via Rodapé + Painel de Timers.
 - Previews obrigatórias por estado relevante (carregando, vazio, erro, sucesso)
 - Semântica: fornecer `contentDescription`, roles e ordem de foco previsível
 
@@ -173,7 +177,7 @@ Tabela de referência dos principais `@Composable`s a implementar/reutilizar. Se
 | RecipeCard | Card de receita em listas | `title`, `time: Duration?`, `livrosDeReceitas: List<String>`, `onClick` | loading, error, vazio | contentDescription no card; foco visível | normal; loading; error |
 | BookCard | Card de livro/coleção | `title`, `count: Int`, `onClick` | vazio | leitura por leitor de tela com contagem | normal; vazio |
 | PortionStepper | Ajuste de porções | `value: Int`, `onChange(Int)`, `range: IntRange` | min/max, inválido | role=adjustable; announce mudanças | 1, meio, max; fontScale 2.0 |
-| PrepBar | Mini‑timer persistente | `title`, `remaining: Duration`, `running: Boolean`, `onToggle()`, `onClose()` | running/paused/finished | announce tempo/restante e estado | running; paused; finished |
+| PrepBar | Mini‑timer persistente | `title`, `remaining: Duration`, `running: Boolean`, `onToggle()`, `onNextStep()`, `onAddTime(Duration)`, `onOpenPrep()` | running/paused/finished | announce tempo/restante e estado; não renderizar na RecipePrepScreen | running; paused; finished |
 | ExternalVideoCTA | Ação “Abrir vídeo externo” | `platform: Platform`, `timestamp: Long`, `onClick` | indisponível | label com plataforma e tempo | disponível; indisponível |
  
 | EmptyState | Vazio para listas/telas | `illustration`, `title`, `message`, `primaryAction` | — | elementos com rótulos | Home; Buscar; Livros |
@@ -214,7 +218,9 @@ fun PrepBar(
   remaining: Duration,
   running: Boolean,
   onToggle: () -> Unit,
-  onClose: () -> Unit,
+  onNextStep: () -> Unit,
+  onAddTime: (Duration) -> Unit,
+  onOpenPrep: () -> Unit,
   modifier: Modifier = Modifier,
 ) { /* slide/fade in/out; evitar layout shift */ }
 
@@ -310,7 +316,7 @@ Usar `@ThemePreviews` + `PreviewWrapper { ... }` nos previews de componentes.
 ## Pontos em Aberto
 
 - Política de múltiplos timers (um ativo por vez vs paralelos)
-- Mini‑timer persistente: escopo de vida e comportamento ao fechar
+- Mini‑timer persistente: escopo de vida e critérios de ocultação
 - CTA “Abrir vídeo externo”: fallback quando app externo indisponível
 
 ## Referências

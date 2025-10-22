@@ -79,7 +79,7 @@ graph TD
 - Primária: App Bar (sem Bottom Bar) com ícone/campo de busca nas telas principais; rotas empilhadas (Compose Navigation) a partir da Home para `recipe/{id}`, `book/{id}`, editor e busca.
 - Ações globais: FAB abre bottom sheet “Adicionar receita” com opções Importar ou Adicionar manualmente.
 - Secundária (por tela): abas em Detalhe da Receita (Ingredientes / Preparo / Nutrição); bottom sheet de Compartilhar; Escalonar Porções via Number Stepper inline na própria tela.
-- Mini‑timer: exibido como “Barra de Preparo” persistente no rodapé enquanto um preparo está ativo; toque abre a tela de Preparo.
+- Mini‑timer: exibido como “Barra de Preparo” persistente no rodapé enquanto um preparo está ativo; toque abre a tela de Preparo. Observação: a PrepBar NÃO é renderizada enquanto a Tela de Preparo (RecipePrepScreen) estiver aberta.
 - Pós‑importação: redirecionar diretamente para a tela de Detalhe da receita salva.
 - Tablet/Wide: manter layout de phone (sem Navigation Rail) neste MVP.
 - Empty/Erro: telas ilustradas com CTA (“Criar primeira receita”, “Tentar de novo”, “Voltar”).
@@ -88,6 +88,10 @@ graph TD
 ## Fluxos de Usuário
 
 ### Cozinhar (Preparo passo a passo)
+
+Regras Globais da Sessão de Preparo
+- Sessão única de preparo: existe apenas uma sessão ativa por vez (vinculada a uma receita). Timers dessa sessão são gerenciados centralmente.
+- PrepBar e PrepScreen: a PrepBar não aparece sobre (nem junto de) a Tela de Preparo; quando a RecipePrepScreen está visível, a gestão de timers e navegação de passos ocorre pelos controles dessa tela (Rodapé e Painel de Timers).
 
 **Objetivo do Usuário:** concluir o preparo de uma receita com apoio de timers e vídeo sem perder o contexto.
 
@@ -213,8 +217,8 @@ Regras de Habilitação do Salvar
 
 ### Preparo
 - Purpose: executar passo a passo com foco
-- Key Elements: passo atual em destaque; botão Iniciar/Pausar timer quando houver tempo; botão “Concluir passo” para avançar; prévia (1 linha) do próximo passo; CTA “Abrir vídeo externo (timestamp)” ao final do texto do passo; Barra de Preparo fixa no rodapé (título curto + tempo restante + play/pause + fechar).
-- Interaction Notes: barra persiste em todo o app enquanto ativa; tap abre Preparo; swipe para dispensar (confirmar se timer ativo); timers continuam em background com notificação.
+- Key Elements: passo atual em destaque; botão Iniciar/Pausar timer quando houver tempo; botão “Concluir passo” para avançar; prévia (1 linha) do próximo passo; CTA “Abrir vídeo externo (timestamp)” ao final do texto do passo). Observação: a PrepBar NÃO é renderizada nesta tela; os controles ficam no próprio Rodapé e no Painel de Timers.
+- Interaction Notes: a PrepBar persiste em todo o app enquanto ativa, exceto na Tela de Preparo onde ela não é renderizada; tap na PrepBar (em outras telas) abre Preparo; timers continuam em background com notificação.
 
 #### Preparo — Destaques e Tooltips (MVP)
 
@@ -298,8 +302,8 @@ Componentes nucleares (propostos):
    - Regras: faixa 1–99, passo 1, persistência por receita; arredondamentos definidos (frações aceitas 0,25/0,5/0,75); debounce leve para recálculos; suporte a TalkBack (role=adjustable) e feedback tátil
 
 7. Barra de Preparo (mini‑timer persistente)
-   - Content: título curto + tempo restante + play/pause + fechar
-   - Behavior: tap abre Preparo; swipe para dispensar (confirmar se timer ativo)
+   - Content: título curto + tempo restante (mm:ss; usar h:mm:ss ≥ 1h) + play/pause + avançar (») + badge “N×” quando houver múltiplos
+   - Behavior: tap abre Preparo; NÃO renderiza quando a Tela de Preparo está aberta (evita duplicação de controles); sem botão de fechar nem gesto de dispensar — a barra aparece enquanto houver timer ativo ou recém‑concluído (janela curta) e some quando não houver mais nenhum
    - Técnica: respeitar WindowInsets; z-order controlado para conviver com IME e sheets; altura mínima estável
 
 8. Timer Controls
