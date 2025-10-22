@@ -9,13 +9,14 @@ Anatomia da tela (regiões)
 - App Bar (fixa): voltar (←), título compacto (uma linha, ellipsis).
 - Painel de Timers (colapsável, acima do Rodapé):
   - Estado colapsado (quando N > 1): pill destacado “⏱ Timers · N” com mini‑previews de progresso.
-  - Estado expandido: lista vertical com todos os timers (rótulo do passo/receita, barra de progresso, mm:ss, ⏯, [Ir]).
+  - Estado expandido: lista vertical com todos os timers (rótulo do passo/receita, barra de progresso, mm:ss, ⏯, [Ir ao passo]).
   - Destaque do passo atual: a linha do timer do passo visível recebe ênfase (fundo tonal, barra primária, chip “Passo atual”).
+  - N = 1: renderizar apenas a linha do timer (sem cabeçalho “Timers (1)”) e sem colapso.
 - Avisos (fixo abaixo da App Bar): região dedicada a mensagens de estado curto.
   - Tipos: Mismatch (timer ≠ passo atual), Timer concluído, Erro de passo/ação, Nudge para iniciar timer.
   - Comportamento: 1 aviso visível por vez; fila (queue) com exibição sequencial.
   - Duração: Mismatch (persistente até resolver/dispensar), Concluído (~10s ou interação), Erro (persistente até fechar), Nudge (~8s ou iniciar/dispensar).
-  - Ações inline contextuais: [Ir], [Abrir], [Dispensar].
+  - Ações inline contextuais: [Ir ao passo], [Abrir], [Dispensar].
 - Conteúdo do Passo (rolável): texto do passo com destaques; gestos de scroll que avançam/retrocedem passo por limiar.
 - Acessórios do Passo (inline, opcional): CTA de vídeo externo com timestamp.
 - Rodapé (fixo): botões « Retroceder e » Avançar.
@@ -43,8 +44,8 @@ Wireframe (Mobile)
   [Abrir vídeo externo (00:23)]
 
     ┌────────────── Timers (2) ──────────────┐
-    │  ▓▓▓░ 05:12   • Passo 3/6 (Molho)  ⏯ [Ir] │
-    │  ▓░░░ 12:47   • Passo 5/6 (Massa)  ⏯ [Ir] │  ← colapsado pode mostrar previews ou apenas a pill
+    │  ▓▓▓░ 05:12   • Passo 3/6 (Molho)  ⏯ [Ir ao passo] │
+    │  ▓░░░ 12:47   • Passo 5/6 (Massa)  ⏯ [Ir ao passo] │  ← colapsado pode mostrar previews ou apenas a pill
     └─────────────────────────────────────────┘
 
 ──────────────────────────────────────────
@@ -70,7 +71,7 @@ Variações por estado
   [⏱ Iniciar 5:00]
 
     ┌────────────── Timers (3) ──────────────┐
-    │  ▓░░░ 14:10   • Passo 4/6 (Descansar) ⏯ [Ir] │  ← passo atual sem timer; lista mostra outros timers
+    │  ▓░░░ 14:10   • Passo 4/6 (Descansar) ⏯ [Ir ao passo] │  ← passo atual sem timer; lista mostra outros timers
     └─────────────────────────────────────────┘
 
 ──────────────────────────────────────────
@@ -88,7 +89,7 @@ Variações por estado
   3) Asse no forno por [⏱ 30 min].
 
     ┌────────────── Timers (2) ──────────────┐
-    │  ░░░░ 29:57   • Passo 3/6 (Assar)   ▶️ [Ir] │
+    │  ░░░░ 29:57   • Passo 3/6 (Assar)   ▶️ [Ir ao passo] │
     └─────────────────────────────────────────┘
 
 ──────────────────────────────────────────
@@ -106,9 +107,7 @@ Variações por estado
   ✓ Timer concluído — Molho pronto!
   3) Asse no forno por [⏱ 30 min].
  
-    ┌────────────── Timers (1) ──────────────┐
-    │  ✓ 00:00   • Passo 3/6 (Assar)     [Ir] │
-    └─────────────────────────────────────────┘
+    │  ✓ 00:00   • Passo 3/6 (Assar)     [Ir ao passo] │
 
 ──────────────────────────────────────────
 │  [ « Retroceder ]       [  » Avançar ] │  ← realce por ~2s
@@ -122,12 +121,12 @@ Variações por estado
 │ ←  Panquecas fofas           Passo 1/6 │
 └─────────────────────────────────────────┘
 
-  Aviso: Timer ativo no Passo 3/6 — [ Ir ]
+  Aviso: Timer ativo no Passo 3/6 — [ Ir ao passo ]
 
   1) Preaqueça o forno a [🔥 180°C].
 
     ┌────────────── Timers (2) ──────────────┐
-    │  ▓▓▓░ 05:12   • Passo 3/6 (Molho)  ⏯ [Ir] │
+    │  ▓▓▓░ 05:12   • Passo 3/6 (Molho)  ⏯ [Ir ao passo] │
     └─────────────────────────────────────────┘
 
 ──────────────────────────────────────────
@@ -145,7 +144,7 @@ Variações por estado
   2) Reduza o molho por [⏱ 15 min].
 
     ┌────────────── Timers (3) ──────────────┐
-    │  ▓▓░░ 01:22   • Passo 2/8 (Reduzir) ⏯ [Ir] │
+    │  ▓▓░░ 01:22   • Passo 2/8 (Reduzir) ⏯ [Ir ao passo] │
     └─────────────────────────────────────────┘
 
 ──────────────────────────────────────────
@@ -164,9 +163,7 @@ Variações por estado
 
   [▶ Abrir vídeo externo (02:43)]
 
-    ┌────────────── Timers (1) ──────────────┐
-    │  ▓▓░░ 03:10   • Passo 4/7 (Emulsificar)  ⏯ [Ir] │
-    └─────────────────────────────────────────┘
+    │  ▓▓░░ 03:10   • Passo 4/7 (Emulsificar)  ⏯ [Ir ao passo] │
 
 ──────────────────────────────────────────
 │  [ « Retroceder ]         [ » Avançar ] │
@@ -174,28 +171,35 @@ Variações por estado
 ```
 
 Gestos e navegação
-- Scroll: avança/volta de passo ao atingir limiares de leitura (com feedback sutil). O título “Passo N/M” atualiza em sincronia.
-- Botão » Avançar: avança explicitamente para o próximo passo (mesmo se o usuário estiver lendo lentamente). Ação redundante ao gesto de scroll.
+- Scroll: avança/volta de passo ao atingir limiar de 60% da altura visível (com feedback de “snap” sutil). O título “Passo N/M” atualiza em sincronia.
+- Botões de etapa:
+  - « Retroceder: volta explicitamente para o passo anterior (desabilitado no Passo 1/1).
+  - » Avançar: avança explicitamente para o próximo passo. Ação redundante ao gesto de scroll.
+  - Atalhos: setas Esquerda/Direita mapeiam para «/»; manter foco visível.
 - Play/Pause: no Painel de Timers, alterna o timer do passo atual (linha destacada) quando existir; se o passo não tiver timer detectado, use o chip [⏱ …] no texto para criar o timer.
 - Back/Fechar: retorna à tela anterior mantendo estado do preparo (passo atual e timers).
- - Painel de Timers (acima do player):
-   - Toque no pill “⏱ Timers · N” ou arrastar para cima → expandir a lista completa de timers.
-   - Na lista expandida: tocar em [Ir] navega para o passo do timer; ⏯ controla cada timer individual.
-   - Toque fora/arrastar para baixo → colapsar o painel.
+- Painel de Timers (acima do player):
+  - Toque no pill “⏱ Timers · N” ou arrastar para cima → expandir a lista completa de timers.
+  - Na lista expandida: tocar em [Ir ao passo] navega para o passo do timer; ⏯ controla cada timer individual.
+  - Toque fora/arrastar para baixo → colapsar o painel.
 
 Região de Avisos — regras de prioridade
 - Ordem de prioridade: Erro > Mismatch > Timer concluído > Nudge.
-- Composição visual: container `surfaceVariant` com ícone por tipo (erro, timer, info), uma linha de texto com possível ação inline [Ir]/[Abrir]/[Dispensar]. Responsivo até 2 linhas sob `fontScale` alto.
+- Composição visual: container `surfaceVariant` com ícone por tipo (erro, timer, info), uma linha de texto com possível ação inline [Ir ao passo]/[Abrir]/[Dispensar]. Responsivo até 2 linhas sob `fontScale` alto.
 - Interação: tocar fora não fecha; cada aviso tem alvo de toque ≥ 48dp para suas ações. Mismatch e Erro são persistentes; demais têm auto-ocultação.
- - Nudge de visibilidade: quando N > 1 e o usuário abre a tela, exibir por ~4s o aviso “⏱ N timers ativos — veja o painel ‘Timers’ acima do player” (uma vez por sessão de preparo).
+- Nudge de visibilidade: quando N > 1 e o usuário abre a tela, exibir por ~4s o aviso “⏱ N timers ativos — veja o painel ‘Timers’ acima do player” (uma vez por sessão de preparo).
+- Coexistência Avisos × Painel:
+  - Painel expandido → ocultar Avisos (ou reduzir a chip sem CTA).
+  - Aviso de Erro (`assertive`) → colapsar Painel automaticamente.
+  - CTA “Ir ao passo” só aparece em Avisos quando o Painel estiver colapsado (evita duplicação com a lista).
 
 Sincronização com timers
-- Se um timer ativo pertence a outro passo (mismatch), exibir um aviso não intrusivo: “Timer ativo no Passo N/M — [Ir]”. Tocar em [Ir] rola e focaliza o passo do timer.
+- Se um timer ativo pertence a outro passo (mismatch), exibir um aviso não intrusivo: “Timer ativo no Passo N/M — [Ir ao passo]”. A ação navega/focaliza o passo do timer quando o Painel está colapsado; se expandido, a ação equivalente está na lista.
 - Concluído: quando um timer do passo atual termina, destacar a linha correspondente no Painel (fundo tonal + ícone ✓) e evidenciar o botão » Avançar por ~2s.
 - Múltiplos timers: além do mais urgente, o Painel de Timers mostra o conjunto completo (expandido) ou previews (colapsado). Gestão completa ocorre via lista expandida.
- - Múltiplos timers: além do mais urgente no rodapé, o Painel de Timers exibe a lista completa no estado expandido.
-   - Ordenação: menor tempo restante primeiro; empate → último iniciado.
-   - Estabilidade de foco: não reordenar enquanto o usuário estiver interagindo (lock até inatividade de 2s).
+  - Ordenação: menor tempo restante primeiro; empate → último iniciado.
+  - Estabilidade de foco: não reordenar enquanto o usuário estiver interagindo (lock até inatividade de 2s); pin do “Passo atual” no topo durante a interação.
+  - Auto‑expandir quando um 2º timer iniciar; auto‑colapsar após 5s de inatividade.
 
 Divisão visual e comportamento de layout
 - App Bar e Rodapé possuem elevação; a região de Avisos não rola com o conteúdo (fica ancorada abaixo da App Bar).
@@ -205,10 +209,10 @@ Divisão visual e comportamento de layout
 Acessibilidade
 - Ordem de foco previsível: título → conteúdo do passo → vídeo (se houver) → controles do rodapé.
 - Ícones com `contentDescription` claros; `stateDescription` para ⏯ (“Rodando”/“Pausado”).
-- Alvos ≥ 48dp (especialmente o botão » Avançar). Suporte a `fontScale` até 200% sem truncar conteúdo crítico.
+- Alvos ≥ 48dp (especialmente os botões « Retroceder e » Avançar). Suporte a `fontScale` até 200% sem truncar conteúdo crítico.
 - Leitura por leitor de tela: anunciar “Passo N de M”. Destaques clicáveis (ingrediente/temperatura/tempo) com rótulos completos.
- - Região de Avisos: usar live region (`polite` para Concluído/Nudge, `assertive` para Erro). Ações acessíveis por teclado e leitor de tela.
- - Painel de Timers: no colapsado anunciar “N timers ativos. Toque para expandir”. No expandido, role=list com cada item anunciando rótulo, progresso e tempo restante; ações ⏯/[Ir] com labels claros. A linha do passo atual deve ter `selected=true` e `stateDescription="Passo atual"`.
+- Região de Avisos: usar live region (`polite` para Concluído/Nudge, `assertive` para Erro). Ações acessíveis por teclado e leitor de tela.
+- Painel de Timers: no colapsado anunciar “N timers ativos. Toque para expandir”. No expandido, role=list com cada item anunciando rótulo, progresso e tempo restante; ações ⏯/[Ir ao passo] com labels claros. A linha do passo atual deve ter `selected=true` e `stateDescription="Passo atual"`.
 
 Estados
 - Carregando: esqueleto simples do conteúdo + placeholder dos controles.
@@ -227,6 +231,7 @@ Notas para Dev
   fun RecipePrepScreen(
     state: PrepUiState,
     onToggleTimer: () -> Unit,
+    onPrevStep: () -> Unit,
     onNextStep: () -> Unit,
     onBack: () -> Unit,
     onOpenExternalVideo: (timestamp: Long) -> Unit,
@@ -236,4 +241,5 @@ Notas para Dev
 - `PrepUiState` deve conter: `currentStepIndex`, `stepsCount`, `hasTimerForStep`, `remaining`, `running`, `activeTimersCount`, `mismatch`.
 - Preservar `currentStepIndex` e `scroll` ao sair/voltar. O gesto de scroll deve sinalizar claramente avanço/retrocesso de passo (por limiar de altura ou gesto dedicado).
 - Prévias: passo sem timer; com timer rodando; pausado; concluído; mismatch; múltiplos timers.
- - Painel de Timers (MVP): `timers: List<TimerUi>`, `onToggle(timerId)`, `onGoTo(timerId)`, `expanded: Boolean`, `onExpandToggle()`; animação simples de altura/alpha.
+- Painel de Timers (MVP): `timers: List<TimerUi>`, `onToggle(timerId)`, `onGoTo(timerId)`, `expanded: Boolean`, `onExpandToggle()`; animação simples de altura/alpha.
+- Tokens do Painel: altura da linha 56–64dp; barra de progresso 4dp; fonte monoespaçada para mm:ss; cores running=primary, paused=onSurfaceVariant, finished=success; destacar “Passo atual” com container tonal.

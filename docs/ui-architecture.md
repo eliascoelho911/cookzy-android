@@ -45,17 +45,19 @@ Referências (arquivos atuais):
 ## Navegação
 
 - Padrão: rotas tipadas usando `@Serializable` + `NavHost`
-  - Destinos: `RecipeListDestination`, `RecipeEditorDestination`, `RecipeDetailDestination`
-  - Deep links: base `cookzy://recipes`, sufixos `/editor` e `/detail`
+  - Destinos: `RecipeListDestination`, `RecipeEditorDestination`, `RecipeDetailDestination`, `RecipePrepDestination`
+  - Deep links: base `cookzy://recipes`, sufixos `/editor`, `/detail`, `/prep`
 - Gráfico de navegação
   - Start: `RecipeListDestination`
   - Transições:
     - Lista → Editor (criar/editar)
     - Lista/Editor/Detalhe → Detalhe com `recipeId`
+    - Detalhe → Preparo focado (`recipe/{id}/prep`)
+    - Prep Bar → Preparo focado (`recipe/{id}/prep`)
 - Boas práticas
   - Encapsular navegação nos destinos tipados
   - Evitar strings de rota soltas; usar classes de destino
-  - Preservar estado na pilha (scroll/aba) nos pops
+  - Preservar estado na pilha (scroll/passo) nos pops
 
 ## Injeção de Dependências (Koin)
 
@@ -80,7 +82,7 @@ Referências (arquivos atuais):
 ## Composição de UI
 
 - Separar `Route` (injeção/navegação) do `Screen` (UI pura)
-- Reutilizar componentes: Cards, Chips, Stepper, Barra de Preparo, Sheets
+- Reutilizar componentes: Cards, Chips, Stepper, Barra de Preparo, Painel de Timers, Sheets
 - Previews obrigatórias por estado relevante (carregando, vazio, erro, sucesso)
 - Semântica: fornecer `contentDescription`, roles e ordem de foco previsível
 

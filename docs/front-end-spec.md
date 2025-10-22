@@ -91,19 +91,19 @@ graph TD
 
 **Objetivo do Usuário:** concluir o preparo de uma receita com apoio de timers e vídeo sem perder o contexto.
 
-**Pontos de Entrada:** Detalhe da Receita → aba Preparo; Barra de Preparo (mini‑timer persistente); notificação de término de timer; link externo para vídeo no timestamp (YouTube/Instagram);
+**Pontos de Entrada:** Detalhe da Receita → Tela de Preparo (focada); Barra de Preparo (mini‑timer persistente); notificação de término de timer; link externo para vídeo no timestamp (YouTube/Instagram);
 
 **Critérios de Sucesso:** passos concluídos; timers iniciam/pausam/notificam; progresso preservado ao navegar/voltar; Barra de Preparo acessível em todo o app enquanto ativa.
 
 ```mermaid
 graph TD
-    D[Detalhe da Receita] --> P[Aba Preparo]
-    P --> S1[Passo atual]
+    D[Detalhe da Receita] --> PS[Tela de Preparo]
+    PS --> S1[Passo atual]
     S1 --> DEC{Tempo detectado?}
     DEC -- "Sim (toque)" --> T[Iniciar timer] --> BAR["Barra de Preparo (persistente)"]
     DEC -- Não --> NEXT[Avançar passo]
     S1 --> EXT["Abrir vídeo externo (timestamp)"]
-    BAR -->|toque| P
+    BAR -->|toque| PS
     NEXT --> S2[Próximo passo] --> FIM[Todos os passos concluídos]
     FIM --> AA[Autoavaliação]
 ```
@@ -114,9 +114,9 @@ graph TD
 - Permissões de notificação negadas (fallback visual/sonoro interno).
 - Link/timestamp inválido ou app externo indisponível (oferecer abrir no navegador/copiar link; fallback para seguir apenas o texto do passo).
 - Importações com passos sem tempo (esconder opção de timer nesse passo).
-- Rotação/orientação: manter passo/scroll/aba corrente.
+- Rotação/orientação: manter passo/scroll correntes.
 
-**Notas:** a “Barra de Preparo” é o handler visual do mini‑timer; tapping retorna à aba Preparo. Escalonar porções é feito via Stepper inline no Detalhe (não abre sheet).
+**Notas:** a “Barra de Preparo” é o handler visual do mini‑timer; tapping abre a Tela de Preparo focada. Escalonar porções é feito via Stepper inline no Detalhe (não abre sheet).
 
 ### Criar Receita
 

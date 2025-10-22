@@ -10,7 +10,7 @@ Elementos‑chave
 - Toque na área principal → abre a Tela de Preparo (focada) e posiciona no passo do timer.
 - Título compacto (receita e/ou passo) e tempo restante em destaque (mm:ss) quando existir timer de etapa.
 - Controles: Play/Pause (toggle) e Avançar passo (»). O botão “encerrar” não existe; encerrar/editar timers acontece na aba Preparo.
-- Múltiplos timers: exibir o próximo a concluir; badge “2×/3×” indica quantidade. Toque abre a aba Preparo para gestão completa.
+- Múltiplos timers: exibir o próximo a concluir; badge “2×/3×” indica quantidade. Toque abre a Tela de Preparo para gestão completa pelo Painel de Timers.
 
 Wireframe (Mobile)
 
@@ -81,7 +81,7 @@ Interações
 - Toque na área principal → abre a Tela de Preparo (focada).
 - ⏯ Play/Pause → alterna estado do timer focado; anuncia “Timer pausado/retomado”.
 - » Avançar → avança para o próximo passo da receita (mesmo fora da Tela de Preparo). Voltar de passo acontece por gesto/scroll dentro da Tela de Preparo.
-- Badge “N×” → indica contagem; a gestão de múltiplos é feita na aba Preparo (não há carrossel de timers no MVP).
+- Badge “N×” → indica contagem; a gestão de múltiplos é feita na Tela de Preparo, via Painel de Timers (não há carrossel na barra).
 
 Acessibilidade
 - Role: `button` para a área principal; ícones com `contentDescription` claros (“Pausar timer”, “Retomar timer”, “Avançar passo”).
