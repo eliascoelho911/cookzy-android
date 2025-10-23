@@ -9,6 +9,7 @@ Epic central do produto. Sustenta todos os demais fluxos (busca, preparo, nutri�
 ## Escopo
 - Em escopo: criar/editar/excluir/visualizar receitas; persistência local; estados de carregamento/erro/vazio; abas Ingredientes/Preparo/Nutrição.
 - Fora de escopo (MVP): sincronização em nuvem; compartilhamento externo; colaboração multiusuário.
+- Itens tratados em outros épicos (fora do Épico 01): Stepper de porções, Resumo Nutritivo, Prep Bar (mini‑timer persistente) e CTA de vídeo externo (timestamp).
 
 ## Requisitos Funcionais
 - Criar receita com campos: título, ingredientes em texto livre (um por linha, `rawText`) e preparo em campo único; livros de receitas e mídia opcionais.
@@ -24,7 +25,7 @@ Epic central do produto. Sustenta todos os demais fluxos (busca, preparo, nutri�
 
 ## Dependências
 - Camada de persistência local (Room/SQLite).
-- Arquitetura de ViewModels e contratos de estado/evento (docs/front-end/03-arquitetura-componentes.md).
+- Arquitetura de ViewModels e contratos de estado/evento/efeito (docs/ui-architecture.md).
 
 ## Riscos
 - Perda de dados por esquemas mal versionados; mitigar com migrações testadas.
@@ -37,3 +38,4 @@ Epic central do produto. Sustenta todos os demais fluxos (busca, preparo, nutri�
 2. Tela Editor de Receita (criar/editar) com validações.
 3. Detalhe da Receita (abas) com estados de erro/vazio.
 4. Exclusão com confirmação e undo (snackbar).
+5. Lista de receitas (Home): carrossel de recentes (1 por viewport), alternância lista/grade, busca inline; sem carrossel de livros no Épico 01.

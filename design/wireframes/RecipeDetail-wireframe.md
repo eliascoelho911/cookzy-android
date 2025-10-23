@@ -7,14 +7,19 @@ Objetivo
 
 Elementos‑chave
 - App Bar com voltar e ações contextuais: Compartilhar e Editar.
-- Hero no topo com imagem da receita; overlay com botão Play (abre vídeo externo quando houver origem).
+- Hero no topo com imagem da receita; overlay com botão Play (abre vídeo externo quando houver origem). [Fora do escopo do Épico 01]
 - Título da receita com tempo de preparo ao lado.
-- Grid de Resumo Nutritivo acima do botão “Iniciar preparo”: ícone + texto para Carbs, Proteínas, Kcal, Gordura.
-- Botão primário “Iniciar preparo”.
-- Stepper de Porções inline (1–99) posicionado abaixo do “Iniciar preparo”.
+- Grid de Resumo Nutritivo acima do botão “Iniciar preparo”: ícone + texto para Carbs, Proteínas, Kcal, Gordura. [Fora do escopo do Épico 01]
+- Botão primário “Iniciar preparo”. [Fora do escopo do Épico 01]
+- Stepper de Porções inline (1–99) posicionado abaixo do “Iniciar preparo”. [Fora do escopo do Épico 01]
 - Tabs: Ingredientes | Preparo | Nutrição.
-- Barra de Preparo (mini‑timer) persistente no rodapé quando houver preparo ativo.
- - Barra de Preparo (mini‑timer) persistente no rodapé quando houver timer de etapa ativo.
+- Barra de Preparo (mini‑timer) persistente no rodapé quando houver preparo ativo. [Fora do escopo do Épico 01]
+ - Barra de Preparo (mini‑timer) persistente no rodapé quando houver timer de etapa ativo. [Fora do escopo do Épico 01]
+
+## Escopo — Épico 01
+
+- Inclui (neste épico): App Bar; Hero sem CTA de vídeo; Título/Tempo quando houver; Abas Ingredientes/Preparo/Nutrição; Ingredientes com destaque de quantidade derivada a partir de `rawText`; estados de carregando/erro.
+- Fora do escopo (outros épicos): CTA de vídeo; Resumo Nutritivo; “Iniciar preparo”; Stepper de Porções; chips de tempo/temperatura embutidos; Prep Bar persistente.
 
 Padrão de Sheet
  

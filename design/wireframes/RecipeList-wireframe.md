@@ -11,10 +11,15 @@ Decisão desta revisão
 Elementos‑chave
 - App Bar reutilizada (Home) com suporte a busca inline opcional: exibe campo de busca embutido quando ativo; caso contrário, mostra título e ação de buscar.
 - Carrossel horizontal “Receitas recentes” (1 card por viewport; snapping; com PEEK do próximo item — sem indicador de página).
-- Carrossel horizontal “Livros de receitas” (filtro) com capas circulares + rótulo; seleciona um livro e filtra a lista abaixo; inclui opção “Todos”.
+- Carrossel horizontal “Livros de receitas” (filtro) com capas circulares + rótulo; seleciona um livro e filtra a lista abaixo; inclui opção “Todos”. [Fora do escopo do Épico 01]
 - Lista de receitas com cabeçalho “N receitas” e ações para alternar layout (lista ↔ grade).
 - Empty/Erro/Skeleton coerentes para carrosséis e lista.
 - FAB “Adicionar receita” → abre sheet com opções (Importar/Manual).
+
+## Escopo — Épico 01
+
+- Inclui (neste épico): carrossel “Recentes” (1 por viewport, PEEK, sem indicador), cabeçalho com “N receitas”, alternância lista↔grade, busca inline e estados (skeleton/erro/empty).
+- Fora do escopo (outros épicos): carrossel de “Livros de receitas” (filtro) — ficará para o épico de Coleções.
 
 Wireframe (Mobile)
 

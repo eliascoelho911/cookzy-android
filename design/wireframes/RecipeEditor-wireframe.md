@@ -10,10 +10,15 @@ Diretriz de Layout
 
 Elementos‑chave
 - App Bar com voltar e ação de salvar: “Nova receita” | “Editar receita” + ícone ✔ para salvar (desabilitado até cumprir requisitos mínimos).
-- Sessões apresentadas como Cards: “Cabeçalho”, “Nutrição”, “Ingredientes”, “Instruções”.
+- Sessões apresentadas como Cards: “Cabeçalho”, “Nutrição”, “Ingredientes”, “Instruções”. (Card “Nutrição” [Fora do escopo do Épico 01])
 - Cards “Ingredientes” e “Instruções” suportam reordenar por arrastar (alça “≡”), além de adicionar/remover.
 - Validações inline com mensagens claras; feedback por Snackbar para erros gerais (ex.: falha ao salvar).
- - Origem (quando houver importação): exibir “Link de origem” no Card Cabeçalho com ação “Abrir link”.
+ - Origem (quando houver importação): exibir “Link de origem” no Card Cabeçalho com ação “Abrir link”. [Fora do escopo do Épico 01]
+
+## Escopo — Épico 01
+
+- Inclui (neste épico): App Bar com salvar (gating), Cards “Cabeçalho/Ingredientes/Instruções”, adicionar/remover e reordenar itens, validações e Snackbar.
+- Fora do escopo (outros épicos): Stepper de Porções; Card “Nutrição”; “Livros de Receitas”; “Link de origem”. Esses itens devem permanecer ocultos ou como placeholders não funcionais neste épico.
 
 Wireframe (Mobile)
 
