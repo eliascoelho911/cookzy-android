@@ -322,6 +322,10 @@ Componentes nucleares (propostos):
    - Variants: Home, Buscar, Livros, Importar
 
 11. IngredientTooltip
+   - Purpose: mostrar quantidade + nome do ingrediente ao tocar no texto do passo
+   - Visual: tooltip ancorado com seta; conteúdo: “quantidade + nome” + ação “Copiar”
+   - Behavior: fecha por Back/tap fora; foco inicial no conteúdo
+   - A11y: role=dialog; `contentDescription` descritivo
 
 12. LayoutToggle
    - Purpose: alternar lista ↔ grade na Home
