@@ -13,13 +13,24 @@ object RecipeListPreviewData {
     )
 
     fun stateEmpty(): RecipeListUiState = RecipeListUiState(
+        isLoading = false,
+        error = false,
+        searchActive = false,
+        searchQuery = "",
+        recents = emptyList(),
         recipes = emptyList(),
+        totalCount = 0,
         isEmpty = true
     )
 
     fun statePopulated(): RecipeListUiState = RecipeListUiState(
+        isLoading = false,
+        error = false,
+        searchActive = false,
+        searchQuery = "",
+        recents = sampleItems(),
         recipes = sampleItems(),
+        totalCount = 5,
         isEmpty = false
     )
 }
-

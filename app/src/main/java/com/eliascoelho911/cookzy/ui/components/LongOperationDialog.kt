@@ -70,9 +70,7 @@ fun LongOperationDialog(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.semantics { role = Role.ProgressBar }
-                    )
+                    CircularProgressIndicator()
                     Spacer(Modifier.height(12.dp))
                     Text(
                         text = message,

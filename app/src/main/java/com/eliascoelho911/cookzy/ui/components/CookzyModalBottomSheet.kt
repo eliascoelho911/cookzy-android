@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.role
 import com.eliascoelho911.cookzy.ui.preview.PreviewWrapper
 import com.eliascoelho911.cookzy.ui.preview.ThemePreviews
 import com.eliascoelho911.cookzy.ui.theme.AppTheme
