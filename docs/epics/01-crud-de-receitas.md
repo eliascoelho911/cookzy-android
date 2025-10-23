@@ -38,4 +38,16 @@ Epic central do produto. Sustenta todos os demais fluxos (busca, preparo, nutri�
 2. Tela Editor de Receita (criar/editar) com validações.
 3. Detalhe da Receita (abas) com estados de erro/vazio.
 4. Exclusão com confirmação e undo (snackbar).
-5. Lista de receitas (Home): carrossel de recentes (1 por viewport), alternância lista/grade, busca inline; sem carrossel de livros no Épico 01.
+ 5. Lista de receitas (Home): carrossel de recentes (1 por viewport), alternância lista/grade, busca inline; sem carrossel de livros no Épico 01.
+
+## Planejamento — Próxima Sprint
+
+Priorizar as histórias de redesign alinhadas aos novos wireframes, na ordem:
+
+1) 1.4 — Redesenhar Home/Lista de Receitas (recentes 1/viewport, lista↔grade, busca inline; sem carrossel de livros)
+2) 1.5 — Redesenhar Editor de Receitas (layout em cards; reordenação; validações; sem Porções/Nutrição/Livros/Link de origem)
+3) 1.6 — Redesenhar Detalhe da Receita (abas estáveis; rawText com quantidade derivada; sem Stepper/Resumo/PrepBar/CTA vídeo)
+
+Notas:
+- Itens fora do escopo do Épico 01 permanecem adiados para épicos específicos (Cálculos/Nutrição, Preparo, Importação, Coleções).
+- Confirmar refinamento técnico antes de iniciar (PO/SM), mantendo as histórias fora de “Ready for Dev” até conclusão do refinamento.
