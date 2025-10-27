@@ -42,7 +42,7 @@ Epic central do produto. Sustenta todos os demais fluxos (busca, preparo, nutri�
 
 ## Planejamento — Próxima Sprint
 
-Priorizar as histórias de redesign alinhadas aos novos wireframes, na ordem:
+Priorizar as histórias de redesign alinhadas aos protótipos Compose, na ordem:
 
 1) 1.4 — Redesenhar Home/Lista de Receitas (recentes 1/viewport, lista↔grade, busca inline; sem carrossel de livros)
 2) 1.5 — Redesenhar Editor de Receitas (layout em cards; reordenação; validações; sem Porções/Nutrição/Livros/Link de origem)

@@ -26,12 +26,12 @@ Status: RASCUNHO PARA REVISÃO/APPROVAÇÃO DO USUÁRIO
 - Story 1.2 (docs/stories/1.2.visualizar-receita-com-abas.md): alinhar ACs e tarefas para ingredientes baseados em `rawText`, sem unidade persistida; atualizar Dev Notes para `docs/ui-architecture.md`.
 - Story 1.3 (docs/stories/1.3.excluir-receita-com-confirmacao-e-undo.md): atualizar Dev Notes para `docs/ui-architecture.md`.
 
-Impactos adicionais vindos dos novos wireframes (design/wireframes)
-- RecipeList-wireframe.md: carrossel “Recentes” (1 card/viewport), carrossel de “Livros” (filtro), busca inline, alternância lista↔grade.
+Impactos adicionais vindos dos protótipos Compose (módulo `prototype`)
+- Lista de Receitas (protótipo Compose): carrossel “Recentes” (1 card/viewport), carrossel de “Livros” (filtro), busca inline, alternância lista↔grade.
   - Proposta para Epic 01: implementar “Recentes”, lista/grade e busca inline; adiar carrossel de “Livros” para o épico de Coleções.
-- RecipeEditor-wireframe.md: Stepper de Porções, Card “Nutrição”, “Livros de Receitas”, “Link de origem”.
+- Editor de Receitas (protótipo Compose): Stepper de Porções, Card “Nutrição”, “Livros de Receitas”, “Link de origem”.
   - Proposta para Epic 01: manter campos opcionais como PLACEHOLDER ou ocultos — Stepper de Porções e Nutrição entram no épico de Cálculos/Nutrição; “Livros” no épico de Coleções; “Link de origem” no épico de Importação.
-- RecipeDetail-wireframe.md: Hero com CTA de vídeo, Resumo Nutritivo, “Iniciar preparo”, Stepper de Porções, Prep Bar persistente, chips de tempo/temperatura.
+- Detalhe da Receita (protótipo Compose): Hero com CTA de vídeo, Resumo Nutritivo, “Iniciar preparo”, Stepper de Porções, Prep Bar persistente, chips de tempo/temperatura.
   - Proposta para Epic 01: mostrar apenas abas Ingredientes/Preparo/Nutrição simples; ocultar Resumo Nutritivo/Stepper/Prep Bar/CTA de vídeo/chips até os épicos correspondentes (Preparo, Importação, Cálculos/Nutrição).
 
 Itens do PRD NÃO trazidos para o Épico 01 agora (confirmado pelo usuário):
