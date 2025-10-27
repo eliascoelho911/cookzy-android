@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "cookzy-android"
 include(":app")
- 
+include(":ds")

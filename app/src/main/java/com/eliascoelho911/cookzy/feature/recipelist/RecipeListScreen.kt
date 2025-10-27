@@ -27,8 +27,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import com.eliascoelho911.cookzy.R
 import androidx.compose.ui.tooling.preview.Preview
-import com.eliascoelho911.cookzy.ui.preview.PreviewWrapper
-import com.eliascoelho911.cookzy.ui.preview.ThemePreviews
+import com.eliascoelho911.cookzy.ds.preview.PreviewWrapper
+import com.eliascoelho911.cookzy.ds.preview.ThemePreviews
 
 @Composable
 fun RecipeListRoute(

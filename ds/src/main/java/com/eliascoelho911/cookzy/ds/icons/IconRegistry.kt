@@ -1,4 +1,4 @@
-package com.eliascoelho911.cookzy.ui.icons
+package com.eliascoelho911.cookzy.ds.icons
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
@@ -58,4 +58,3 @@ object IconRegistry {
     val ExpandMore: ImageVector = Icons.Outlined.ExpandMore
     val ExpandLess: ImageVector = Icons.Outlined.ExpandLess
 }
-

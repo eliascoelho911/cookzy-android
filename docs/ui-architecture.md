@@ -27,7 +27,7 @@ Este documento descreve como implementar a UI do Cookzy usando Jetpack Compose, 
 - Pacotes principais
   - android: Activity host e bootstrap (MainActivity)
   - ui: `CookzyApp`, `CookzyNavHost` e elementos cross‑cutting
-  - ui/theme: `Theme.kt`, `Color.kt`, `Type.kt`
+  - ds: módulo de design system (tema, componentes, ícones, prévias)
   - navigation: destinos tipados e deep links
   - di: módulos Koin
   - feature/*: telas + ViewModels por funcionalidade
@@ -38,9 +38,9 @@ Referências (arquivos atuais):
 - app/src/main/java/com/eliascoelho911/cookzy/ui/CookzyNavHost.kt:1
 - app/src/main/java/com/eliascoelho911/cookzy/navigation/CookzyDestinations.kt:1
 - app/src/main/java/com/eliascoelho911/cookzy/di/AppModules.kt:1
-- app/src/main/java/com/eliascoelho911/cookzy/ui/theme/Theme.kt:1
-- app/src/main/java/com/eliascoelho911/cookzy/ui/theme/Color.kt:1
-- app/src/main/java/com/eliascoelho911/cookzy/ui/theme/Type.kt:1
+- ds/src/main/java/com/eliascoelho911/cookzy/ds/theme/Theme.kt:1
+- ds/src/main/java/com/eliascoelho911/cookzy/ds/theme/Color.kt:1
+- ds/src/main/java/com/eliascoelho911/cookzy/ds/theme/Type.kt:1
 
 ## Navegação
 
@@ -201,12 +201,12 @@ Observação: respeitar tokens de `Theme.kt`, `Color.kt`, `Type.kt` e `ExtendedC
 - Fonte única: todo ícone deve ser consumido via `IconRegistry`.
 
 Estrutura
-- Local: `app/src/main/java/com/eliascoelho911/cookzy/ui/icons/IconRegistry.kt:1`
+- Local: `ds/src/main/java/com/eliascoelho911/cookzy/ds/icons/IconRegistry.kt:1`
 - Definição: objeto Kotlin com propriedades `ImageVector` para cada ícone utilizado.
 
 Exemplo (uso)
 ```kotlin
-import com.eliascoelho911.cookzy.ui.icons.IconRegistry
+import com.eliascoelho911.cookzy.ds.icons.IconRegistry
 
 Icon(
   imageVector = IconRegistry.Close,

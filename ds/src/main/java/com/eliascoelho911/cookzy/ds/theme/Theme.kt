@@ -1,4 +1,4 @@
-package com.eliascoelho911.cookzy.ui.theme
+package com.eliascoelho911.cookzy.ds.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -323,4 +323,3 @@ fun AppTheme(
     content = content
   )
 }
-

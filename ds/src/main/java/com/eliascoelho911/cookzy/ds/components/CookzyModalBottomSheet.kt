@@ -1,4 +1,4 @@
-package com.eliascoelho911.cookzy.ui.components
+package com.eliascoelho911.cookzy.ds.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -25,11 +25,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.role
-import com.eliascoelho911.cookzy.ui.preview.PreviewWrapper
-import com.eliascoelho911.cookzy.ui.preview.ThemePreviews
-import com.eliascoelho911.cookzy.ui.theme.AppTheme
-import com.eliascoelho911.cookzy.R
-import com.eliascoelho911.cookzy.ui.icons.IconRegistry
+import com.eliascoelho911.cookzy.ds.R
+import com.eliascoelho911.cookzy.ds.icons.IconRegistry
+import com.eliascoelho911.cookzy.ds.preview.PreviewWrapper
+import com.eliascoelho911.cookzy.ds.preview.ThemePreviews
+import com.eliascoelho911.cookzy.ds.theme.AppTheme
 
 @Immutable
 data class SheetButton(

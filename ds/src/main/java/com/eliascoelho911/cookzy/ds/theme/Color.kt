@@ -1,4 +1,4 @@
-package com.eliascoelho911.cookzy.ui.theme
+package com.eliascoelho911.cookzy.ds.theme
 
 import androidx.compose.ui.graphics.Color
 
@@ -247,4 +247,3 @@ val successDarkHighContrast = Color(0xFFC8FEC3)
 val onSuccessDarkHighContrast = Color(0xFF000000)
 val successContainerDarkHighContrast = Color(0xFF9BD098)
 val onSuccessContainerDarkHighContrast = Color(0xFF000F02)
-

@@ -1,4 +1,4 @@
-package com.eliascoelho911.cookzy.ui.components
+package com.eliascoelho911.cookzy.ds.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,8 +26,8 @@ import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.eliascoelho911.cookzy.ui.preview.PreviewWrapper
-import com.eliascoelho911.cookzy.ui.preview.ThemePreviews
+import com.eliascoelho911.cookzy.ds.preview.PreviewWrapper
+import com.eliascoelho911.cookzy.ds.preview.ThemePreviews
 
 /**
  * Full‑screen blocking overlay for long operations.
@@ -66,9 +66,7 @@ fun LongOperationOverlay(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                CircularProgressIndicator(
-                    modifier = Modifier.semantics { role = Role.ProgressBar }
-                )
+                CircularProgressIndicator()
                 Spacer(Modifier.height(12.dp))
                 Text(
                     text = message,
@@ -100,4 +98,3 @@ private fun LongOperationOverlayPreview() {
         }
     }
 }
-
