@@ -2,6 +2,13 @@
 
 This file provides guidance and memory for Codex CLI.
 
+## Iconography Standard
+- Library icons only (Material/Heroicons), no emoji.
+- Android uses `androidx.compose.material:material-icons-extended` via Compose BOM.
+- Single source of truth: `IconRegistry` object (Kotlin) with one property per icon (e.g., `Close`, `Back`, `Play`).
+- All UI code must consume icons from `IconRegistry`.
+- See `docs/ui-architecture.md` for usage and examples.
+
 <!-- BEGIN: BMAD-AGENTS -->
 # BMAD-METHOD Agents and Tasks
 

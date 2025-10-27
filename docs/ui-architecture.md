@@ -194,6 +194,32 @@ Tabela de referência dos principais `@Composable`s a implementar/reutilizar. Se
 
 Observação: respeitar tokens de `Theme.kt`, `Color.kt`, `Type.kt` e `ExtendedColorScheme`.
 
+## Iconografia & IconRegistry
+
+- Biblioteca: Material Icons (Compose) com `material-icons-extended` (alinhado ao Compose BOM).
+- Padrão: nenhuma ligação de domínio (ex.: WorkItemType). Em vez disso, expor um registro central de ícones por propriedade.
+- Fonte única: todo ícone deve ser consumido via `IconRegistry`.
+
+Estrutura
+- Local: `app/src/main/java/com/eliascoelho911/cookzy/ui/icons/IconRegistry.kt:1`
+- Definição: objeto Kotlin com propriedades `ImageVector` para cada ícone utilizado.
+
+Exemplo (uso)
+```kotlin
+import com.eliascoelho911.cookzy.ui.icons.IconRegistry
+
+Icon(
+  imageVector = IconRegistry.Close,
+  contentDescription = stringResource(R.string.common_close),
+)
+```
+
+Regras
+- Não mapear conceitos de domínio para ícones (Status, Tipo, etc.).
+- Adicionar novas propriedades ao `IconRegistry` ao introduzir novos ícones.
+- Manter `contentDescription` no ponto de uso para acessibilidade e contexto correto.
+
+
 ### Especificações por Componente (assinaturas sugeridas)
 
 ```kotlin
