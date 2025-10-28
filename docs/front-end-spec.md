@@ -255,10 +255,13 @@ Estados e Erros
 - Interaction Notes: debounce na digitação; histórico recente; estados vazio/erro/skeleton.
 
 ### Estados vazios/erro
-- Home: ilustração + CTA “Criar primeira receita”.
-- Buscar: ilustração + CTA “Tentar outra busca”.
-- Livros: ilustração + CTA “Criar livro”.
-- Importar: mensagens de falha com ação “Tentar novamente/Editar manualmente” na sheet de Importar; durante extração, mostrar loading de tela cheia (bloqueante, não cancelável).
+- Componentes genéricos do DS (EmptyState/ErrorState) com personalização por tela.
+- Ilustração opcional (slot), título e mensagem configuráveis (Defaults passíveis de override), 1–2 CTAs.
+- Exemplos de cópia (padrões sugeridos, sobrescrevíveis pelas telas):
+  - Home: “Sem receitas ainda” + CTA “Criar primeira receita”.
+  - Buscar: “Nenhum resultado encontrado” + CTA “Tentar outra busca”.
+  - Livros: “Nenhum livro de receitas” + CTA “Criar livro”.
+  - Importar: “Falha ao importar” + CTAs “Tentar novamente”/“Editar manualmente” (sheet de Importar) e loading bloqueante durante extração.
 
 ### Notas gerais de UI
 - Hierarquia visual: títulos fortes; ações primárias evidentes; espaçamento base 8dp.
@@ -317,9 +320,10 @@ Componentes nucleares (propostos):
    - Headers consistentes, ações primárias/secundárias
    - Tooltip de Ingrediente: ancorado, sem cabeçalho; até 2 ações inline; densidade compacta.
 
-10. Empty/Erro Views
-   - Ilustração + título + descrição curta + CTA
-   - Variants: Home, Buscar, Livros, Importar
+10. Empty/Erro Views (genéricos)
+   - DS genérico: ilustração (slot), título, descrição curta e CTAs
+   - Defaults com textos/ilustrações sugeridos; as telas podem sobrescrever
+   - A11y: título como heading; ilustração decorativa quando apropriado; foco previsível
 
 11. IngredientTooltip
    - Purpose: mostrar quantidade + nome do ingrediente ao tocar no texto do passo
@@ -327,11 +331,11 @@ Componentes nucleares (propostos):
    - Behavior: fecha por Back/tap fora; foco inicial no conteúdo
    - A11y: role=dialog; `contentDescription` descritivo
 
-12. LayoutToggle
-   - Purpose: alternar lista ↔ grade na Home
-   - Variants: dois ícones (`ViewList`/`GridView` ou equivalentes)
-   - States: list/grid selecionado; disabled durante carregamento
-   - A11y: role=toggle; `contentDescription` descritivo; persistência em DataStore
+12. IconToggle (genérico)
+   - Purpose: controle segmentado de 2 estados, reutilizável (ex.: List ↔ Tile)
+   - Props: `options(2)`, `selectedIndex`, `onSelect(Int)`; ícones via `IconRegistry` (ex.: `ViewList`, `ViewTiles`)
+   - States: esquerda/direita selecionado; disabled durante carregamento
+   - A11y: tratar como tabs (preferível) ou toggle; `stateDescription` da opção ativa; persistir preferência em DataStore quando aplicado a layouts
 
 13. RecipeCountLabel
    - Purpose: mostrar “N receitas” após filtros
