@@ -18,8 +18,9 @@
     <string name="recent_carousel_hint">Receitas recentes. Deslize para ver mais.</string>
     <string name="icon_toggle_selected">Selecionado</string>
     <string name="icon_toggle_not_selected">Não selecionado</string>
-    <plurals name="recipe_card_cookbooks">
-        <item quantity="one">%d livro</item>
-        <item quantity="other">%d livros</item>
+
+    <plurals name="recipe_card_more_cookbooks">
+        <item quantity="one">e +%d livro</item>
+        <item quantity="other">e +%d livros</item>
     </plurals>
 </resources>

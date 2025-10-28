@@ -21,6 +21,18 @@ Escopo: padrões de implementação para o app Android do Cookzy. Estes padrões
 - Separar `Route` (injeção/navegação) de `Screen` (UI pura).
 - State hoisting: telas recebem `state` e callbacks do ViewModel; evite lógica de negócio em Composables.
 - Semântica: forneça `contentDescription`, `stateDescription` e roles quando aplicável.
+- Componentes do Design System devem definir `Defaults` adequados para garantir uso consistente e minimizar repetição de parâmetros.
+  - Exemplos esperados: `ContentPadding`, `Shape`, `Colors`, `Typography`, `Spacing` específico do componente.
+  - Referencie os defaults no componente público (ex.: `CookzyFilledButtonDefaults`) e consuma-os internamente.
+
+```kotlin
+object CookzyFilledButtonDefaults {
+    val ContentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp)
+    val Shape = RoundedCornerShape(12.dp)
+    val Colors = ButtonDefaults.buttonColors(containerColor = AppTheme.colorScheme.primary)
+    val TextStyle = AppTheme.typography.labelLarge
+}
+```
 - Tamanhos mínimos de toque ≥ 48dp; espaçamento base 8dp; respeitar `MaterialTheme`.
 - Performance: use `remember`, `derivedStateOf` e chaves estáveis em listas; evite overdraw e sombras excessivas.
 
