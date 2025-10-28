@@ -34,12 +34,13 @@ workflow:
     - agent: dev
       action: create_compose_prototypes
       creates:
-        - prototype/
-        - docs/prototypes/
+        - prototype/.../{epic}/{flow}
+        - docs/prototypes/{epic}
       requires:
         - front-end-spec.md
       notes: |
         Build Compose-based prototypes inside the `prototype` module. Treat them as the sole design artifact before implementation:
+        - Organize previews by epic (e.g., prototype/.../epic01/...) and then by flow/screen
         - Mirror the UX specification screens using Jetpack Compose @Preview functions
         - Use fake data/samples; avoid wiring to production navigation or data sources
         - Document available previews and states in docs/prototypes/README.md and update the spec change log with the new prototype revision
