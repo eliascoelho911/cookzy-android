@@ -13,6 +13,3 @@
 .externalNativeBuild
 .cxx
 local.properties
-# BMAD (local only)
-.bmad-core/
-.bmad-*/

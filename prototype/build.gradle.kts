@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.eliascoelho911.cookzy.ds"
+    namespace = "com.eliascoelho911.cookzy.prototype"
     compileSdk = 36
 
     defaultConfig {
@@ -38,15 +38,10 @@ android {
 
 dependencies {
 
-    api(platform(libs.androidx.compose.bom))
-    api(libs.androidx.ui)
-    api(libs.androidx.ui.graphics)
-    api(libs.androidx.ui.tooling.preview)
-    api(libs.androidx.ui.text.googlefonts)
-    api(libs.androidx.material3)
-    api(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(project(":ds"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    debugApi(libs.androidx.ui.tooling)
 }

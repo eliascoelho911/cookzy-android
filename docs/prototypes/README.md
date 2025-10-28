@@ -24,5 +24,9 @@ O módulo `prototype` concentra protótipos Jetpack Compose que funcionam como a
 ## Catálogo de Previews
 | Tela | Estado(s) coberto(s) | Arquivo | Notas |
 |------|----------------------|---------|-------|
-| _Preencher_ | _Preencher_ | _Preencher_ | _Pendências, TODOs, etc._ |
-
+| Home | Lista vs. grade, Recentes vazio, filtro ativo | `prototype/.../home/HomePreviews.kt` | Carrossel “Recentes” com 1 card/viewport e chips de Livros sem indicador |
+| RecipeDetail | Loaded, Loading, Error | `prototype/.../recipe/detail/RecipeDetailPreviews.kt` | Destaque de quantidades derivadas sem unidade persistida |
+| RecipeEditor | Novo, Revisar Importação, Validação em erro | `prototype/.../recipe/editor/RecipeEditorPreviews.kt` | Salvar habilita somente com título + ingrediente + passo mínimos |
+| ImportFlow | Sheet Selecionar Origem, Loading bloqueante, Erro | `prototype/.../import/ImportPreviews.kt` | Loading tela cheia com scrim; fallback “Editar manualmente” |
+| Prep | Passo ativo, Timer em andamento, Placeholder | `prototype/.../prep/PrepPreviews.kt` | PrepBar ausente na tela própria; CTA abrir vídeo em backlog |
+| Nutrition | Placeholder, Dados parciais | `prototype/.../recipe/detail/NutritionPreviews.kt` | Placeholder 🍎 até integração dos dados reais |
