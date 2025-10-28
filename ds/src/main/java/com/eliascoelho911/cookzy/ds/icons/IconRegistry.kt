@@ -13,6 +13,7 @@ import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material.icons.outlined.ExpandLess
 import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material.icons.outlined.FilterList
+import androidx.compose.material.icons.outlined.GridView
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Pause
 import androidx.compose.material.icons.outlined.PlayArrow
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.Sort
 import androidx.compose.material.icons.outlined.Stop
 import androidx.compose.material.icons.outlined.Timer
+import androidx.compose.material.icons.outlined.ViewList
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /**
@@ -53,6 +55,8 @@ object IconRegistry {
     val Sort: ImageVector = Icons.Outlined.Sort
     val Filter: ImageVector = Icons.Outlined.FilterList
     val Share: ImageVector = Icons.Outlined.Share
+    val ViewList: ImageVector = Icons.Outlined.ViewList
+    val ViewTile: ImageVector = Icons.Outlined.GridView
 
     // Disclosure
     val ExpandMore: ImageVector = Icons.Outlined.ExpandMore

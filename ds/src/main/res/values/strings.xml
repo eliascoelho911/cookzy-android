@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="common_close">Fechar</string>
+    <string name="common_retry">Tentar novamente</string>
+    <string name="app_topbar_search_activate">Buscar</string>
+    <string name="app_topbar_search_back">Sair da busca</string>
+    <string name="app_topbar_search_clear">Limpar busca</string>
+    <string name="recipe_card_loading">Carregando receita</string>
+    <string name="recipe_card_error">Não foi possível carregar a receita</string>
+    <string name="recipe_card_duration_hours">%1$d h</string>
+    <string name="recipe_card_duration_minutes">%1$d min</string>
+    <string name="recipe_card_duration_hours_minutes">%1$d h %2$d min</string>
+    <string name="empty_state_default_title">Nada por aqui… ainda</string>
+    <string name="empty_state_default_message">Adicione ou importe uma receita para começar.</string>
+    <string name="empty_state_default_primary_action">Adicionar receita</string>
+    <string name="error_state_default_title">Ops! Algo deu errado</string>
+    <string name="error_state_default_message">Tente atualizar ou volte mais tarde.</string>
+    <string name="recent_carousel_hint">Receitas recentes. Deslize para ver mais.</string>
+    <string name="icon_toggle_selected">Selecionado</string>
+    <string name="icon_toggle_not_selected">Não selecionado</string>
+    <plurals name="recipe_card_cookbooks">
+        <item quantity="one">%d livro</item>
+        <item quantity="other">%d livros</item>
+    </plurals>
 </resources>

@@ -74,7 +74,6 @@ Icon(imageVector = IconRegistry.Close, contentDescription = stringResource(R.str
 
 ## Testes
 - Unit: JUnit + Coroutines Test + MockK; evite fakes caseiros.
-- Compose UI: `androidx.compose.ui.test` para interações e semântica.
 - Room: use `room-testing` quando necessário; preferir repositórios isolados em testes da UI.
 - Diretrizes: teste estados relevantes, efeitos one‑shot e navegação derivada.
 
