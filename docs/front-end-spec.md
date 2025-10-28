@@ -339,7 +339,7 @@ Componentes nucleares (propostos):
    - Tooltip ao tocar em menções de ingredientes nos passos (conteúdo: “quantidade + nome”; ação: Copiar)
    - Acessível (role=dialog) e cancelável (Back/tap fora)
 
-12. ExternalVideoCTA
+14. ExternalVideoCTA
    - Ação "Abrir vídeo externo (timestamp)" com ícone da plataforma
    - Locais: abaixo do título no Detalhe (se houver origem) e ao final do texto do passo
    - Técnica: Intent ACTION_VIEW com fallback para navegador; validação/normalização de timestamp (YouTube/Instagram); ação “Copiar link” se app externo indisponível
