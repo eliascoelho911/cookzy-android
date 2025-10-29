@@ -9,6 +9,7 @@ Tabela de referência dos principais `@Composable`s a implementar/reutilizar. Se
 | BookFilterCarousel | Carrossel de livros (filtro) | `books: List<Book>`, `selected: Book?`, `onSelect(Book?)` | selected/unselected | role=tab/toggle; item “Todos” com label | sem seleção; com seleção |
 | ListGridToggle | Alternância lista ↔ grade | `isGrid: Boolean`, `onToggle(Boolean)` | list/grid | role=toggle; descriptions | list; grid |
 | RecipeCard | Card de receita em listas | `title`, `time: Duration?`, `livrosDeReceitas: List<String>`, `onClick` | loading, error, vazio | contentDescription no card; foco visível | normal; loading; error |
+| RecipeList | Lista vertical de receitas com `RecipeCard.List` | `state: RecipeListState`, `listState: LazyListState`, `contentPadding: PaddingValues` | conteúdo, carregando, vazio, erro | itens ≥48dp; estados vazio/erro com heading | populada; carregando; vazia; erro; fontScale 2x |
 | BookCard | Card de livro/coleção | `title`, `count: Int`, `onClick` | vazio | leitura por leitor de tela com contagem | normal; vazio |
 | PortionStepper | Ajuste de porções | `value: Int`, `onChange(Int)`, `range: IntRange` | min/max, inválido | role=adjustable; announce mudanças | 1, meio, max; fontScale 2.0 |
 | PrepBar | Mini‑timer persistente | `title`, `remaining: Duration`, `running: Boolean`, `onToggle()`, `onNextStep()`, `onAddTime(Duration)`, `onOpenPrep()` | running/paused/finished | announce tempo/restante e estado; não renderizar na RecipePrepScreen | running; paused; finished |
@@ -27,4 +28,3 @@ Tabela de referência dos principais `@Composable`s a implementar/reutilizar. Se
 | LongOperationDialog | Dialog de tela cheia p/ operações longas | `visible: Boolean`, `message: String` | visível/oculto | focus trap, não dismissível | visível/oculto |
 
 Observação: respeitar tokens de `Theme.kt`, `Color.kt`, `Type.kt` e `ExtendedColorScheme`.
-

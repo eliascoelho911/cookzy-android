@@ -6,6 +6,7 @@
 |------------|---------|--------------------------------------------|------------|
 | 2025-10-22 | 0.1     | Documento criado (esqueleto inicial)       | Sally (UX) |
 | 2025-10-22 | 0.2     | Inventário de componentes e padrões de preview | Sally (UX) |
+| 2025-10-29 | 0.3     | Adicionado componente RecipeList ao Design System | James (Dev) |
 
 ## Visão Geral
 

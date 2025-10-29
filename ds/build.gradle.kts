@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+    implementation(libs.compose.shimmer)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.ui.test.junit4.android)
     androidTestImplementation(platform(libs.androidx.compose.bom))

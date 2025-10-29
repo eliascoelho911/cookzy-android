@@ -4,22 +4,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.FlowRowScope
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -38,16 +35,17 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import com.eliascoelho911.cookzy.ds.R
 import com.eliascoelho911.cookzy.ds.icons.IconRegistry
+import com.eliascoelho911.cookzy.ds.loading.shimmerLoading
 import com.eliascoelho911.cookzy.ds.preview.PreviewWrapper
 import com.eliascoelho911.cookzy.ds.preview.ThemePreviews
-import com.eliascoelho911.cookzy.ds.utils.shimmerLoading
+import com.valentinilk.shimmer.ShimmerBounds
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 
@@ -362,7 +360,9 @@ private fun RecipeCardImageContainer(
                 Box(
                     modifier = Modifier
                         .matchParentSize()
-                        .shimmerLoading()
+                        .shimmerLoading(
+                            bounds = ShimmerBounds.Window
+                        )
                         .clearAndSetSemantics {},
                 )
             },
@@ -401,33 +401,14 @@ private fun RecipeCardLoading(
     shape: CornerBasedShape,
     color: CardColors
 ) {
-    OutlinedCard(
+    Box(
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = RecipeCardDefaults.LoadingMinHeight),
-        shape = shape,
-        colors = color,
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(RecipeCardDefaults.LoadingContentPadding),
-            verticalArrangement = Arrangement.spacedBy(
-                RecipeCardDefaults.LoadingContentSpacing,
-                Alignment.CenterVertically
-            ),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(RecipeCardDefaults.LoadingIndicatorSize),
-            )
-            Text(
-                text = stringResource(id = R.string.recipe_card_loading),
-                style = MaterialTheme.typography.labelMedium,
-                color = color.contentColor,
-            )
-        }
-    }
+            .heightIn(min = RecipeCardDefaults.LoadingMinHeight)
+            .shimmerLoading(bounds = ShimmerBounds.Window)
+            .background(color.containerColor, shape)
+            .clip(shape)
+    )
 }
 
 @Composable
