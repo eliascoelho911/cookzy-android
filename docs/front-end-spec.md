@@ -19,7 +19,6 @@ Este documento define os objetivos de experiência do usuário, a arquitetura da
 | 2025-10-22 | 0.7     | Adicionadas seções de Desempenho e Próximos Passos         | Sally (UX)  |
 | 2025-10-22 | 0.8     | Home: carrossel de recentes com 1 card/viewport (snap, PEEK, sem indicador); carrossel de livros (filtro); cabeçalho com contagem e toggle lista/grade; remover tags na Recipe List | Sally (UX)  |
 | 2025-10-22 | 0.9     | Importar: loading em tela cheia; revisão feita no Editor (variante) com link de origem no Cabeçalho; padronização dos sheets (footer vertical full‑width, IconButton fechar) | Sally (UX) |
-| 2025-10-24 | 1.0     | Migrado para protótipos Compose como fonte única de design; catálogo documentado | Sally (UX) |
 
 ## Objetivos e Princípios de UX
 
@@ -172,100 +171,102 @@ Regras de Habilitação do Salvar
 
 **Notas:** editor segue Material 3; validação inline com mensagens claras; listas de Ingredientes e Instruções suportam reordenação por arrastar com feedback háptico (quando disponível) e alternativas acessíveis via menu (“Mover para cima/baixo”). Após salvar (manual ou importado), redirecionar diretamente para o Detalhe.
 
-## Compose Prototypes
+## Wireframes & Mockups
 
-Os protótipos Compose funcionam como “Figma vivo” antes de qualquer implementação de produção. Toda validação visual acontece no módulo `prototype`, com documentação complementar em `docs/prototypes/README.md`.
+**Arquivos de design:** Figma — definir link posteriormente
 
-### Module Overview
-- Caminho base: `prototype/src/main/java/com/eliascoelho911/cookzy/prototype`
-- Estrutura sugerida: subpacotes por fluxo (`home/`, `recipe/detail/`, `recipe/editor/`, `import/`, `prep/`)
-- Convenção de naming: `Preview<Screen><State>` (ex.: `PreviewRecipeDetailLoading`)
-- Dados fake: helpers dedicados (ex.: `PreviewRecipeData`) hospedados em `prototype/.../data`; nunca acessar DAOs ou camadas reais
-- Navegação: callbacks vazios (`onBack = {}`) e estados injetados por parâmetros; nada conecta com `CookzyNavHost`
-- Updates: qualquer mudança relevante deve atualizar também o changelog deste documento
+### Home
+- Purpose: descoberta rápida (recentes) + filtro por livros + navegação para receitas
+- Key Elements: App Bar reutilizada (mesma componente das telas de Livros) com suporte a busca inline opcional (campo embutido que pode ser ativado/desativado); carrossel “Receitas recentes” com 1 card por viewport (full‑bleed, snap e PEEK do próximo; sem indicador de página); carrossel “Livros (filtro)” com capas circulares + rótulo (inclui “Todos”); cabeçalho da lista com “N receitas” + botões de alternância lista/grade; lista/grade de receitas; FAB “Adicionar receita”.
+- Interaction Notes: selecionar um livro no carrossel filtra a lista/grade abaixo; cabeçalho atualiza a contagem após filtros; alternância de layout persiste em preferência local; cartões mostram cover, tempo e livros de receitas (sem tags); estados vazio/erro/skeleton. A busca inline na App Bar mantém foco e clear (✕); pode tanto abrir a rota de Buscar dedicada quanto aplicar filtro leve local, conforme decisão técnica, mantendo consistência com Livros.
 
-### Preview Catalog
-| Preview | Estados cobertos | Fonte | Notas |
-|---------|------------------|-------|-------|
-| Home | Lista vs. grade, Recentes vazio, filtro ativo | `prototype/.../home/HomePreviews.kt` | Carrossel “Recentes” com 1 card/viewport e chips de Livros sem indicador de página |
-| RecipeDetail | Loaded, Loading, Error | `prototype/.../recipe/detail/RecipeDetailPreviews.kt` | Destaque de quantidades derivadas (sem unidade persistida) em `AnnotatedString` |
-| RecipeEditor | Novo, Revisar Importação, Validação em erro | `prototype/.../recipe/editor/RecipeEditorPreviews.kt` | Botão salvar habilita somente com título + ingrediente + passo; cards opcionais tratados como placeholders |
-| ImportFlow | Sheet Selecionar Origem, Loading bloqueante, Erro | `prototype/.../import/ImportPreviews.kt` | Loading tela cheia com scrim; fallback “Editar manualmente” exposto na sheet |
-| Prep | Passo ativo, Timer em andamento, Placeholder | `prototype/.../prep/PrepPreviews.kt` | PrepBar ausente na tela própria; CTA abrir vídeo permanece desativado no MVP |
-| Nutrition | Placeholder, Dados parciais | `prototype/.../recipe/detail/NutritionPreviews.kt` | Card 🍎 placeholder até a integração real; estados parciais mostram campos disponíveis |
+### FAB Sheet — Adicionar receita
+- Purpose: criar por importação ou manual
+- Key Elements: lista com opções e ícones (YouTube/Instagram/Link genérico, Manual); descrição curta por item; header com título + IconButton fechar; footer vertical (até 2 botões, full‑width) quando houver.
+- Interaction Notes: 48dp touch targets; foco inicial no primeiro item; suporte a teclado; “Importar” abre a sheet “Importar receita (origem/URL)”.
 
-### Screen Notes
-#### Home
-- Compose preview: `HomePreviews.kt`
-- Objetivo: descoberta rápida (recentes) + filtro por livros + navegação para receitas
-- Elementos centrais: App Bar com busca inline opcional, carrossel “Receitas recentes” (1 card/viewport, snap + PEEK sem indicador), carrossel “Livros (filtro)” com capas circulares e opção “Todos”, cabeçalho da lista com contagem e toggles lista/grade, lista/grade de receitas, FAB “Adicionar receita”
-- Interações: seleção no carrossel filtra lista/grade, cabeçalho atualiza contagem conforme filtro, toggle lista/grade persiste preferência local, cards exibem cover/tempo/livros (sem tags), estados vazio/erro/skeleton cobertos nas prévias
+### Importar
+- Purpose: importar de YouTube (MVP) colando link, extrair dados e revisar antes de salvar
+- Key Elements:
+  - Sheet “Importar receita”: selecionar origem (YouTube) e colar URL; validação inline; footer com botões em coluna (Cancelar/Extrair).
+  - Loading: tela cheia com scrim e indicador central (“Importando receita…”), bloqueante e não cancelável no MVP.
+  - Revisão: mesma tela do Editor (variante “Revisar importação”) com “Link de origem” no Card Cabeçalho (abrir link externo).
+- Interaction Notes: ao tocar “Extrair”, fechar a sheet e exibir loading de tela cheia; em sucesso abrir o Editor (variante Revisar importação); em erro reabrir sheet de erro com “Tentar novamente/Editar manualmente”.
 
-#### FAB Sheet — Adicionar Receita
-- Compose preview: `ImportPreviews.kt`
-- Objetivo: escolher entre importar ou criar manualmente
-- Elementos: lista de opções com ícones (YouTube/Instagram/Link genérico/Manual), header com título + IconButton fechar, footer vertical (até 2 botões full‑width)
-- Interações: alvos 48dp, foco inicial no primeiro item, suporte a teclado; acionar “Importar” abre sheet “Importar receita (origem/URL)”
+### Detalhe da Receita
+- Purpose: centro de verdade da receita
+- Key Elements: título; botão “Iniciar preparo”; Stepper de porções inline posicionado abaixo do “Iniciar preparo”; tabs (Ingredientes/Preparo/Nutrição); botão “Compartilhar”; CTA “Abrir vídeo externo (timestamp)” abaixo do título quando houver origem de vídeo.
+- Interaction Notes: Stepper com faixa 1–99 (passo 1), persistido por receita; recalcula quantidades em Ingredientes; Compartilhar abre sheet; voltar mantém rolagem/aba ativa.
 
-#### Importar
-- Compose preview: `ImportPreviews.kt`
-- Objetivo: importar de YouTube (MVP), revisar e salvar
-- Estados: sheet de seleção (origem + URL, validação inline), loading tela cheia bloqueante (“Importando receita…”), variante do Editor “Revisar importação” com link de origem no Cabeçalho
-- Interações: após “Extrair”, sheet fecha e mostra loading; sucesso abre Editor (variante Revisar importação); erro reabre sheet com “Tentar novamente/Editar manualmente”
+### Editor de Receita
+- Purpose: criar/editar receita com campos mínimos e alguns metadados opcionais.
+- Key Elements: App Bar com voltar e salvar (check); Cards: Cabeçalho (Título, Imagem, Porções, Tempo, Livros de Receitas), Nutrição (abre sheet), Ingredientes (lista reordenável), Instruções (lista reordenável).
+- Interaction Notes: salvar habilita quando requisitos mínimos atendidos; Porções/Tempo/Livros de Receitas/Imagem/Nutrição opcionais; reordenar por alça “≡” com auto‑scroll e chaves estáveis; confirmação de descarte ao sair com alterações (ou autosave/rascunho). Variante “Revisar importação”: App Bar “Revisar importação” e “Link de origem” no Card Cabeçalho (abrir link).
 
-#### Detalhe da Receita
-- Compose preview: `RecipeDetailPreviews.kt`
-- Objetivo: hub da receita
-- Elementos: título, CTA “Iniciar preparo”, Stepper de porções inline (abaixo do CTA), tabs Ingredientes/Preparo/Nutrição, botão “Compartilhar”, CTA “Abrir vídeo externo (timestamp)” (fora do escopo MVP do épico)
-- Interações: Stepper faixa 1–99 (passo 1) persistida por receita; recalcula ingredientes; voltar mantém rolagem/aba; futuros CTA de vídeo e Prep Bar permanecem prototipados mas fora do escopo atual
+#### Sheet — Nutrição por porção (detalhes)
+- Campos: Calorias (kcal), Carboidratos (g), Proteínas (g), Gorduras (g). Opcionais adicionais: Fibra (g), Açúcares (g), Sódio (mg).
+- Validação: valores positivos; aceitar vírgula como separador decimal; normalização interna.
+- Ações: “Salvar” aplica e fecha; “Limpar” zera campos; fechar por gesto/tocar fora/Back retorna foco ao card.
+- A11y: rótulos com unidade no label; leitura “por porção”; ordem de foco previsível.
 
-#### Editor de Receita
-- Compose preview: `RecipeEditorPreviews.kt`
-- Objetivo: criar/editar receitas com mínimos obrigatórios
-- Elementos: App Bar com voltar/salvar, cards Cabeçalho (Título, Imagem, Porções, Tempo, Livros), Nutrição (abre sheet), Ingredientes e Instruções (listas reordenáveis)
-- Interações: salvar habilita com título + ≥1 ingrediente + ≥1 passo; opcionais não bloqueiam; reordenar por alça “≡” com auto‑scroll e feedback háptico; variante Revisar importação mostra link de origem no cabeçalho
+#### Ingredientes — Formatação e Interações
+- Formatação: quantidade em negrito no texto do ingrediente (ex.: “**200 g** farinha de trigo”).
+- Derivação: usar `deriveQuantity()` e range retornado no estado da UI para aplicar `SpanStyle(fontWeight = Bold)` via `AnnotatedString`.
+- Reatividade: ao alterar porções, recalcular e atualizar o trecho em negrito sem layout shift perceptível.
+- A11y: leitura “200 gramas de farinha de trigo”; unidade conforme locale; foco linear por itens; ações têm rótulos claros.
 
-##### Sheet — Nutrição por Porção
-- Campos: Calorias, Carboidratos, Proteínas, Gorduras (opcionais: Fibra, Açúcares, Sódio)
-- Validação: valores positivos, aceitar vírgula como decimal; normalização interna
-- Ações: “Salvar”, “Limpar”, dismiss por gesto/Back; foco sequencial previsível; rótulos incluem unidade
+### Preparo
+- Purpose: executar passo a passo com foco
+- Key Elements: passo atual em destaque; botão Iniciar/Pausar timer quando houver tempo; botão “Concluir passo” para avançar; prévia (1 linha) do próximo passo; CTA “Abrir vídeo externo (timestamp)” ao final do texto do passo). Observação: a PrepBar NÃO é renderizada nesta tela; os controles ficam no próprio Rodapé e no Painel de Timers.
+- Interaction Notes: a PrepBar persiste em todo o app enquanto ativa, exceto na Tela de Preparo onde ela não é renderizada; tap na PrepBar (em outras telas) abre Preparo; timers continuam em background com notificação.
 
-##### Ingredientes — Formatação & Interações
-- Quantidade em negrito via `AnnotatedString`
-- `deriveQuantity()` reutilizado para destacar valores quando inferíveis
-- Recalcular sem layout shift perceptível e com leitura acessível (“200 gramas de farinha de trigo”)
+#### Preparo — Destaques e Tooltips (MVP)
 
-#### Preparo
-- Compose preview: `PrepPreviews.kt`
-- Objetivo: executar passos com foco
-- Elementos: passo atual destacado, controles Iniciar/Pausar, botão “Concluir passo”, prévia do próximo passo, CTA “Abrir vídeo externo (timestamp)” adiado
-- Interações: PrepBar não aparece nesta tela; timers seguem em background com notificação; placeholders e erros prototipados
+Reconhecimento e enriquecimento inline de entidades no texto dos passos. Os elementos são decorativos e acionáveis, mantendo acessibilidade.
 
-##### Preparo — Destaques e Tooltips
-- Ingredientes: sublinhado pontilhado, tooltip com “quantidade + nome”, ação “Copiar”, acessível (`role=dialog`)
-- Temperatura: chip 🔥, entrada via regex, pulso ao introduzir nova temperatura
-- Timer: chip ⏱, sugere criação de timer, sincroniza com Barra de Preparo
-- Estratégia de conflito: priorizar Timer > Temperatura > Ingrediente para evitar overlaps
+- Ingrediente com Tooltip
+  - Detecção: match por dicionário de ingredientes do passo e/ou anotações do parser; fallback por heurística (palavra no conjunto de ingredientes).
+  - Visual: sublinhado pontilhado no texto; cor padrão do link normal.
+  - Ação: tap → tooltip ancorado exibindo “quantidade + nome” (ex.: “400g de farinha de trigo”). Ação secundária: “Copiar”.
+  - A11y: role=dialog; foco inicial no conteúdo; `contentDescription` descritivo; fechar por Back/tap fora.
 
-#### Buscar
-- Compose preview: incluir ao criar (placeholder)
-- Elementos esperados: App Bar com campo/ícone, sugestões, chips de filtro (tempo, livro, coleção), lista resultados
-- Interações: debounce na digitação, histórico recente, estados vazio/erro/skeleton planejados
+- Destaque de Temperatura
+  - Detecção: regex `(?i)(\d{2,3})\s?[°º]\s?[cf]` e variações “180°C”, “350°F”.
+  - Visual: chip inline com ícone 🔥 e valor (ex.: “🔥 180°C”); cor de ênfase usa `onSecondaryContainer`/`secondaryContainer` (ou tokens de Warning sugeridos na paleta).
+  - Ações: tap → nenhuma ação obrigatória.
+  - Microinteração: quando um passo introduz nova temperatura (difere da anterior), aplicar pulso leve no chip (≤120 ms) para chamar atenção.
+  - A11y: label completo (ex.: “Temperatura: 180 graus Celsius”).
 
-#### Estados Vazios & Erro
-- Home: ilustração + CTA “Criar primeira receita”
-- Buscar: ilustração + CTA “Tentar outra busca”
-- Livros: ilustração + CTA “Criar livro”
-- Importar: mensagens de falha com “Tentar novamente/Editar manualmente” na sheet; extração com loading bloqueante
+- Destaque de Timer
+  - Detecção: regex de duração “(\d+)(\s?)(min|minutos|m|h|hora|horas)” e combinações “1 h 30 min”.
+  - Visual: chip inline com ícone ⏱ e valor (ex.: “⏱ 30 min”).
+  - Ações: tap → sugere criar timer do passo com a duração detectada (sheet ou snackbar com ação “Criar timer”); ao confirmar, o passo ganha controle play/pause e a Barra de Preparo aparece/persiste.
+  - Sincronização: pausa/retoma refletida tanto no chip quanto nos controles do passo e na Prep Bar.
+  - A11y: label completo (ex.: “Tempo: 30 minutos”).
 
-#### Notas Gerais de UI
-- Hierarquia visual consistente (base 8dp); reuso de cards/chips/sheet headers Material 3
-- Acessibilidade: alvos ≥48dp, contraste AA, `contentDescription` adequado, ordem de foco previsível, espaçamento de linhas 1.5–1.8 para passos
+Estados e Erros
+- Texto sem entidades: renderização normal (sem sublinhado/chips).
+- Over‑match: evitar matches sobrepostos; priorizar timer > temperatura > ingrediente, ou usar ranges não conflitantes.
+- Preferências: unidades (°C/°F) e idioma dos rótulos respeitam locale e settings do app.
 
-### Follow-ups
-- Registrar novas telas/estados no catálogo e no README assim que previews forem adicionados.
-- Gerar capturas principais dos previews para revisão assíncrona (anexar em PRs ou wiki).
-- Validar acessibilidade básica diretamente nos previews (`contentDescription`, foco, tamanhos ≥ 48dp).
+### Buscar
+- Purpose: localizar receitas rapidamente
+- Key Elements: campo/ícone de busca na App Bar; sugestões; chips de filtro (tempo, livro, livro de receitas); lista de resultados.
+- Interaction Notes: debounce na digitação; histórico recente; estados vazio/erro/skeleton.
+
+### Estados vazios/erro
+- Componentes genéricos do DS (EmptyState/ErrorState) com personalização por tela.
+- Ilustração opcional (slot), título e mensagem configuráveis (Defaults passíveis de override), 1–2 CTAs.
+- Exemplos de cópia (padrões sugeridos, sobrescrevíveis pelas telas):
+  - Home: “Sem receitas ainda” + CTA “Criar primeira receita”.
+  - Buscar: “Nenhum resultado encontrado” + CTA “Tentar outra busca”.
+  - Livros: “Nenhum livro de receitas” + CTA “Criar livro”.
+  - Importar: “Falha ao importar” + CTAs “Tentar novamente”/“Editar manualmente” (sheet de Importar) e loading bloqueante durante extração.
+
+### Notas gerais de UI
+- Hierarquia visual: títulos fortes; ações primárias evidentes; espaçamento base 8dp.
+- Consistência: reuso de cards, chips e cabeçalhos de sheet; Material 3 com tema/tipografia conforme código do app.
+- A11y: alvos 48dp; contraste conforme tema; contentDescription; ordem de foco previsível; linhas 1.5–1.8 em passos.
 
 ## Component Library / Design System
 
@@ -319,9 +320,10 @@ Componentes nucleares (propostos):
    - Headers consistentes, ações primárias/secundárias
    - Tooltip de Ingrediente: ancorado, sem cabeçalho; até 2 ações inline; densidade compacta.
 
-10. Empty/Erro Views
-   - Ilustração + título + descrição curta + CTA
-   - Variants: Home, Buscar, Livros, Importar
+10. Empty/Erro Views (genéricos)
+   - DS genérico: ilustração (slot), título, descrição curta e CTAs
+   - Defaults com textos/ilustrações sugeridos; as telas podem sobrescrever
+   - A11y: título como heading; ilustração decorativa quando apropriado; foco previsível
 
 11. IngredientTooltip
    - Purpose: mostrar quantidade + nome do ingrediente ao tocar no texto do passo
@@ -329,11 +331,11 @@ Componentes nucleares (propostos):
    - Behavior: fecha por Back/tap fora; foco inicial no conteúdo
    - A11y: role=dialog; `contentDescription` descritivo
 
-12. LayoutToggle
-   - Purpose: alternar lista ↔ grade na Home
-   - Variants: dois ícones (`ViewList`/`GridView` ou equivalentes)
-   - States: list/grid selecionado; disabled durante carregamento
-   - A11y: role=toggle; `contentDescription` descritivo; persistência em DataStore
+12. IconToggle (genérico)
+   - Purpose: controle segmentado de 2 estados, reutilizável (ex.: List ↔ Tile)
+   - Props: `options(2)`, `selectedIndex`, `onSelect(Int)`; ícones via `IconRegistry` (ex.: `ViewList`, `ViewTiles`)
+   - States: esquerda/direita selecionado; disabled durante carregamento
+   - A11y: tratar como tabs (preferível) ou toggle; `stateDescription` da opção ativa; persistir preferência em DataStore quando aplicado a layouts
 
 13. RecipeCountLabel
    - Purpose: mostrar “N receitas” após filtros
@@ -341,7 +343,7 @@ Componentes nucleares (propostos):
    - Tooltip ao tocar em menções de ingredientes nos passos (conteúdo: “quantidade + nome”; ação: Copiar)
    - Acessível (role=dialog) e cancelável (Back/tap fora)
 
-12. ExternalVideoCTA
+14. ExternalVideoCTA
    - Ação "Abrir vídeo externo (timestamp)" com ícone da plataforma
    - Locais: abaixo do título no Detalhe (se houver origem) e ao final do texto do passo
    - Técnica: Intent ACTION_VIEW com fallback para navegador; validação/normalização de timestamp (YouTube/Instagram); ação “Copiar link” se app externo indisponível
@@ -536,7 +538,7 @@ Notas técnicas
 
 ### Ações Imediatas
 1. Revisar esta especificação com stakeholders (Produto/Engenharia/Design) e registrar decisões.
-2. Garantir que o catálogo de protótipos Compose (docs/prototypes/README.md) esteja linkado em cada seção relevante.
+2. Vincular arquivos de design (Figma) às seções de telas e componentes.
 3. Preparar handoff para arquitetura de frontend (Compose/DI/navegação) com o time de Engenharia.
 4. Mapear questões em aberto (ex.: granularidade do mini‑timer, política de múltiplos timers) e definir owners/decisões.
 5. Consultar e manter alinhado com o documento de Arquitetura de Front‑end: docs/ui-architecture.md

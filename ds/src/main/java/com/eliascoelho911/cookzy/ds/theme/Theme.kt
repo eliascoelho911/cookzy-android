@@ -1,16 +1,12 @@
 package com.eliascoelho911.cookzy.ds.theme
 
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 
 @Immutable
 data class ExtendedColorScheme(
@@ -246,57 +242,57 @@ private val highContrastDarkColorScheme = darkColorScheme(
 )
 
 val extendedLight = ExtendedColorScheme(
-  success = ColorFamily(
-      successLight,
-      onSuccessLight,
-      successContainerLight,
-      onSuccessContainerLight,
-  ),
+    success = ColorFamily(
+        successLight,
+        onSuccessLight,
+        successContainerLight,
+        onSuccessContainerLight,
+    ),
 )
 
 val extendedDark = ExtendedColorScheme(
-  success = ColorFamily(
-      successDark,
-      onSuccessDark,
-      successContainerDark,
-      onSuccessContainerDark,
-  ),
+    success = ColorFamily(
+        successDark,
+        onSuccessDark,
+        successContainerDark,
+        onSuccessContainerDark,
+    ),
 )
 
 val extendedLightMediumContrast = ExtendedColorScheme(
-  success = ColorFamily(
-      successLightMediumContrast,
-      onSuccessLightMediumContrast,
-      successContainerLightMediumContrast,
-      onSuccessContainerLightMediumContrast,
-  ),
+    success = ColorFamily(
+        successLightMediumContrast,
+        onSuccessLightMediumContrast,
+        successContainerLightMediumContrast,
+        onSuccessContainerLightMediumContrast,
+    ),
 )
 
 val extendedLightHighContrast = ExtendedColorScheme(
-  success = ColorFamily(
-      successLightHighContrast,
-      onSuccessLightHighContrast,
-      successContainerLightHighContrast,
-      onSuccessContainerLightHighContrast,
-  ),
+    success = ColorFamily(
+        successLightHighContrast,
+        onSuccessLightHighContrast,
+        successContainerLightHighContrast,
+        onSuccessContainerLightHighContrast,
+    ),
 )
 
 val extendedDarkMediumContrast = ExtendedColorScheme(
-  success = ColorFamily(
-      successDarkMediumContrast,
-      onSuccessDarkMediumContrast,
-      successContainerDarkMediumContrast,
-      onSuccessContainerDarkMediumContrast,
-  ),
+    success = ColorFamily(
+        successDarkMediumContrast,
+        onSuccessDarkMediumContrast,
+        successContainerDarkMediumContrast,
+        onSuccessContainerDarkMediumContrast,
+    ),
 )
 
 val extendedDarkHighContrast = ExtendedColorScheme(
-  success = ColorFamily(
-      successDarkHighContrast,
-      onSuccessDarkHighContrast,
-      successContainerDarkHighContrast,
-      onSuccessContainerDarkHighContrast,
-  ),
+    success = ColorFamily(
+        successDarkHighContrast,
+        onSuccessDarkHighContrast,
+        successContainerDarkHighContrast,
+        onSuccessContainerDarkHighContrast,
+    ),
 )
 
 @Immutable
@@ -312,14 +308,14 @@ fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable() () -> Unit
 ) {
-  val colorScheme = when {
-      darkTheme -> darkScheme
-      else -> lightScheme
-  }
+    val colorScheme = when {
+        darkTheme -> darkScheme
+        else -> lightScheme
+    }
 
-  MaterialTheme(
-    colorScheme = colorScheme,
-    typography = AppTypography,
-    content = content
-  )
+    MaterialTheme(
+        colorScheme = colorScheme,
+        typography = AppTypography,
+        content = content
+    )
 }

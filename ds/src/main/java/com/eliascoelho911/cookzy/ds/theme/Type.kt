@@ -26,6 +26,13 @@ val displayFontFamily = FontFamily(
     )
 )
 
+val logoFontFamily = FontFamily(
+    Font(
+        googleFont = GoogleFont("Bricolage Grotesque"),
+        fontProvider = provider,
+    )
+)
+
 // Default Material 3 typography values
 val baseline = Typography()
 
