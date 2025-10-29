@@ -24,6 +24,7 @@ Escopo: padrões de implementação para o app Android do Cookzy. Estes padrões
 - Componentes do Design System devem definir `Defaults` adequados para garantir uso consistente e minimizar repetição de parâmetros.
   - Exemplos esperados: `ContentPadding`, `Shape`, `Colors`, `Typography`, `Spacing` específico do componente.
   - Referencie os defaults no componente público (ex.: `CookzyFilledButtonDefaults`) e consuma-os internamente.
+  - Você deve receber parâmetros para sobrescrever defaults, mas use os defaults como valores padrão.
 
 ```kotlin
 object CookzyFilledButtonDefaults {

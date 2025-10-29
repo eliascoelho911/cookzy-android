@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.FlowRowScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -296,7 +297,10 @@ private fun MetadataRow(
             verticalArrangement = Arrangement.spacedBy(RecipeCardDefaults.MetadataVerticalSpacing),
         ) {
             content.duration?.let { duration ->
-                DurationRow(duration = duration)
+                DurationRow(
+                    duration = duration,
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                )
             }
             capsules.forEach { text ->
                 CookbookCapsule(text = text)
@@ -306,8 +310,9 @@ private fun MetadataRow(
 }
 
 @Composable
-private fun DurationRow(duration: Duration) {
+private fun DurationRow(duration: Duration, modifier: Modifier = Modifier) {
     Row(
+        modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(RecipeCardDefaults.DurationSpacing),
         verticalAlignment = Alignment.CenterVertically,
     ) {
