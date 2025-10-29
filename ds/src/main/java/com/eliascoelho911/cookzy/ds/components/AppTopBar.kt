@@ -3,15 +3,14 @@ package com.eliascoelho911.cookzy.ds.components
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.SizeTransform
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -21,8 +20,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -76,6 +77,49 @@ private val appTopBarTitleFontFamily = FontFamily(
     ),
 )
 
+object AppTopBarDefaults {
+    val SearchFieldPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+
+    @Composable
+    fun colors(
+        containerColor: Color = MaterialTheme.colorScheme.surface,
+        titleContentColor: Color = MaterialTheme.colorScheme.onSurface,
+        navigationIconContentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
+        actionIconContentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
+        scrolledContainerColor: Color = MaterialTheme.colorScheme.surface,
+    ): TopAppBarColors = TopAppBarDefaults.topAppBarColors(
+        containerColor = containerColor,
+        titleContentColor = titleContentColor,
+        navigationIconContentColor = navigationIconContentColor,
+        actionIconContentColor = actionIconContentColor,
+        scrolledContainerColor = scrolledContainerColor,
+    )
+
+    @Composable
+    fun searchShape(): Shape = MaterialTheme.shapes.medium
+
+    @Composable
+    fun searchColors(
+        focusedContainerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+        unfocusedContainerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+        disabledContainerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+        errorContainerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+        focusedIndicatorColor: Color = Color.Transparent,
+        unfocusedIndicatorColor: Color = Color.Transparent,
+        disabledIndicatorColor: Color = Color.Transparent,
+        errorIndicatorColor: Color = Color.Transparent,
+    ): TextFieldColors = TextFieldDefaults.colors(
+        focusedContainerColor = focusedContainerColor,
+        unfocusedContainerColor = unfocusedContainerColor,
+        disabledContainerColor = disabledContainerColor,
+        errorContainerColor = errorContainerColor,
+        focusedIndicatorColor = focusedIndicatorColor,
+        unfocusedIndicatorColor = unfocusedIndicatorColor,
+        disabledIndicatorColor = disabledIndicatorColor,
+        errorIndicatorColor = errorIndicatorColor,
+    )
+}
+
 /**
  * Cookzy top app bar with optional inline search experience.
  *
@@ -92,11 +136,14 @@ fun AppTopBar(
     actions: @Composable RowScope.() -> Unit = {},
     searchUi: AppTopBarSearchUi? = null,
     scrollBehavior: TopAppBarScrollBehavior? = null,
-    searchShape: Shape = MaterialTheme.shapes.medium,
+    colors: TopAppBarColors = AppTopBarDefaults.colors(),
+    searchShape: Shape = AppTopBarDefaults.searchShape(),
+    searchFieldPadding: PaddingValues = AppTopBarDefaults.SearchFieldPadding,
+    searchTextFieldColors: TextFieldColors = AppTopBarDefaults.searchColors(),
 ) {
     val currentSearch = searchUi
     val searchActive = currentSearch?.active == true
-    val topAppBarColors = TopAppBarDefaults.topAppBarColors()
+    val topAppBarColors = colors
 
     AnimatedContent(
         targetState = searchActive,
@@ -120,6 +167,8 @@ fun AppTopBar(
                 searchUi = currentSearch,
                 backgroundColor = topAppBarColors.containerColor,
                 shape = searchShape,
+                contentPadding = searchFieldPadding,
+                colors = searchTextFieldColors,
             )
         } else {
             TopAppBar(
@@ -162,7 +211,9 @@ private fun InlineSearchField(
     searchUi: AppTopBarSearchUi,
     modifier: Modifier = Modifier,
     backgroundColor: Color,
-    shape: Shape
+    shape: Shape,
+    contentPadding: PaddingValues,
+    colors: TextFieldColors,
 ) {
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(searchUi.active) {
@@ -177,7 +228,7 @@ private fun InlineSearchField(
         modifier = modifier
             .fillMaxWidth()
             .background(backgroundColor)
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(contentPadding)
             .focusRequester(focusRequester),
         placeholder = { Text(text = searchUi.placeholder) },
         singleLine = true,
@@ -224,16 +275,7 @@ private fun InlineSearchField(
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = { searchUi.onSubmit() }),
         shape = shape,
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-            disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-            errorContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
-            errorIndicatorColor = Color.Transparent,
-        ),
+        colors = colors,
     )
 }
 
