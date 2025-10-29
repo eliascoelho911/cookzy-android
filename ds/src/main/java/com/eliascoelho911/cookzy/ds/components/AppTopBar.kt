@@ -182,10 +182,23 @@ private fun InlineSearchField(
         placeholder = { Text(text = searchUi.placeholder) },
         singleLine = true,
         leadingIcon = {
-            Icon(
-                imageVector = IconRegistry.Search,
-                contentDescription = null,
-            )
+            if (searchUi.query.isNotEmpty()) {
+                IconButton(
+                    onClick = searchUi.onDeactivate
+                ) {
+                    Icon(
+                        imageVector = IconRegistry.Back,
+                        contentDescription = stringResource(
+                            id = R.string.app_topbar_search_back
+                        ),
+                    )
+                }
+            } else {
+                Icon(
+                    imageVector = IconRegistry.Search,
+                    contentDescription = null,
+                )
+            }
         },
         trailingIcon = {
             if (searchUi.query.isNotEmpty()) {
