@@ -19,7 +19,10 @@ class OfflineRecipeRepository(
 
     override suspend fun createRecipe(draft: RecipeDraft): Long {
         val recipeId = recipeDao.insertRecipe(
-            RecipeEntity(title = draft.title.trim())
+            RecipeEntity(
+                title = draft.title.trim(),
+                updatedAt = System.currentTimeMillis()
+            )
         )
         persistChildren(recipeId, draft)
         return recipeId
@@ -29,7 +32,8 @@ class OfflineRecipeRepository(
         recipeDao.updateRecipe(
             RecipeEntity(
                 id = id,
-                title = draft.title.trim()
+                title = draft.title.trim(),
+                updatedAt = System.currentTimeMillis()
             )
         )
         recipeDao.deleteIngredientsByRecipeId(id)
@@ -42,6 +46,11 @@ class OfflineRecipeRepository(
 
     override fun observeRecipes(): Flow<List<Recipe>> =
         recipeDao.observeRecipes().map { recipes ->
+            recipes.map { it.toDomain() }
+        }
+
+    override fun observeRecentRecipes(limit: Int): Flow<List<Recipe>> =
+        recipeDao.observeRecentRecipes(limit).map { recipes ->
             recipes.map { it.toDomain() }
         }
 
@@ -97,5 +106,7 @@ class OfflineRecipeRepository(
                         position = it.position
                     )
                 }
+        ,
+            updatedAt = recipe.updatedAt
         )
 }

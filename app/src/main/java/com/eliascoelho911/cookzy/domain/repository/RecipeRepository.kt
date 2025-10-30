@@ -9,4 +9,9 @@ interface RecipeRepository {
     suspend fun updateRecipe(id: Long, draft: RecipeDraft)
     suspend fun getRecipe(id: Long): Recipe?
     fun observeRecipes(): Flow<List<Recipe>>
+    fun observeRecentRecipes(limit: Int = DEFAULT_RECENT_LIMIT): Flow<List<Recipe>>
+
+    companion object {
+        const val DEFAULT_RECENT_LIMIT: Int = 10
+    }
 }

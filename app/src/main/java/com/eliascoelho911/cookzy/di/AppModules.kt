@@ -1,7 +1,9 @@
 package com.eliascoelho911.cookzy.di
 
 import com.eliascoelho911.cookzy.data.local.database.CookzyDatabase
+import com.eliascoelho911.cookzy.data.preferences.HomeLayoutPreferencesDataSource
 import com.eliascoelho911.cookzy.data.repository.OfflineRecipeRepository
+import com.eliascoelho911.cookzy.domain.preferences.HomeLayoutPreferences
 import com.eliascoelho911.cookzy.domain.repository.RecipeRepository
 import com.eliascoelho911.cookzy.feature.recipeeditor.RecipeEditorViewModel
 import com.eliascoelho911.cookzy.feature.recipedetail.RecipeDetailViewModel
@@ -20,14 +22,19 @@ private val repositoryModule = module {
     single { OfflineRecipeRepository(get()) } bind RecipeRepository::class
 }
 
+private val preferencesModule = module {
+    single<HomeLayoutPreferences> { HomeLayoutPreferencesDataSource(androidContext()) }
+}
+
 private val viewModelModule = module {
-    viewModel { RecipeListViewModel(get()) }
+    viewModel { RecipeListViewModel(get(), get()) }
     viewModel { (recipeId: Long?) -> RecipeEditorViewModel(recipeId, get()) }
     viewModel { (recipeId: Long) -> RecipeDetailViewModel(recipeId, get()) }
 }
 
 val appModules = listOf(
     databaseModule,
+    preferencesModule,
     repositoryModule,
     viewModelModule
 )

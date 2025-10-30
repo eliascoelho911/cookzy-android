@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 data class RecipeEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val title: String
+    val title: String,
+    val updatedAt: Long = System.currentTimeMillis()
 )

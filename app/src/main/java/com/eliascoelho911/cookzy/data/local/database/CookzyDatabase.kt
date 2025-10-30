@@ -15,7 +15,7 @@ import com.eliascoelho911.cookzy.data.local.entity.RecipeStepEntity
         IngredientEntity::class,
         RecipeStepEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 abstract class CookzyDatabase : RoomDatabase() {

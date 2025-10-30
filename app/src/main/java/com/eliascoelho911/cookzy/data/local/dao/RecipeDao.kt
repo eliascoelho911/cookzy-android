@@ -38,6 +38,10 @@ interface RecipeDao {
     suspend fun getRecipeWithDetails(recipeId: Long): RecipeWithDetails?
 
     @Transaction
-    @Query("SELECT * FROM recipes ORDER BY title COLLATE NOCASE")
+    @Query("SELECT * FROM recipes ORDER BY updatedAt DESC, title COLLATE NOCASE")
     fun observeRecipes(): Flow<List<RecipeWithDetails>>
+
+    @Transaction
+    @Query("SELECT * FROM recipes ORDER BY updatedAt DESC, title COLLATE NOCASE LIMIT :limit")
+    fun observeRecentRecipes(limit: Int): Flow<List<RecipeWithDetails>>
 }

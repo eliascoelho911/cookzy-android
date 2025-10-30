@@ -1,5 +1,6 @@
 package com.eliascoelho911.cookzy.feature.recipeeditor
 
+import com.eliascoelho911.cookzy.R
 import com.eliascoelho911.cookzy.domain.model.Recipe
 import com.eliascoelho911.cookzy.domain.model.RecipeIngredient
 import com.eliascoelho911.cookzy.domain.model.RecipeStep
@@ -9,8 +10,8 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -43,7 +44,7 @@ class RecipeEditorViewModelTest {
 
         viewModel.onSave()
 
-        assertEquals("Título é obrigatório", viewModel.state.value.titleError)
+        assertEquals(R.string.error_title_required, viewModel.state.value.titleError)
         coVerify(exactly = 0) { repository.createRecipe(any()) }
         coVerify(exactly = 0) { repository.updateRecipe(any(), any()) }
     }
@@ -89,7 +90,8 @@ class RecipeEditorViewModelTest {
                     description = "Misture tudo e deixe crescer.",
                     position = 0
                 )
-            )
+            ),
+            updatedAt = 0L
         )
         coEvery { repository.getRecipe(existingRecipe.id) } returns existingRecipe
 
