@@ -4,6 +4,8 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
@@ -148,16 +150,17 @@ fun AppTopBar(
     AnimatedContent(
         targetState = searchActive,
         transitionSpec = {
-            val animationSpec = tween<IntOffset>(durationMillis = 300)
-            (
-                slideInVertically(
-                    animationSpec = animationSpec,
-                    initialOffsetY = { -it },
-                ) togetherWith slideOutVertically(
-                    animationSpec = animationSpec,
-                    targetOffsetY = { it },
-                )
-            ).using(SizeTransform(clip = false))
+            val slideAnimationSpec = tween<IntOffset>(durationMillis = 300)
+            val fadeAnimationSpec = tween<Float>(durationMillis = 300)
+            val enterTransition = slideInVertically(
+                animationSpec = slideAnimationSpec,
+                initialOffsetY = { -it },
+            ) + fadeIn(fadeAnimationSpec)
+            val exitTransition = slideOutVertically(
+                animationSpec = slideAnimationSpec,
+                targetOffsetY = { it },
+            ) + fadeOut(fadeAnimationSpec)
+            (enterTransition togetherWith exitTransition).using(SizeTransform(clip = true))
         },
         label = "Search",
         modifier = modifier.background(topAppBarColors.containerColor),
