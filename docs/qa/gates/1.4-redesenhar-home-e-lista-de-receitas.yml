@@ -1,0 +1,42 @@
+schema: 1
+story: '1.4'
+story_title: 'Story 1.4: Redesenhar Home/Lista de Receitas'
+gate: PASS
+status_reason: 'Busca inline mantém debounce e agora vive em uma única fonte de verdade; cobertura unitária valida o fluxo.'
+reviewer: 'Quinn (Test Architect)'
+updated: '2025-10-30T00:00:00Z'
+top_issues:
+  - severity: low
+    description: 'Story ainda marcada como Approved com tarefas abertas; alinhar Ready for QA antes de concluir.'
+    suggested_owner: sm
+    refs:
+      - docs/stories/1.4.redesenhar-home-e-lista-de-receitas.md:3
+waiver:
+  active: false
+quality_score: 100
+evidence:
+  tests_reviewed: 2
+  risks_identified: 0
+  trace:
+    ac_covered: [3]
+    ac_gaps: []
+nfr_validation:
+  security:
+    status: PASS
+    notes: 'Fluxo permanece local; sem novas superfícies externas.'
+  performance:
+    status: PASS
+    notes: 'Filtragem em memória no repository evita varreduras repetidas na UI.'
+  reliability:
+    status: PASS
+    notes: 'Combine + testes garantem consistência da busca mesmo após recriações do ViewModel.'
+  maintainability:
+    status: PASS
+    notes: 'Estado de filtros centralizado elimina caches duplicados na UI.'
+recommendations:
+  immediate: []
+  future:
+    - action: 'Atualizar Status/Tarefas da história para refletir Ready for QA.'
+      refs:
+        - docs/stories/1.4.redesenhar-home-e-lista-de-receitas.md:3
+      suggested_owner: sm

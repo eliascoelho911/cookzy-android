@@ -5,13 +5,17 @@ import com.eliascoelho911.cookzy.domain.model.RecipeIngredient
 import com.eliascoelho911.cookzy.domain.model.RecipeStep
 import com.eliascoelho911.cookzy.domain.preferences.HomeLayoutMode
 import com.eliascoelho911.cookzy.domain.preferences.HomeLayoutPreferences
+import com.eliascoelho911.cookzy.domain.repository.RecipeFeed
+import com.eliascoelho911.cookzy.domain.repository.RecipeFilters
 import com.eliascoelho911.cookzy.domain.repository.RecipeRepository
 import com.eliascoelho911.cookzy.testing.MainDispatcherRule
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -29,7 +33,7 @@ class RecipeListViewModelTest {
 
     private lateinit var repository: RecipeRepository
     private lateinit var layoutPreferences: FakeLayoutPreferences
-    private lateinit var recipesFlow: MutableSharedFlow<List<Recipe>>
+    private lateinit var recipesFlow: MutableSharedFlow<RecipeFeed>
     private lateinit var recentFlow: MutableSharedFlow<List<Recipe>>
 
     @Before
@@ -51,8 +55,9 @@ class RecipeListViewModelTest {
             recipe(id = 1L, title = "Bolo de Fubá"),
             recipe(id = 2L, title = "Lasanha de Legumes")
         )
-        recipesFlow.emit(recipes)
+        recipesFlow.emit(feed(all = recipes))
         recentFlow.emit(recipes.take(1))
+        advanceUntilIdle()
 
         val state = viewModel.state.value
         assertFalse(state.isLoading)
@@ -65,18 +70,30 @@ class RecipeListViewModelTest {
     @Test
     fun searchQuery_filtersAfterDebounce() = runTest {
         val viewModel = createViewModel()
-        recipesFlow.emit(
-            listOf(
-                recipe(id = 1L, title = "Pão de Queijo"),
-                recipe(id = 2L, title = "Risoto de Cogumelos")
-            )
+        val recipes = listOf(
+            recipe(id = 1L, title = "Pão de Queijo"),
+            recipe(id = 2L, title = "Risoto de Cogumelos")
         )
+        recipesFlow.emit(feed(all = recipes))
         recentFlow.emit(emptyList())
+        advanceUntilIdle()
 
         viewModel.onSearchQueryChange("risoto")
         assertTrue(viewModel.state.value.isSearchDebouncing)
 
         advanceTimeBy(500)
+        advanceUntilIdle()
+        verify(exactly = 1) { repository.setSearchQuery("risoto") }
+
+        val filtered = listOf(recipes[1])
+        recipesFlow.emit(
+            feed(
+                all = recipes,
+                filtered = filtered,
+                query = "risoto"
+            )
+        )
+        advanceUntilIdle()
 
         val state = viewModel.state.value
         assertFalse(state.isSearchDebouncing)
@@ -87,8 +104,9 @@ class RecipeListViewModelTest {
     @Test
     fun layoutModeSelection_persistsPreference() = runTest {
         val viewModel = createViewModel()
-        recipesFlow.emit(emptyList())
+        recipesFlow.emit(feed(all = emptyList()))
         recentFlow.emit(emptyList())
+        advanceUntilIdle()
 
         viewModel.onLayoutModeSelected(HomeLayoutMode.Grid)
 
@@ -121,6 +139,16 @@ class RecipeListViewModelTest {
             )
         ),
         updatedAt = 0L
+    )
+
+    private fun feed(
+        all: List<Recipe>,
+        filtered: List<Recipe> = all,
+        query: String = ""
+    ): RecipeFeed = RecipeFeed(
+        all = all,
+        filtered = filtered,
+        filters = RecipeFilters(query = query)
     )
 
     private class FakeLayoutPreferences(

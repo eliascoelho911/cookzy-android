@@ -7,7 +7,6 @@ import com.eliascoelho911.cookzy.domain.preferences.HomeLayoutMode
 import com.eliascoelho911.cookzy.domain.preferences.HomeLayoutPreferences
 import com.eliascoelho911.cookzy.domain.repository.RecipeRepository
 import kotlinx.coroutines.FlowPreview
-import java.util.Locale
 import kotlin.time.Duration
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +26,6 @@ class RecipeListViewModel(
     private val searchQuery = MutableStateFlow("")
     private var recipesJob: Job? = null
     private var recentRecipesJob: Job? = null
-    private var recipesCache: List<RecipeSummaryUi> = emptyList()
 
     init {
         observeLayoutMode()
@@ -107,25 +105,22 @@ class RecipeListViewModel(
                         )
                     }
                 }
-                .collectLatest { recipes ->
-                    val mapped = recipes.map { it.toSummaryUi() }
-                    /*
-                    TODO Acredito que esse cache é desnecessário.
-                     */
-                    recipesCache = mapped
-                    val query = searchQuery.value
-                    val filtered = filterRecipes(mapped, query)
-                    updateState {
-                        it.copy(
-                            recipes = mapped,
+                .collectLatest { feed ->
+                    val all = feed.all.map { it.toSummaryUi() }
+                    val filtered = feed.filtered.map { it.toSummaryUi() }
+                    val query = feed.filters.query
+                    updateState { current ->
+                        current.copy(
+                            recipes = all,
                             filteredRecipes = filtered,
                             isLoading = false,
                             listStatus = determineListStatus(
-                                allRecipes = mapped,
+                                allRecipes = all,
                                 filteredRecipes = filtered,
                                 query = query,
                                 hasError = false
                             ),
+                            searchQuery = query,
                             errorMessage = null
                         )
                     }
@@ -185,17 +180,9 @@ class RecipeListViewModel(
     }
 
     private fun applyFilterNow(query: String) {
-        val filtered = filterRecipes(recipesCache, query)
+        recipeRepository.setSearchQuery(query)
         updateState { current ->
-            val hasError = current.listStatus == RecipeFeedStatus.Error
             current.copy(
-                filteredRecipes = filtered,
-                listStatus = determineListStatus(
-                    allRecipes = recipesCache,
-                    filteredRecipes = filtered,
-                    query = query,
-                    hasError = hasError
-                ),
                 searchQuery = query,
                 isSearchDebouncing = false
             )
@@ -203,23 +190,8 @@ class RecipeListViewModel(
     }
 
     private fun resetSearch() {
-        if (searchQuery.value.isEmpty()) {
-            applyFilterNow("")
-            return
-        }
         searchQuery.value = ""
         applyFilterNow("")
-    }
-
-    private fun filterRecipes(
-        recipes: List<RecipeSummaryUi>,
-        query: String
-    ): List<RecipeSummaryUi> {
-        if (query.isBlank()) return recipes
-        val normalizedQuery = query.trim().lowercase(Locale.getDefault())
-        return recipes.filter { recipe ->
-            recipe.title.lowercase(Locale.getDefault()).contains(normalizedQuery)
-        }
     }
 
     private fun determineListStatus(
