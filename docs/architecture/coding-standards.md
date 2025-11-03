@@ -14,6 +14,7 @@ Escopo: padrões de implementação para o app Android do Cookzy. Estes padrões
 ## Kotlin & Organização
 - Nomes: `PascalCase` para classes/objetos; `camelCase` para funções/variáveis; constantes `UPPER_SNAKE`.
 - Pacotes por domínio/feature: `feature/<nome>`, `ui`, `navigation`, `di`, `core`, `domain`, `data`.
+- Componentização: componentes genéricos/shared vivem no módulo `:ds`; componentes específicos de uma feature residem em `app/.../feature/<nome>/components`.
 - Evite classes “god”; extraia helpers privados e extensões.
 - Preferir `sealed interface/class` para estados de UI quando fizer sentido.
 
