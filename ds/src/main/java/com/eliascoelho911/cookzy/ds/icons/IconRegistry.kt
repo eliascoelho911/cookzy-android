@@ -45,7 +45,7 @@ object IconRegistry {
     val Copy: ImageVector = Icons.Outlined.ContentCopy
 
     // Status & Feedback
-    val Check: ImageVector = Icons.Outlined.CheckCircle
+    val Check: ImageVector @Composable get() = ImageVector.vectorResource(R.drawable.ic_check)
     val Info: ImageVector = Icons.Outlined.Info
     val Error: ImageVector = Icons.Outlined.Error
 

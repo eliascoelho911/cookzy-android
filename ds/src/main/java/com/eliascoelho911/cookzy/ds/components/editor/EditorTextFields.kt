@@ -1,6 +1,5 @@
 package com.eliascoelho911.cookzy.ds.components.editor
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
@@ -164,7 +163,10 @@ private fun EditorTextFieldImpl(
             decorationBox = { innerTextField ->
                 EditorTextFieldDecoration(
                     value = value,
+                    label = label,
                     placeholder = placeholder,
+                    isFocused = isFocused,
+                    isError = isError,
                     innerTextField = innerTextField,
                 )
             },
@@ -217,20 +219,42 @@ private fun EditorSupportingText(
 
 object EditorTextFieldDefaults {
     val ContentPadding = PaddingValues(vertical = 12.dp)
-    val SupportingTextTopPadding = 8.dp
+    val SupportingTextTopPadding = 4.dp
+    val LabelBottomPadding = 4.dp
+    val LabelHorizontalPadding = 0.dp
 }
 
 @Composable
 private fun EditorTextFieldDecoration(
     value: String,
+    label: String,
     placeholder: String?,
+    isFocused: Boolean,
+    isError: Boolean,
     innerTextField: @Composable () -> Unit,
 ) {
     Column {
+        if (label.isNotBlank()) {
+            val labelColor = when {
+                isFocused -> MaterialTheme.colorScheme.primary
+                else -> MaterialTheme.colorScheme.onSurfaceVariant
+            }
+
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelMedium,
+                color = labelColor,
+                modifier = Modifier.padding(
+                    start = EditorTextFieldDefaults.LabelHorizontalPadding,
+                    end = EditorTextFieldDefaults.LabelHorizontalPadding,
+                    bottom = EditorTextFieldDefaults.LabelBottomPadding,
+                ),
+            )
+        }
+
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(EditorTextFieldDefaults.ContentPadding),
+                .fillMaxWidth(),
         ) {
             if (value.isEmpty() && !placeholder.isNullOrBlank()) {
                 Text(
@@ -256,7 +280,6 @@ private fun EditorTextFieldPreview() {
                 onValueChange = {},
                 label = "Ingrediente",
                 placeholder = "Ex.: Chocolate 70%",
-                maxChars = 100,
             )
         }
     }

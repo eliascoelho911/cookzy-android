@@ -23,10 +23,10 @@ import com.eliascoelho911.cookzy.ds.preview.ThemePreviews
 
 @Composable
 fun FormSectionCard(
-    title: String,
     modifier: Modifier = Modifier,
+    title: String? = null,
     description: String? = null,
-    actions: @Composable RowScope.() -> Unit = {},
+    actions: @Composable (RowScope.() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Surface(
@@ -41,36 +41,42 @@ fun FormSectionCard(
                 .padding(FormSectionCardDefaults.ContentPadding),
             verticalArrangement = Arrangement.spacedBy(FormSectionCardDefaults.ContentSpacing),
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(FormSectionCardDefaults.HeaderSpacing),
-                verticalAlignment = Alignment.Top,
-            ) {
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(FormSectionCardDefaults.HeaderTextSpacing),
+            if (!title.isNullOrBlank() || actions != null) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(FormSectionCardDefaults.HeaderSpacing),
+                    verticalAlignment = Alignment.Top,
                 ) {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                    )
+                    if (!title.isNullOrBlank()) {
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            verticalArrangement = Arrangement.spacedBy(FormSectionCardDefaults.HeaderTextSpacing),
+                        ) {
+                            Text(
+                                text = title,
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                            )
 
-                    if (!description.isNullOrBlank()) {
-                        Text(
-                            text = description,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            if (!description.isNullOrBlank()) {
+                                Text(
+                                    text = description,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                        }
+                    }
+
+                    actions?.let {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(FormSectionCardDefaults.ActionsSpacing),
+                            content = it,
                         )
                     }
                 }
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(FormSectionCardDefaults.ActionsSpacing),
-                    content = actions,
-                )
             }
 
             content()
@@ -89,7 +95,7 @@ object FormSectionCardDefaults {
     fun containerShape() = MaterialTheme.shapes.medium
 
     @Composable
-    fun containerColor() = MaterialTheme.colorScheme.surface
+    fun containerColor() = MaterialTheme.colorScheme.surfaceContainerLow
 
     @Composable
     fun containerElevation() = 1.dp
@@ -106,6 +112,20 @@ private fun FormSectionCardPreview() {
         ) {
             Text(
                 text = "Conteúdo do formulário",
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
+    }
+}
+
+@ThemePreviews
+@Preview(name = "FontScale 2.0", fontScale = 2f, showBackground = true)
+@Composable
+private fun FormSectionCardWithoutTitlePreview() {
+    PreviewWrapper {
+        FormSectionCard {
+            Text(
+                text = "Descreva como preparar a receita",
                 style = MaterialTheme.typography.bodyMedium,
             )
         }

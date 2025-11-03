@@ -1,5 +1,7 @@
 package com.eliascoelho911.cookzy.feature.recipeeditor
 
+import com.eliascoelho911.cookzy.R
+
 /**
  * Preview data factories for Recipe Editor feature.
  */
@@ -37,5 +39,21 @@ object RecipeEditorPreviewData {
     )
 
     fun stateSaving(): RecipeEditorUiState = stateEditing().copy(isSaving = true)
-}
 
+    fun stateValidationErrors(): RecipeEditorUiState {
+        val ingredientWithError = IngredientInput(id = "ing-error", rawText = "")
+        val validIngredient = IngredientInput(id = "ing-valid", rawText = "300 ml de água")
+        val stepWithError = StepInput(id = "step-error", description = "")
+        val validStep = StepInput(id = "step-valid", description = "Misture os ingredientes secos.")
+
+        return RecipeEditorUiState(
+            title = "",
+            titleError = R.string.editor_title_error_required,
+            ingredientInputs = listOf(ingredientWithError, validIngredient),
+            ingredientErrors = setOf(ingredientWithError.id),
+            stepInputs = listOf(validStep, stepWithError),
+            stepErrors = setOf(stepWithError.id),
+            validationTriggered = true,
+        )
+    }
+}

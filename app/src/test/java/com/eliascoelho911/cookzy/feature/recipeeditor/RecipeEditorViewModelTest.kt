@@ -42,9 +42,14 @@ class RecipeEditorViewModelTest {
             recipeRepository = repository
         )
 
+        val ingredientId = viewModel.state.value.ingredientInputs.first().id
+        val stepId = viewModel.state.value.stepInputs.first().id
+
         viewModel.onSave()
 
-        assertEquals(R.string.error_title_required, viewModel.state.value.titleError)
+        assertEquals(R.string.editor_title_error_required, viewModel.state.value.titleError)
+        assertEquals(setOf(ingredientId), viewModel.state.value.ingredientErrors)
+        assertEquals(setOf(stepId), viewModel.state.value.stepErrors)
         coVerify(exactly = 0) { repository.createRecipe(any()) }
         coVerify(exactly = 0) { repository.updateRecipe(any(), any()) }
     }
