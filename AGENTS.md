@@ -3,7 +3,7 @@
 This file provides guidance and memory for Codex CLI.
 
 ## Iconography Standard
-- Library icons only (Material/Heroicons), no emoji.
+- Library icons (Material/Heroicons/drawable ds icon), no emoji.
 - Android uses `androidx.compose.material:material-icons-extended` via Compose BOM.
 - Single source of truth: `IconRegistry` object (Kotlin) with one property per icon (e.g., `Close`, `Back`, `Play`).
 - All UI code must consume icons from `IconRegistry`.

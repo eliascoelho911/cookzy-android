@@ -2,20 +2,27 @@
     <string name="app_name">Cookzy</string>
     <string name="recipe_editor_top_bar_title_edit">Editar receita</string>
     <string name="recipe_editor_top_bar_title_new">Nova receita</string>
-    <string name="recipe_editor_cancel">Cancelar</string>
     <string name="recipe_editor_save">Salvar receita</string>
     <string name="recipe_editor_discard_changes">Descartar alterações</string>
-    <string name="recipe_editor_title_label">Título</string>
-    <string name="recipe_editor_ingredients_title">Ingredientes</string>
-    <string name="recipe_editor_add_ingredient">Adicionar ingrediente</string>
-    <string name="recipe_editor_ingredient_number">Ingrediente %1$d</string>
-    <string name="recipe_editor_ingredient_label">Texto do ingrediente</string>
-    <string name="recipe_editor_remove_ingredient">Remover ingrediente</string>
-    <string name="recipe_editor_steps_title">Passos de preparo</string>
-    <string name="recipe_editor_add_step">Adicionar passo</string>
-    <string name="recipe_editor_step_number">Passo %1$d</string>
-    <string name="recipe_editor_step_description">Descrição</string>
-    <string name="recipe_editor_remove_step">Remover passo</string>
+
+    <string name="editor_back">Voltar</string>
+    <string name="editor_title_section_title">Cabeçalho</string>
+    <string name="editor_title_section_description">Informe o título da receita.</string>
+    <string name="editor_title_label">Título</string>
+    <string name="editor_title_placeholder">Ex.: Bolo de cenoura fofinho</string>
+    <string name="editor_title_error_required">Informe um título.</string>
+    <string name="editor_ingredients_title">Ingredientes</string>
+    <string name="editor_ingredients_description">Adicione os ingredientes na ordem desejada.</string>
+    <string name="editor_ingredients_add">Adicionar ingrediente</string>
+    <string name="editor_ingredients_placeholder">Ex.: 200 g de chocolate meio amargo</string>
+    <string name="editor_ingredients_error_required">Informe o ingrediente.</string>
+    <string name="editor_remove_last_ingredient_warning">Mantenha pelo menos um ingrediente.</string>
+    <string name="editor_instructions_title">Instruções</string>
+    <string name="editor_instructions_description">Descreva os passos do preparo.</string>
+    <string name="editor_instructions_add">Adicionar passo</string>
+    <string name="editor_instructions_placeholder">Ex.: Misture até ficar homogêneo.</string>
+    <string name="editor_instructions_error_required">Descreva o passo.</string>
+    <string name="editor_remove_last_step_warning">Mantenha pelo menos um passo.</string>
     <string name="recipe_detail_top_bar_title">Detalhes da receita</string>
     <string name="common_back">Voltar</string>
     <string name="recipe_detail_ingredients_title">Ingredientes</string>
@@ -48,7 +55,6 @@
         <item quantity="one">%d receita</item>
         <item quantity="other">%d receitas</item>
     </plurals>
-    <string name="error_title_required">Título é obrigatório</string>
     <string name="error_recipe_save">Não foi possível salvar a receita.</string>
     <string name="error_recipe_not_found">Receita não encontrada.</string>
     <string name="error_recipe_load">Erro ao carregar a receita.</string>

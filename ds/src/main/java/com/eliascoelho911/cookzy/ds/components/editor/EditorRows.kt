@@ -12,6 +12,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eliascoelho911.cookzy.ds.R
+import com.eliascoelho911.cookzy.ds.components.editor.ReorderableListDefaults.HandleIconSize
 import com.eliascoelho911.cookzy.ds.icons.IconRegistry
 import com.eliascoelho911.cookzy.ds.preview.PreviewWrapper
 import com.eliascoelho911.cookzy.ds.preview.ThemePreviews
@@ -42,6 +45,8 @@ fun IngredientEditorRow(
     maxChars: Int? = null,
     focusRequester: FocusRequester? = null,
     textFieldModifier: Modifier = Modifier,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
     ReorderableListItem(
         modifier = modifier,
@@ -50,7 +55,6 @@ fun IngredientEditorRow(
             EditorTextField(
                 value = value,
                 onValueChange = onValueChange,
-                label = stringResource(id = R.string.editor_ingredient_label),
                 placeholder = placeholder,
                 modifier = Modifier
                     .weight(1f)
@@ -58,6 +62,8 @@ fun IngredientEditorRow(
                 isError = isError,
                 supportingText = errorText,
                 maxChars = maxChars,
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions,
                 focusRequester = focusRequester,
             )
 
@@ -69,6 +75,7 @@ fun IngredientEditorRow(
                 ),
             ) {
                 Icon(
+                    modifier = Modifier.size(HandleIconSize),
                     imageVector = IconRegistry.Delete,
                     contentDescription = stringResource(id = R.string.editor_remove_ingredient),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -95,6 +102,8 @@ fun InstructionEditorRow(
     onDuplicate: (() -> Unit)? = null,
     focusRequester: FocusRequester? = null,
     textFieldModifier: Modifier = Modifier,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
     ReorderableListItem(
         modifier = modifier,
@@ -103,7 +112,6 @@ fun InstructionEditorRow(
             EditorMultilineField(
                 value = value,
                 onValueChange = onValueChange,
-                label = stringResource(id = R.string.editor_instruction_field_label),
                 placeholder = placeholder,
                 modifier = Modifier
                     .weight(1f)
@@ -112,6 +120,8 @@ fun InstructionEditorRow(
                 isError = isError,
                 supportingText = errorText,
                 maxChars = maxChars,
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions,
                 focusRequester = focusRequester,
             )
 
@@ -142,6 +152,7 @@ fun InstructionEditorRow(
                     ),
                 ) {
                     Icon(
+                        modifier = Modifier.size(HandleIconSize),
                         imageVector = IconRegistry.Delete,
                         contentDescription = stringResource(id = R.string.editor_remove_instruction),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -168,7 +179,7 @@ fun InstructionDragHandle(
         contentAlignment = Alignment.Center,
     ) {
         Surface(
-            modifier = Modifier.size(36.dp),
+            modifier = Modifier.size(24.dp),
             shape = CircleShape,
             color = InstructionDragHandleDefaults.containerColor(),
             contentColor = InstructionDragHandleDefaults.contentColor(),
@@ -179,7 +190,7 @@ fun InstructionDragHandle(
             ) {
                 Text(
                     text = (index + 1).toString(),
-                    style = MaterialTheme.typography.labelLarge,
+                    style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.SemiBold,
                 )
             }
@@ -189,10 +200,10 @@ fun InstructionDragHandle(
 
 object InstructionDragHandleDefaults {
     @Composable
-    fun containerColor() = MaterialTheme.colorScheme.secondaryContainer
+    fun containerColor() = MaterialTheme.colorScheme.surfaceTint
 
     @Composable
-    fun contentColor() = MaterialTheme.colorScheme.onSecondaryContainer
+    fun contentColor() = MaterialTheme.colorScheme.inverseOnSurface
 }
 
 @ThemePreviews
