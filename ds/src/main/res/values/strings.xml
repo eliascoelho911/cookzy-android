@@ -18,6 +18,16 @@
     <string name="recent_carousel_hint">Receitas recentes. Deslize para ver mais.</string>
     <string name="icon_toggle_selected">Selecionado</string>
     <string name="icon_toggle_not_selected">Não selecionado</string>
+    <string name="editor_drag_handle_description">Reordenar item</string>
+    <string name="editor_reorder_move_up">Mover item para cima</string>
+    <string name="editor_reorder_move_down">Mover item para baixo</string>
+    <string name="editor_drag_handle_state">Posição %1$d de %2$d</string>
+    <string name="editor_remove_ingredient">Remover ingrediente</string>
+    <string name="editor_remove_instruction">Remover passo</string>
+    <string name="editor_duplicate_instruction">Duplicar passo</string>
+    <string name="editor_textfield_counter">%1$d/%2$d</string>
+    <string name="editor_ingredient_label">Ingrediente</string>
+    <string name="editor_instruction_field_label">Descrição do passo</string>
 
     <plurals name="recipe_card_more_cookbooks">
         <item quantity="one">e +%d livro</item>

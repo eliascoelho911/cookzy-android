@@ -12,6 +12,7 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material.icons.outlined.ExpandLess
 import androidx.compose.material.icons.outlined.ExpandMore
+import androidx.compose.material.icons.outlined.DragHandle
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.GridView
 import androidx.compose.material.icons.outlined.Info
@@ -23,7 +24,11 @@ import androidx.compose.material.icons.outlined.Sort
 import androidx.compose.material.icons.outlined.Stop
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material.icons.outlined.ViewList
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.dp
+import com.eliascoelho911.cookzy.ds.R
 
 /**
  * Central icon registry. Every UI icon must be consumed from here.
@@ -35,7 +40,7 @@ object IconRegistry {
     val Close: ImageVector = Icons.Outlined.Close
     val Add: ImageVector = Icons.Outlined.Add
     val Edit: ImageVector = Icons.Outlined.Edit
-    val Delete: ImageVector = Icons.Outlined.Delete
+    val Delete: ImageVector @Composable get() = ImageVector.vectorResource(R.drawable.ic_x)
     val Clear: ImageVector = Icons.Outlined.Clear
     val Copy: ImageVector = Icons.Outlined.ContentCopy
 
@@ -61,4 +66,7 @@ object IconRegistry {
     // Disclosure
     val ExpandMore: ImageVector = Icons.Outlined.ExpandMore
     val ExpandLess: ImageVector = Icons.Outlined.ExpandLess
+
+    // Reorder
+    val DragHandle: ImageVector @Composable get() = ImageVector.vectorResource(R.drawable.ic_bars_3)
 }
