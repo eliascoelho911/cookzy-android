@@ -1,0 +1,60 @@
+schema: 1
+story: '1.8'
+story_title: 'Story 1.8: Design System — Componentes para RecipeEditor (Épico 01)'
+gate: FAIL
+status_reason: 'Labels invisíveis, ícone fora do padrão e ausência total de testes quebram múltiplos critérios de aceite.'
+reviewer: 'Quinn (Test Architect)'
+updated: '2025-11-03T14:59:33Z'
+top_issues:
+  - severity: high
+    description: 'EditorTextField/EditorMultilineField não exibem o label, violando AC1 e degradando usabilidade.'
+    suggested_owner: dev
+    refs:
+      - ds/src/main/java/com/eliascoelho911/cookzy/ds/components/editor/EditorTextFields.kt:124
+  - severity: high
+    description: 'IconRegistry.DragHandle continua apontando para vectorResource customizado, descumprindo AC3.'
+    suggested_owner: dev
+    refs:
+      - ds/src/main/java/com/eliascoelho911/cookzy/ds/icons/IconRegistry.kt:71
+  - severity: high
+    description: 'Nenhum teste Compose implementado para os componentes do editor; pasta esperada permanece vazia, falhando AC5.'
+    suggested_owner: dev
+    refs:
+      - ds/src/androidTest/java/com/eliascoelho911/cookzy/ds/components/editor
+waiver:
+  active: false
+quality_score: 15
+evidence:
+  tests_reviewed: 0
+  risks_identified: 3
+  trace:
+    ac_covered: []
+    ac_gaps: [1, 3, 5]
+nfr_validation:
+  security:
+    status: NOT_RUN
+    notes: 'Cobertura bloqueada por falhas funcionais.'
+  performance:
+    status: NOT_RUN
+    notes: 'Cobertura bloqueada por falhas funcionais.'
+  reliability:
+    status: NOT_RUN
+    notes: 'Cobertura bloqueada por falhas funcionais.'
+  maintainability:
+    status: CONCERNS
+    notes: 'Ausência de testes e uso de asset customizado geram dívida técnica imediata.'
+recommendations:
+  immediate:
+    - action: 'Renderizar label visível nos campos EditorTextField/EditorMultilineField e validar com previews + testes.'
+      refs:
+        - ds/src/main/java/com/eliascoelho911/cookzy/ds/components/editor/EditorTextFields.kt:124
+      suggested_owner: dev
+    - action: 'Trocar IconRegistry.DragHandle para Icons.Outlined.DragHandle e remover asset redundante.'
+      refs:
+        - ds/src/main/java/com/eliascoelho911/cookzy/ds/icons/IconRegistry.kt:71
+      suggested_owner: dev
+    - action: 'Adicionar testes Compose exercitando renderização, foco pós-adicionar/remover e onMove para ReorderableList e linhas do editor.'
+      refs:
+        - ds/src/androidTest/java/com/eliascoelho911/cookzy/ds/components/editor
+      suggested_owner: dev
+  future: []
