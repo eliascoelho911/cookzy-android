@@ -104,8 +104,7 @@ fun ReorderableListItem(
 ) {
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .heightIn(min = ReorderableListDefaults.ItemMinHeight),
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(ReorderableListDefaults.ItemSpacing),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -216,10 +215,9 @@ private val LocalReorderableItemDragging = compositionLocalOf { false }
 
 object ReorderableListDefaults {
     val ItemSpacing = 12.dp
-    val ItemMinHeight = 64.dp
-    val TouchTarget = 48.dp
+    val TouchTarget = 36.dp
     val HandlePadding = PaddingValues(8.dp)
-    val HandleIconSize = 24.dp
+    val HandleIconSize = 20.dp
 }
 
 @ThemePreviews

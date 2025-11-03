@@ -3,18 +3,20 @@ package com.eliascoelho911.cookzy.ds.components.editor
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.IconButton
+import androidx.compose.foundation.shape.CornerBasedShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,14 +28,15 @@ fun FormSectionCard(
     modifier: Modifier = Modifier,
     title: String? = null,
     description: String? = null,
+    colors: CardColors = FormSectionCardDefaults.colors(),
+    shape: CornerBasedShape = FormSectionCardDefaults.containerShape(),
     actions: @Composable (RowScope.() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    Surface(
+    Card(
         modifier = modifier,
-        shape = FormSectionCardDefaults.containerShape(),
-        color = FormSectionCardDefaults.containerColor(),
-        shadowElevation = FormSectionCardDefaults.containerElevation(),
+        shape = shape,
+        colors = colors
     ) {
         Column(
             modifier = Modifier
@@ -86,7 +89,7 @@ fun FormSectionCard(
 
 object FormSectionCardDefaults {
     val ContentPadding = PaddingValues(20.dp)
-    val ContentSpacing = 20.dp
+    val ContentSpacing = 8.dp
     val HeaderSpacing = 16.dp
     val HeaderTextSpacing = 4.dp
     val ActionsSpacing = 8.dp
@@ -95,10 +98,7 @@ object FormSectionCardDefaults {
     fun containerShape() = MaterialTheme.shapes.medium
 
     @Composable
-    fun containerColor() = MaterialTheme.colorScheme.surfaceContainerLow
-
-    @Composable
-    fun containerElevation() = 1.dp
+    fun colors() = CardDefaults.cardColors()
 }
 
 @ThemePreviews

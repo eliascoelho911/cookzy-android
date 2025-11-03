@@ -4,15 +4,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,15 +35,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.isShiftPressed
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.eliascoelho911.cookzy.R
 import com.eliascoelho911.cookzy.ds.components.AppTopBar
 import com.eliascoelho911.cookzy.ds.components.editor.EditorTextField
 import com.eliascoelho911.cookzy.ds.components.editor.FormSectionCard
+import com.eliascoelho911.cookzy.ds.components.editor.FormSectionCardDefaults
 import com.eliascoelho911.cookzy.ds.components.editor.IngredientEditorRow
 import com.eliascoelho911.cookzy.ds.components.editor.InstructionEditorRow
 import com.eliascoelho911.cookzy.ds.components.editor.ReorderableDragHandle
@@ -49,6 +58,8 @@ import com.eliascoelho911.cookzy.ds.components.editor.ReorderableList
 import com.eliascoelho911.cookzy.ds.icons.IconRegistry
 import com.eliascoelho911.cookzy.ds.preview.PreviewWrapper
 import com.eliascoelho911.cookzy.ds.preview.ThemePreviews
+import com.eliascoelho911.cookzy.feature.recipeeditor.RecipeEditorScreenDefaults.ItemsSpacing
+import com.eliascoelho911.cookzy.feature.recipeeditor.RecipeEditorScreenDefaults.SectionsSpacing
 import kotlinx.coroutines.launch
 
 @Composable
@@ -92,7 +103,7 @@ fun RecipeEditorRoute(
         onConsumeIngredientFocus = viewModel::consumeIngredientFocus,
         onConsumeStepFocus = viewModel::consumeStepFocus,
         onConsumeTitleFocus = viewModel::consumeTitleFocus,
-        modifier = modifier,
+        modifier = modifier.safeContentPadding(),
     )
 }
 
@@ -208,9 +219,13 @@ private fun RecipeEditorScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .verticalScroll(scrollState),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
+                verticalArrangement = Arrangement.spacedBy(SectionsSpacing),
             ) {
-                FormSectionCard {
+                FormSectionCard(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
+                ) {
                     EditorTextField(
                         value = state.title,
                         onValueChange = onTitleChange,
@@ -226,21 +241,38 @@ private fun RecipeEditorScreen(
                 FormSectionCard(
                     title = stringResource(id = R.string.editor_ingredients_title),
                     description = stringResource(id = R.string.editor_ingredients_description),
-                    actions = {
-                        TextButton(onClick = { if (!state.isSaving) onAddIngredient() }) {
-                            Text(text = stringResource(id = R.string.editor_ingredients_add))
-                        }
-                    },
                 ) {
+                    val lastIngredientFilled = state.ingredientInputs.lastOrNull()
+                        ?.rawText
+                        ?.isNotBlank() == true
                     ReorderableList(
                         items = state.ingredientInputs,
                         key = { it.id },
                         onMove = onMoveIngredient,
                         modifier = Modifier.heightIn(max = listMaxHeight),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(ItemsSpacing),
                     ) { index, ingredient ->
-                        val focusRequester = ingredientFocusRequesters.getOrPut(ingredient.id) { FocusRequester() }
-                        val isError = state.validationTriggered && ingredient.id in state.ingredientErrors
+                        val focusRequester =
+                            ingredientFocusRequesters.getOrPut(ingredient.id) { FocusRequester() }
+                        val isError =
+                            state.validationTriggered && ingredient.id in state.ingredientErrors
+                        val isLast = index == state.ingredientInputs.lastIndex
+                        val hasText = ingredient.rawText.isNotBlank()
+                        val canHandleEnter = !state.isSaving && (hasText || !isLast)
+                        val handleSubmit = {
+                            if (isLast) {
+                                if (hasText) {
+                                    onAddIngredient()
+                                }
+                            } else {
+                                val nextId = state.ingredientInputs.getOrNull(index + 1)?.id
+                                if (nextId != null) {
+                                    val nextRequester =
+                                        ingredientFocusRequesters.getOrPut(nextId) { FocusRequester() }
+                                    nextRequester.requestFocus()
+                                }
+                            }
+                        }
                         IngredientEditorRow(
                             value = ingredient.rawText,
                             onValueChange = { value ->
@@ -258,30 +290,78 @@ private fun RecipeEditorScreen(
                             dragHandle = {
                                 ReorderableDragHandle()
                             },
-                            placeholder = stringResource(id = R.string.editor_ingredients_placeholder),
+                            //                            placeholder = stringResource(id = R.string.editor_ingredients_placeholder),
                             focusRequester = focusRequester,
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                            keyboardActions = KeyboardActions(
+                                onNext = {
+                                    if (canHandleEnter) handleSubmit()
+                                },
+                                onDone = {
+                                    if (canHandleEnter) handleSubmit()
+                                },
+                            ),
+                            textFieldModifier = Modifier.onPreviewKeyEvent { keyEvent ->
+                                if (
+                                    canHandleEnter &&
+                                    keyEvent.type == KeyEventType.KeyUp &&
+                                    keyEvent.key == Key.Enter &&
+                                    !keyEvent.isShiftPressed
+                                ) {
+                                    handleSubmit()
+                                    true
+                                } else {
+                                    false
+                                }
+                            },
                         )
+                    }
+
+                    if (lastIngredientFilled) {
+                        TextButton(
+                            onClick = onAddIngredient,
+                            enabled = !state.isSaving,
+                            modifier = Modifier.align(Alignment.Start),
+                        ) {
+                            Text(text = stringResource(id = R.string.editor_ingredients_add))
+                        }
                     }
                 }
 
                 FormSectionCard(
                     title = stringResource(id = R.string.editor_instructions_title),
                     description = stringResource(id = R.string.editor_instructions_description),
-                    actions = {
-                        TextButton(onClick = { if (!state.isSaving) onAddStep() }) {
-                            Text(text = stringResource(id = R.string.editor_instructions_add))
-                        }
-                    },
                 ) {
+                    val lastStepFilled = state.stepInputs.lastOrNull()
+                        ?.description
+                        ?.isNotBlank() == true
                     ReorderableList(
                         items = state.stepInputs,
                         key = { it.id },
                         onMove = onMoveStep,
                         modifier = Modifier.heightIn(max = listMaxHeight),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(ItemsSpacing),
                     ) { index, step ->
-                        val focusRequester = stepFocusRequesters.getOrPut(step.id) { FocusRequester() }
+                        val focusRequester =
+                            stepFocusRequesters.getOrPut(step.id) { FocusRequester() }
                         val isError = state.validationTriggered && step.id in state.stepErrors
+                        val isLast = index == state.stepInputs.lastIndex
+                        val hasText = step.description.isNotBlank()
+                        val canHandleEnter = !state.isSaving && (hasText || !isLast)
+                        val handleSubmit = {
+                            if (isLast) {
+                                if (hasText) {
+                                    onAddStep()
+                                }
+                            } else {
+                                val nextId = state.stepInputs.getOrNull(index + 1)?.id
+                                if (nextId != null) {
+                                    val nextRequester =
+                                        stepFocusRequesters.getOrPut(nextId) { FocusRequester() }
+                                    nextRequester.requestFocus()
+                                }
+                            }
+                        }
                         InstructionEditorRow(
                             index = index,
                             value = step.description,
@@ -297,14 +377,51 @@ private fun RecipeEditorScreen(
                                     onRemoveStep(step.id)
                                 }
                             },
-                            placeholder = stringResource(id = R.string.editor_instructions_placeholder),
+                            //                            placeholder = stringResource(id = R.string.editor_instructions_placeholder),
                             focusRequester = focusRequester,
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                            keyboardActions = KeyboardActions(
+                                onNext = {
+                                    if (canHandleEnter) handleSubmit()
+                                },
+                                onDone = {
+                                    if (canHandleEnter) handleSubmit()
+                                },
+                            ),
+                            textFieldModifier = Modifier.onPreviewKeyEvent { keyEvent ->
+                                if (
+                                    canHandleEnter &&
+                                    keyEvent.type == KeyEventType.KeyUp &&
+                                    keyEvent.key == Key.Enter &&
+                                    !keyEvent.isShiftPressed
+                                ) {
+                                    handleSubmit()
+                                    true
+                                } else {
+                                    false
+                                }
+                            },
                         )
+                    }
+
+                    if (lastStepFilled) {
+                        TextButton(
+                            onClick = onAddStep,
+                            enabled = !state.isSaving,
+                            modifier = Modifier.align(Alignment.Start),
+                        ) {
+                            Text(text = stringResource(id = R.string.editor_instructions_add))
+                        }
                     }
                 }
             }
         }
     }
+}
+
+private object RecipeEditorScreenDefaults {
+    val ItemsSpacing = 4.dp
+    val SectionsSpacing = 4.dp
 }
 
 @ThemePreviews

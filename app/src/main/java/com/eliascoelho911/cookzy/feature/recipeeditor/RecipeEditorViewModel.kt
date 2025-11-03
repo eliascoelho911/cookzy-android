@@ -69,6 +69,13 @@ class RecipeEditorViewModel(
 
     fun addIngredient() {
         updateState { current ->
+            val canAdd = current.ingredientInputs.lastOrNull()
+                ?.rawText
+                ?.isNotBlank() ?: true
+            if (!canAdd) {
+                return@updateState current
+            }
+
             val newIngredient = IngredientInput()
             val updatedErrors = current.ingredientErrors.toMutableSet().apply {
                 if (current.validationTriggered) {
@@ -159,6 +166,13 @@ class RecipeEditorViewModel(
 
     fun addStep() {
         updateState { current ->
+            val canAdd = current.stepInputs.lastOrNull()
+                ?.description
+                ?.isNotBlank() ?: true
+            if (!canAdd) {
+                return@updateState current
+            }
+
             val newStep = StepInput()
             val updatedErrors = current.stepErrors.toMutableSet().apply {
                 if (current.validationTriggered) {
@@ -377,13 +391,7 @@ data class RecipeEditorUiState(
     val isEditing: Boolean = false,
 ) {
     val canSave: Boolean
-        get() = !isSaving &&
-            !isLoading &&
-            title.trim().isNotEmpty() &&
-            ingredientInputs.isNotEmpty() &&
-            stepInputs.isNotEmpty() &&
-            ingredientInputs.all { it.rawText.trim().isNotEmpty() } &&
-            stepInputs.all { it.description.trim().isNotEmpty() }
+        get() = !isSaving && !isLoading
 }
 
 data class IngredientInput(

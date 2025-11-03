@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -37,13 +38,14 @@ import com.eliascoelho911.cookzy.ds.preview.ThemePreviews
 fun EditorTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    label: String,
+    label: String? = null,
     placeholder: String? = null,
     modifier: Modifier = Modifier,
     isError: Boolean = false,
     supportingText: String? = null,
     maxChars: Int? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     focusRequester: FocusRequester? = null,
 ) {
@@ -59,6 +61,7 @@ fun EditorTextField(
         supportingText = supportingText,
         maxChars = maxChars,
         keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
         visualTransformation = visualTransformation,
         focusRequester = focusRequester,
     )
@@ -68,7 +71,7 @@ fun EditorTextField(
 fun EditorMultilineField(
     value: String,
     onValueChange: (String) -> Unit,
-    label: String,
+    label: String? = null,
     placeholder: String? = null,
     modifier: Modifier = Modifier,
     isError: Boolean = false,
@@ -76,6 +79,7 @@ fun EditorMultilineField(
     maxChars: Int? = null,
     minLines: Int = 1,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     focusRequester: FocusRequester? = null,
 ) {
@@ -91,6 +95,7 @@ fun EditorMultilineField(
         supportingText = supportingText,
         maxChars = maxChars,
         keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
         visualTransformation = visualTransformation,
         focusRequester = focusRequester,
     )
@@ -100,7 +105,7 @@ fun EditorMultilineField(
 private fun EditorTextFieldImpl(
     value: String,
     onValueChange: (String) -> Unit,
-    label: String,
+    label: String? = null,
     placeholder: String?,
     modifier: Modifier,
     singleLine: Boolean,
@@ -109,6 +114,7 @@ private fun EditorTextFieldImpl(
     supportingText: String?,
     maxChars: Int?,
     keyboardOptions: KeyboardOptions,
+    keyboardActions: KeyboardActions,
     visualTransformation: VisualTransformation,
     focusRequester: FocusRequester?,
 ) {
@@ -120,7 +126,7 @@ private fun EditorTextFieldImpl(
         )
     }
 
-    val labelSemanticsModifier = if (label.isNotBlank()) {
+    val labelSemanticsModifier = if (!label.isNullOrBlank()) {
         Modifier.semantics { contentDescription = label }
     } else {
         Modifier
@@ -150,13 +156,14 @@ private fun EditorTextFieldImpl(
             value = value,
             onValueChange = onValueChangeSanitized,
             modifier = textFieldModifier,
-            textStyle = MaterialTheme.typography.bodyLarge.copy(
+            textStyle = MaterialTheme.typography.bodyMedium.copy(
                 color = MaterialTheme.colorScheme.onSurface,
             ),
             singleLine = singleLine,
             minLines = minLines,
             maxLines = if (singleLine) 1 else Int.MAX_VALUE,
             keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
             visualTransformation = visualTransformation,
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             interactionSource = interactionSource,
@@ -227,14 +234,14 @@ object EditorTextFieldDefaults {
 @Composable
 private fun EditorTextFieldDecoration(
     value: String,
-    label: String,
+    label: String?,
     placeholder: String?,
     isFocused: Boolean,
     isError: Boolean,
     innerTextField: @Composable () -> Unit,
 ) {
     Column {
-        if (label.isNotBlank()) {
+        if (!label.isNullOrBlank()) {
             val labelColor = when {
                 isFocused -> MaterialTheme.colorScheme.primary
                 else -> MaterialTheme.colorScheme.onSurfaceVariant
@@ -259,7 +266,7 @@ private fun EditorTextFieldDecoration(
             if (value.isEmpty() && !placeholder.isNullOrBlank()) {
                 Text(
                     text = placeholder,
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
